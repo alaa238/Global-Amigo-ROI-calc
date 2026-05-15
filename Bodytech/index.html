@@ -115,9 +115,9 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Ar
 .sc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;
   color:var(--text-muted);margin-bottom:5px;}
 .sc-value{font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1;white-space:nowrap;}
-.sc-value.rev-color{color:var(--red-dark);}
-.sc-value.sav-color{color:var(--blue);}
-.sc-value.net-pos{color:var(--green);}
+.sc-value.rev-color{color:var(--text);}
+.sc-value.sav-color{color:var(--text);}
+.sc-value.net-pos{color:var(--text);}
 .sc-value.net-neg{color:var(--neg);}
 .sc-sub{font-size:10.5px;color:var(--text-muted);margin-top:4px;}
 
@@ -137,18 +137,38 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Ar
 .kpi-sub{font-size:10.5px;color:var(--text-muted);margin-top:3px;}
 
 /* CHART */
-.chart-section{margin-bottom:24px;}
-.chart-group-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;
-  color:var(--text-muted);margin-bottom:8px;margin-top:14px;}
+/* ── CHART ── */
+.chart-section{margin-bottom:24px;background:white;border:1px solid var(--border);
+  border-radius:var(--r);padding:18px 20px;}
+.chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.chart-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);}
+.chart-legend{display:flex;gap:14px;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--text-muted);}
+.legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.legend-dot.rev{background:linear-gradient(90deg,#FF6600,#FF8C42);}
+.legend-dot.save{background:linear-gradient(90deg,#1A5799,#2E6BC4);}
+.chart-group-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;
+  color:var(--text-muted);margin:14px 0 8px;padding-left:4px;}
 .chart-group-label:first-child{margin-top:0;}
-.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
-.bar-row:last-child{margin-bottom:0;}
-.bar-name{width:200px;font-size:12px;color:var(--text-mid);flex-shrink:0;font-weight:500;}
-.bar-track{flex:1;height:9px;background:#EEF2F5;border-radius:5px;overflow:hidden;}
-.bar-fill{height:100%;border-radius:5px;transition:width .4s cubic-bezier(.4,0,.2,1);min-width:2px;}
-.bar-fill.rev{background:var(--red);}
-.bar-fill.save{background:var(--blue);}
-.bar-val{width:80px;text-align:right;font-size:12px;font-weight:700;color:var(--text);flex-shrink:0;}
+.bar-row{display:flex;align-items:center;gap:12px;padding:7px 8px;
+  border-radius:8px;transition:background .15s;margin-bottom:2px;}
+.bar-row:hover{background:#F9FAFB;}
+.bar-name{width:188px;font-size:12px;color:var(--text-mid);flex-shrink:0;font-weight:600;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bar-track{flex:1;height:22px;background:#F0F2F5;border-radius:7px;overflow:hidden;
+  display:flex;position:relative;}
+.bar-fill{height:100%;transition:width .5s cubic-bezier(.4,0,.2,1);position:absolute;top:0;}
+.bar-fill.rev{background:linear-gradient(90deg,#FF6600 0%,#FF8C42 100%);left:0;
+  border-radius:7px 0 0 7px;}
+.bar-fill.save{background:linear-gradient(90deg,#1A5799 0%,#2E6BC4 100%);
+  border-radius:0 7px 7px 0;}
+.bar-fill.rev.only{border-radius:7px;}
+.bar-inner-label{position:absolute;top:50%;transform:translateY(-50%);left:10px;
+  font-size:10px;font-weight:700;color:white;pointer-events:none;white-space:nowrap;
+  text-shadow:0 1px 2px rgba(0,0,0,.25);}
+.bar-meta{display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0;width:84px;}
+.bar-total{font-size:13px;font-weight:800;color:var(--text);line-height:1.2;}
+.bar-breakdown{font-size:9.5px;color:var(--text-muted);margin-top:1px;white-space:nowrap;line-height:1.4;}
 
 /* ACCORDIONS */
 .acc-section{background:white;border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;}
@@ -184,9 +204,9 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:non
   width:17px;height:17px;border-radius:50%;background:var(--red);cursor:pointer;
   border:2.5px solid white;box-shadow:0 1px 5px rgba(232,0,45,.4);transition:transform .12s;}
 input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.15);}
-input[type="range"].blue::-webkit-slider-thumb{background:var(--blue);box-shadow:0 1px 5px rgba(26,87,153,.35);}
-input[type="range"].gold::-webkit-slider-thumb{background:var(--gold);box-shadow:0 1px 5px rgba(200,149,42,.35);}
-input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box-shadow:0 1px 5px rgba(107,114,128,.35);}
+input[type="range"].blue::-webkit-slider-thumb{background:var(--red);box-shadow:0 1px 5px rgba(255,102,0,.4);}
+input[type="range"].gold::-webkit-slider-thumb{background:var(--red);box-shadow:0 1px 5px rgba(255,102,0,.4);}
+input[type="range"].muted::-webkit-slider-thumb{background:var(--red);box-shadow:0 1px 5px rgba(255,102,0,.4);}
 
 /* RAMP SLIDERS in sidebar */
 input[type="range"].ramp-sl{height:3px;}
@@ -224,7 +244,7 @@ input[type="range"].ramp-sl::-webkit-slider-thumb{width:14px;height:14px;backgro
 <aside class="sidebar">
   <div class="sb-top">
 
-    <div class="sb-section-label">Core Agents</div>
+    <div class="sb-section-label">Amigo Agent — Core Functions</div>
     <div class="toggle-row">
       <label class="tog"><input type="checkbox" id="tog-uc1" checked><span class="tog-slider"></span></label>
       <span class="toggle-label core-label">Sales &amp; Acquisition</span>
@@ -258,15 +278,15 @@ input[type="range"].ramp-sl::-webkit-slider-thumb{width:14px;height:14px;backgro
 
     <div class="sb-section-label" style="margin-top:8px;">Scenario</div>
     <div class="scenario-row">
-      <div class="sc-btn" id="sc-cons" onclick="setScenario('cons',this)">Conservative</div>
-      <div class="sc-btn active" id="sc-base" onclick="setScenario('base',this)">Base</div>
+      <div class="sc-btn active" id="sc-cons" onclick="setScenario('cons',this)">Conservative</div>
+      <div class="sc-btn" id="sc-base" onclick="setScenario('base',this)">Base</div>
       <div class="sc-btn" id="sc-agg" onclick="setScenario('agg',this)">Aggressive</div>
     </div>
 
     <div class="sb-section-label" style="margin-top:4px;">Currency</div>
     <div class="cur-row">
-      <div class="cur-btn active" id="cur-usd" onclick="setCurrency('USD',this)">USD</div>
-      <div class="cur-btn" id="cur-cop" onclick="setCurrency('COP',this)">COP</div>
+      <div class="cur-btn" id="cur-usd" onclick="setCurrency('USD',this)">USD</div>
+      <div class="cur-btn active" id="cur-cop" onclick="setCurrency('COP',this)">COP</div>
     </div>
 
   </div><!-- /sb-top -->
@@ -410,44 +430,44 @@ input[type="range"].ramp-sl::-webkit-slider-thumb{width:14px;height:14px;backgro
       <div class="sub-label">Lead Volume &amp; Conversion</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Monthly inbound leads</div><div class="input-desc">Instagram, web, referral, walk-in across all sedes</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-leads" min="5000" max="150000" step="1000" value="40000"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-leads" min="5000" max="150000" step="1000" value="20000"></div>
         <div class="input-val" id="lv-leads">40,000</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Current lead → trial conversion</div><div class="input-desc">% of leads who book a cortesía / free trial today</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-conv-curr" min="1" max="50" step="1" value="12"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-conv-curr" min="1" max="50" step="1" value="8"></div>
         <div class="input-val" id="lv-conv-curr">12%</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">AI lead → trial conversion</div><div class="input-desc">WhatsApp-first response within seconds lifts this materially</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-conv-ai" min="1" max="60" step="1" value="20"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-conv-ai" min="1" max="60" step="1" value="14"></div>
         <div class="input-val" id="lv-conv-ai">20%</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Current trial → paid conversion</div><div class="input-desc">% of cortesías that convert to a paid membership</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-t2p-curr" min="5" max="80" step="1" value="35"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-t2p-curr" min="5" max="80" step="1" value="25"></div>
         <div class="input-val" id="lv-t2p-curr">35%</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">AI trial → paid conversion</div><div class="input-desc">Brand routing + personalized follow-up during trial window</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-t2p-ai" min="5" max="90" step="1" value="50"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-t2p-ai" min="5" max="90" step="1" value="38"></div>
         <div class="input-val" id="lv-t2p-ai">50%</div>
       </div>
       <div class="sub-label">Membership Value</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Average annual membership fee (USD)</div><div class="input-desc">Blended across Bodytech, Athletic &amp; Sports Medicine brands</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-ann-fee" min="100" max="1000" step="10" value="360" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-ann-fee" min="100" max="1000" step="10" value="250" class="blue"></div>
         <div class="input-val" id="lv-ann-fee">$360</div>
       </div>
       <div class="sub-label">Sales Staff Redeployment</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Monthly sales &amp; acquisition team cost</div><div class="input-desc">Staff across sedes handling lead follow-up &amp; sales (USD)</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-sales-staff" min="10000" max="500000" step="5000" value="120000" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-sales-staff" min="10000" max="500000" step="5000" value="50000" class="gold"></div>
         <div class="input-val" id="lv-sales-staff">$120,000</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">% of sales workflow AI handles</div><div class="input-desc">Lead qualification, follow-up calls, trial booking, reminders</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-sales-ai" min="0" max="100" step="5" value="55" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-sales-ai" min="0" max="100" step="5" value="40" class="gold"></div>
         <div class="input-val" id="lv-sales-ai">55%</div>
       </div>
     </div>
@@ -465,7 +485,7 @@ input[type="range"].ramp-sl::-webkit-slider-thumb{width:14px;height:14px;backgro
       <div class="sub-label">Billing Recovery</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Monthly billing volume (USD)</div><div class="input-desc">Total recurring billing across all active members</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-billing" min="1000000" max="50000000" step="500000" value="18000000" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-billing" min="1000000" max="50000000" step="500000" value="8000000" class="blue"></div>
         <div class="input-val" id="lv-billing">$18.0M</div>
       </div>
       <div class="input-row">
@@ -475,34 +495,34 @@ input[type="range"].ramp-sl::-webkit-slider-thumb{width:14px;height:14px;backgro
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">AI-assisted collection rate</div><div class="input-desc">WhatsApp reminders, payment links &amp; conversational collections</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-col-ai" min="50" max="100" step="1" value="97"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-col-ai" min="50" max="100" step="1" value="94"></div>
         <div class="input-val" id="lv-col-ai">97%</div>
       </div>
       <div class="sub-label">Past-Due Recovery</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Delinquent members</div><div class="input-desc">Members with outstanding balances (10% of base = 60K)</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-delin" min="5000" max="200000" step="5000" value="60000" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-delin" min="5000" max="200000" step="5000" value="15000" class="blue"></div>
         <div class="input-val" id="lv-delin">60,000</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Average past-due balance (USD)</div><div class="input-desc">Avg outstanding amount per delinquent member</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-pastdue-bal" min="10" max="200" step="5" value="45" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-pastdue-bal" min="10" max="200" step="5" value="25" class="blue"></div>
         <div class="input-val" id="lv-pastdue-bal">$45</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">% AI successfully recovers</div><div class="input-desc">Past-due members who pay after AI outreach</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-pastdue-rec" min="0" max="80" step="5" value="35" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-pastdue-rec" min="0" max="80" step="5" value="15" class="blue"></div>
         <div class="input-val" id="lv-pastdue-rec">35%</div>
       </div>
       <div class="sub-label">Collections Staff Redeployment</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Monthly collections team cost (USD)</div><div class="input-desc">Staff handling payment reminders, dunning &amp; recovery</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-col-staff" min="5000" max="300000" step="5000" value="64000" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-col-staff" min="5000" max="300000" step="5000" value="25000" class="gold"></div>
         <div class="input-val" id="lv-col-staff">$64,000</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">% of collections workflow AI handles</div><div class="input-desc">Reminders, payment link sends, failed card recovery</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-col-ai-pct" min="0" max="100" step="5" value="70" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-col-ai-pct" min="0" max="100" step="5" value="40" class="gold"></div>
         <div class="input-val" id="lv-col-ai-pct">70%</div>
       </div>
     </div>
@@ -520,7 +540,7 @@ input[type="range"].ramp-sl::-webkit-slider-thumb{width:14px;height:14px;backgro
       <div class="sub-label">Member Base</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Active member base</div><div class="input-desc">Total active paid members across all sedes and brands</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-members" min="50000" max="1000000" step="10000" value="600000"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-members" min="50000" max="1000000" step="10000" value="150000"></div>
         <div class="input-val" id="lv-members">600,000</div>
       </div>
       <div class="input-row">
@@ -530,34 +550,34 @@ input[type="range"].ramp-sl::-webkit-slider-thumb{width:14px;height:14px;backgro
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Annual membership fee (USD)</div><div class="input-desc">Blended annual value of a retained member</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-ret-fee" min="100" max="1000" step="10" value="360" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-ret-fee" min="100" max="1000" step="10" value="240" class="blue"></div>
         <div class="input-val" id="lv-ret-fee">$360</div>
       </div>
       <div class="sub-label">Churn Reduction</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">AI churn reduction (percentage points)</div><div class="input-desc">Amigo's modeling: +5pp renewal ≈ $18M/yr. Slider = full-year impact.</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-churn-pp" min="1" max="25" step="1" value="8" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-churn-pp" min="1" max="25" step="1" value="4" class="blue"></div>
         <div class="input-val" id="lv-churn-pp">8 pp</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Absence detection save rate</div><div class="input-desc">% of at-risk absent members successfully re-engaged by AI</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-absence-save" min="0" max="60" step="5" value="25" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-absence-save" min="0" max="60" step="5" value="15" class="blue"></div>
         <div class="input-val" id="lv-absence-save">25%</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">% of members showing absence signal/mo</div><div class="input-desc">Members who miss ≥2 consecutive sessions in a month</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-absence-pct" min="2" max="30" step="1" value="10" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-absence-pct" min="2" max="30" step="1" value="8" class="blue"></div>
         <div class="input-val" id="lv-absence-pct">10%</div>
       </div>
       <div class="sub-label">Retention Staff Redeployment</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Monthly retention team cost (USD)</div><div class="input-desc">Staff handling renewal calls, absence outreach &amp; recovery</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-ret-staff" min="10000" max="500000" step="5000" value="160000" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-ret-staff" min="10000" max="500000" step="5000" value="40000" class="gold"></div>
         <div class="input-val" id="lv-ret-staff">$160,000</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">% of retention workflow AI handles</div><div class="input-desc">Churn scoring, outreach, renewal conversations</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-ret-ai-pct" min="0" max="100" step="5" value="50" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-ret-ai-pct" min="0" max="100" step="5" value="30" class="gold"></div>
         <div class="input-val" id="lv-ret-ai-pct">50%</div>
       </div>
     </div>
@@ -619,33 +639,33 @@ input[type="range"].ramp-sl::-webkit-slider-thumb{width:14px;height:14px;backgro
       <div class="sub-label">Class No-Show Reduction</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Monthly class reservations</div><div class="input-desc">Total booked class slots across all sedes</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cls-res" min="100000" max="10000000" step="100000" value="2000000"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cls-res" min="100000" max="10000000" step="100000" value="500000"></div>
         <div class="input-val" id="lv-cls-res">2,000,000</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Current class no-show rate</div><div class="input-desc">% of booked slots where member doesn't show</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cls-ns-curr" min="0" max="60" step="1" value="25"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cls-ns-curr" min="0" max="60" step="1" value="20"></div>
         <div class="input-val" id="lv-cls-ns-curr">25%</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">AI-assisted no-show rate</div><div class="input-desc">AI reminders + waitlist backfill reduce this significantly</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cls-ns-ai" min="0" max="50" step="1" value="10"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cls-ns-ai" min="0" max="50" step="1" value="8"></div>
         <div class="input-val" id="lv-cls-ns-ai">10%</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Revenue per recovered class slot (USD)</div><div class="input-desc">Value of a filled slot (premium group class / PT session)</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cls-slot-rev" min="1" max="30" step="1" value="5" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cls-slot-rev" min="1" max="30" step="1" value="3" class="blue"></div>
         <div class="input-val" id="lv-cls-slot-rev">$5</div>
       </div>
       <div class="sub-label">Front-Desk Deflection</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Monthly inbound member queries</div><div class="input-desc">WhatsApp + phone inquiries about schedules, policies, sedes</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cls-queries" min="50000" max="2000000" step="50000" value="500000"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cls-queries" min="50000" max="2000000" step="50000" value="100000"></div>
         <div class="input-val" id="lv-cls-queries">500,000</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">% AI deflects end-to-end</div><div class="input-desc">Queries resolved without staff involvement</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cls-deflect" min="0" max="100" step="5" value="60"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cls-deflect" min="0" max="100" step="5" value="40"></div>
         <div class="input-val" id="lv-cls-deflect">60%</div>
       </div>
       <div class="input-row">
@@ -655,12 +675,12 @@ input[type="range"].ramp-sl::-webkit-slider-thumb{width:14px;height:14px;backgro
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Monthly front-desk &amp; concierge staff cost</div><div class="input-desc">Loaded cost of receptionist / ops teams across sedes</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cls-staff" min="10000" max="500000" step="5000" value="150000" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cls-staff" min="10000" max="500000" step="5000" value="30000" class="gold"></div>
         <div class="input-val" id="lv-cls-staff">$150,000</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">% front-desk work AI handles</div><div class="input-desc">Bookings, FAQ, concierge — addressable by conversational AI</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cls-staff-ai" min="0" max="100" step="5" value="45" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cls-staff-ai" min="0" max="100" step="5" value="30" class="gold"></div>
         <div class="input-val" id="lv-cls-staff-ai">45%</div>
       </div>
     </div>
@@ -678,50 +698,50 @@ input[type="range"].ramp-sl::-webkit-slider-thumb{width:14px;height:14px;backgro
       <div class="sub-label">Coached Member Base</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Members on AI coaching at Year-1 end</div><div class="input-desc">% of total member base using AI coach by Month 12</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cch-pct" min="1" max="80" step="1" value="30"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cch-pct" min="1" max="80" step="1" value="15"></div>
         <div class="input-val" id="lv-cch-pct">30%</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Total member base (pulls from UC3)</div><div class="input-desc">Active paid members for coaching uplift calculation</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cch-members" min="50000" max="1000000" step="10000" value="600000"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cch-members" min="50000" max="1000000" step="10000" value="150000"></div>
         <div class="input-val" id="lv-cch-members">600,000</div>
       </div>
       <div class="sub-label">Retention Uplift from Coaching</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Churn reduction for coached members (pp)</div><div class="input-desc">Members seeing results churn measurably less</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cch-churn" min="1" max="20" step="1" value="10" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cch-churn" min="1" max="20" step="1" value="5" class="blue"></div>
         <div class="input-val" id="lv-cch-churn">10 pp</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Annual membership fee (USD)</div><div class="input-desc">Value of each retained coached member</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cch-fee" min="100" max="1000" step="10" value="360" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cch-fee" min="100" max="1000" step="10" value="240" class="blue"></div>
         <div class="input-val" id="lv-cch-fee">$360</div>
       </div>
       <div class="sub-label">Premium Upsell</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">% coached members upgrading to premium add-on</div><div class="input-desc">PT sessions, advanced plans, wearable integration tier</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cch-upsell-pct" min="0" max="30" step="1" value="5" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cch-upsell-pct" min="0" max="30" step="1" value="3" class="blue"></div>
         <div class="input-val" id="lv-cch-upsell-pct">5%</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Monthly premium add-on value (USD)</div><div class="input-desc">Incremental monthly revenue per upgraded member</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cch-upsell-val" min="5" max="100" step="5" value="15" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cch-upsell-val" min="5" max="100" step="5" value="10" class="blue"></div>
         <div class="input-val" id="lv-cch-upsell-val">$15</div>
       </div>
       <div class="sub-label">Specialist Referral Revenue</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">% coached members hitting plateau signal</div><div class="input-desc">AI detects stagnation and suggests specialist referral</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cch-plateau-pct" min="0" max="50" step="5" value="20" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cch-plateau-pct" min="0" max="50" step="5" value="10" class="gold"></div>
         <div class="input-val" id="lv-cch-plateau-pct">20%</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">% who convert to specialist session</div><div class="input-desc">Physio, deportólogo, nutritionist referral conversion</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cch-plateau-conv" min="0" max="60" step="5" value="30" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cch-plateau-conv" min="0" max="60" step="5" value="20" class="gold"></div>
         <div class="input-val" id="lv-cch-plateau-conv">30%</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Revenue per specialist session (USD)</div><div class="input-desc">Average value of a physio / sports medicine session</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cch-session-fee" min="10" max="150" step="5" value="40" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cch-session-fee" min="10" max="150" step="5" value="25" class="gold"></div>
         <div class="input-val" id="lv-cch-session-fee">$40</div>
       </div>
     </div>
@@ -739,33 +759,33 @@ input[type="range"].ramp-sl::-webkit-slider-thumb{width:14px;height:14px;backgro
       <div class="sub-label">Nutrition Consultations</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Members eligible for nutrition outreach</div><div class="input-desc">Members with nutrition-related goals or plateau signals</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-nut-eligible" min="10000" max="600000" step="10000" value="300000"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-nut-eligible" min="10000" max="600000" step="10000" value="50000"></div>
         <div class="input-val" id="lv-nut-eligible">300,000</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Monthly conversion to nutrition consult (%)</div><div class="input-desc">% of eligible members who book a consultation per month</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-nut-conv" min="0" max="15" step="0.5" value="3" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-nut-conv" min="0" max="15" step="0.5" value="2" class="blue"></div>
         <div class="input-val" id="lv-nut-conv">3.0%</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Revenue per nutrition consultation (USD)</div><div class="input-desc">Avg value of a nutritionist appointment</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-nut-rev" min="10" max="150" step="5" value="40" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-nut-rev" min="10" max="150" step="5" value="25" class="blue"></div>
         <div class="input-val" id="lv-nut-rev">$40</div>
       </div>
       <div class="sub-label">Wellness Cross-sell</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Cross-sell trigger rate (%)</div><div class="input-desc">% of eligible members surfaced a wellness offer/mo (massage, body comp, etc.)</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-xsell-pct" min="0" max="20" step="1" value="5" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-xsell-pct" min="0" max="20" step="1" value="3" class="blue"></div>
         <div class="input-val" id="lv-xsell-pct">5%</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Cross-sell conversion rate (%)</div><div class="input-desc">% of triggered members who purchase</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-xsell-conv" min="0" max="40" step="1" value="15" class="blue"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-xsell-conv" min="0" max="40" step="1" value="10" class="blue"></div>
         <div class="input-val" id="lv-xsell-conv">15%</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Avg cross-sell transaction value (USD)</div><div class="input-desc">Massage, body composition analysis, supplements, etc.</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-xsell-val" min="5" max="100" step="5" value="25" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-xsell-val" min="5" max="100" step="5" value="15" class="gold"></div>
         <div class="input-val" id="lv-xsell-val">$25</div>
       </div>
     </div>
@@ -790,9 +810,9 @@ input[type="range"].ramp-sl::-webkit-slider-thumb{width:14px;height:14px;backgro
 'use strict';
 
 /* HELPERS */
-var CUR = 'USD';
+var CUR = 'COP';
 var COP_RATE = 4200;
-var SCENARIO = 1.0;
+var SCENARIO = 0.6;
 
 function usdToCop(n){ return n * COP_RATE; }
 function fmt(n, compact){
@@ -1157,32 +1177,66 @@ function renderChart(items){
   var container=$id('chart-container');
   if(!container) return;
   var active = items.filter(function(i){return i.active && (i.rev+i.sav)>0;});
-  if(!active.length){ container.innerHTML='<div style="font-size:12px;color:var(--text-muted);font-style:italic;padding:8px 0;">Enable at least one agent to see the chart.</div>'; return; }
+  if(!active.length){
+    container.innerHTML='<div style="font-size:12px;color:var(--text-muted);font-style:italic;padding:8px 0;">Enable at least one agent to see the chart.</div>';
+    return;
+  }
   var maxVal = Math.max.apply(null, active.map(function(i){return i.rev+i.sav;}));
-  var coreItems = active.filter(function(i){return i.core;});
+  var coreItems  = active.filter(function(i){return  i.core;});
   var addonItems = active.filter(function(i){return !i.core;});
-  var html='';
+
+  var html = '';
+  // Header + legend
+  html += '<div class="chart-header">';
+  html += '<div class="chart-title">Annual Benefit by Agent</div>';
+  html += '<div class="chart-legend">';
+  html += '<div class="legend-item"><div class="legend-dot rev"></div>Revenue Uplift</div>';
+  html += '<div class="legend-item"><div class="legend-dot save"></div>Cost Savings</div>';
+  html += '</div></div>';
+
   function renderGroup(label, arr){
     if(!arr.length) return;
-    html+='<div class="chart-group-label">'+label+'</div>';
+    html += '<div class="chart-group-label">'+label+'</div>';
     arr.forEach(function(item){
-      var total=item.rev+item.sav;
-      var revPct = maxVal>0 ? (item.rev/maxVal*100).toFixed(1) : 0;
-      var savPct = maxVal>0 ? (item.sav/maxVal*100).toFixed(1) : 0;
-      html+='<div class="bar-row">';
-      html+='<div class="bar-name">'+item.label+'</div>';
-      html+='<div class="bar-track" style="position:relative;">';
-      html+='<div class="bar-fill rev" style="width:'+revPct+'%;position:absolute;top:0;left:0;"></div>';
-      if(item.sav>0){
-        html+='<div class="bar-fill save" style="width:'+savPct+'%;position:absolute;top:0;left:'+(parseFloat(revPct))+'%;"></div>';
+      var total  = item.rev + item.sav;
+      var revPct = maxVal > 0 ? (item.rev / maxVal * 100) : 0;
+      var savPct = maxVal > 0 ? (item.sav / maxVal * 100) : 0;
+      var onlyRev = item.sav === 0;
+
+      // Revenue line only
+      var revLine = item.rev > 0 ? '<div class="bar-breakdown" style="color:#CC5200;">Rev '+fmt(item.rev,true)+'</div>' : '';
+      var savLine = '';
+
+      // Inner label: show rev value inside bar if bar is wide enough (>18%)
+      var innerLabel = revPct > 18 ? fmt(item.rev, true) : '';
+
+      html += '<div class="bar-row">';
+      html += '<div class="bar-name">'+item.label+'</div>';
+      html += '<div class="bar-track">';
+      // Revenue fill
+      html += '<div class="bar-fill rev'+(onlyRev?' only':'')+'" style="width:'+revPct.toFixed(1)+'%;left:0;">';
+      html += '</div>';
+      // Savings fill — starts right after revenue
+      if(item.sav > 0){
+        html += '<div class="bar-fill save" style="width:'+savPct.toFixed(1)+'%;left:'+revPct.toFixed(1)+'%;"></div>';
       }
-      html+='</div>';
-      html+='<div class="bar-val">'+fmt(total,true)+'</div></div>';
+      // Inner label overlay
+      if(innerLabel){
+        html += '<div class="bar-inner-label">'+innerLabel+'</div>';
+      }
+      html += '</div>';
+      // Right-side meta
+      html += '<div class="bar-meta">';
+      html += '<div class="bar-total">'+fmt(total,true)+'</div>';
+      html += revLine + savLine;
+      html += '</div>';
+      html += '</div>';
     });
   }
-  renderGroup('Core Agents', coreItems);
+
+  renderGroup('Amigo Agent — Core Functions', coreItems);
   renderGroup('Add-On Modules', addonItems);
-  container.innerHTML=html;
+  container.innerHTML = html;
 }
 
 /* INIT */
