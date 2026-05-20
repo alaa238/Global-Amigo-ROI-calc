@@ -294,14 +294,6 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-t
     </div>
   </div>
   <div class="ctrl-divider"></div>
-  <div class="ctrl-group">
-    <span class="ctrl-label">Currency</span>
-    <div class="pill-group">
-      <div class="pill cur-active" id="cur-cop" onclick="setCurrency('COP')">COP</div>
-      <div class="pill" id="cur-usd" onclick="setCurrency('USD')">USD</div>
-    </div>
-  </div>
-  <div class="ctrl-divider"></div>
   <div class="ctrl-group" style="flex:1;gap:8px;flex-wrap:wrap;">
     <span class="ctrl-label">Adoption Ramp</span>
     <div class="ramp-inline">
@@ -564,7 +556,7 @@ function fmt(n,compact){
     return '$'+Math.round(n).toLocaleString('en-US');
   }
 }
-function fmtCost(v){return CUR==='COP'?fmt(v):'$'+Math.round(v).toLocaleString('en-US');}
+function fmtCost(v){return fmt(v);}
 
 function rampFactor(){return (3*g('sl-ramp3')+3*g('sl-ramp6')+6*g('sl-ramp12'))/1200;}
 function rampChange(){
@@ -574,12 +566,6 @@ function rampChange(){
   recalc();
 }
 
-function setCurrency(c){
-  $id('cur-cop').classList.remove('cur-active');
-  $id('cur-usd').classList.remove('cur-active');
-  $id('cur-'+(c==='COP'?'cop':'usd')).classList.add('cur-active');
-  CUR=c; recalc();
-}
 
 function toggleCard(key){
   var body=$id('body-'+key), arr=$id('arr-'+key);
@@ -825,7 +811,6 @@ function renderChart(items){
 // Expose to global scope for inline HTML handlers
 window.toggleAddon = toggleAddon;
 window.toggleCard  = toggleCard;
-window.setCurrency = setCurrency;
 window.rampChange  = rampChange;
 
 // Init
