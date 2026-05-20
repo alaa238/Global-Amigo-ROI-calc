@@ -322,12 +322,8 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-t
           <div class="bp-sl-wrap"><input type="range" class="bp-sl" id="sl-g-sedes" min="20" max="200" step="1" value="82"></div>
           <span class="bp-val" id="lv-g-sedes">82</span>
         </div>
-        <div class="bp-row">
-          <span class="bp-lbl">COP / USD</span>
-          <div class="bp-sl-wrap"><input type="range" class="bp-sl" id="sl-g-cop" min="3000" max="6000" step="100" value="4200"></div>
-          <span class="bp-val" id="lv-g-cop">4,200</span>
-        </div>
-        <!-- hidden: still feed updateChips & internal calcs -->
+        <!-- hidden: technical params still feed updateChips & internal calcs -->
+        <input type="hidden" id="sl-g-cop" value="4200">
         <input type="hidden" id="sl-g-fee" value="30">
         <input type="hidden" id="sl-g-revenue" value="216000000">
         <input type="hidden" id="sl-g-classes" value="2000000">
