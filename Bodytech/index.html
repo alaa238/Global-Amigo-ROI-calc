@@ -209,6 +209,7 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--orange);}
   background:#F8F9FA;border:1.5px solid var(--border);
   border-radius:8px;padding:6px 10px 6px 12px;gap:3px;
   transition:border-color .15s,background .15s,box-shadow .15s;
+  width:220px;box-sizing:border-box;
 }
 .cost-num-field:focus-within{
   border-color:var(--orange);background:#fff;
@@ -217,10 +218,10 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--orange);}
 .cost-num-pre{font-size:11.5px;font-weight:700;color:var(--muted);white-space:nowrap;user-select:none;}
 .cost-num-inp{
   border:none;background:transparent;font-size:14px;font-weight:800;color:var(--black);
-  width:96px;outline:none;text-align:right;font-family:inherit;
+  flex:1;min-width:0;outline:none;text-align:right;font-family:inherit;
 }
 .cost-num-inp::-webkit-inner-spin-button,.cost-num-inp::-webkit-outer-spin-button{opacity:1;}
-.cost-num-suf{font-size:10.5px;font-weight:600;color:var(--muted);white-space:nowrap;margin-left:2px;}
+.cost-num-suf{font-size:10.5px;font-weight:600;color:var(--muted);white-space:nowrap;margin-left:4px;min-width:56px;text-align:left;}
 .cost-num-ann{font-size:10px;color:var(--muted);text-align:right;min-height:14px;}
 .cost-num-ann span{font-weight:700;color:var(--text-mid);}
 .cost-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;padding-top:12px;border-top:2px solid var(--border);}
@@ -518,7 +519,7 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-t
   </div>
   <div class="card-body" id="body-cost">
     <div class="cost-row">
-      <div class="cost-info"><div class="cost-name">Monthly platform fee <span style="font-weight:400;color:var(--muted)">(negotiable)</span></div><div class="cost-desc">Confirm final pricing with Saad</div></div>
+      <div class="cost-info"><div class="cost-name">Monthly platform fee <span style="font-weight:400;color:var(--muted)">(negotiable)</span></div><div class="cost-desc">Ongoing subscription fee for the Amigo AI platform</div></div>
       <div class="cost-num-group">
         <div class="cost-num-field">
           <span class="cost-num-pre">COP $</span>
