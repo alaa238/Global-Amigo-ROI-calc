@@ -67,6 +67,7 @@ header{
 /* CONTROL STRIP */
 .control-strip{
   display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;
+  align-items:start;
 }
 .ctrl-box{
   background:var(--white);border:1px solid var(--border);border-radius:var(--radius);
@@ -322,6 +323,7 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-t
           <div class="bp-sl-wrap"><input type="range" class="bp-sl" id="sl-g-sedes" min="20" max="200" step="1" value="82"></div>
           <span class="bp-val" id="lv-g-sedes">82</span>
         </div>
+        <div class="ramp-avg-line">Implied annual revenue <span id="bp-implied-rev">—</span></div>
         <!-- hidden: technical params still feed updateChips & internal calcs -->
         <input type="hidden" id="sl-g-cop" value="4200">
         <input type="hidden" id="sl-g-fee" value="30">
@@ -642,6 +644,10 @@ function updateChips(){
   setTxt('chip-sedes', Math.round(sed));
   setTxt('chip-rev', rev>=1e9?'$'+(rev/1e9).toFixed(0)+'B':'$'+(rev/1e6).toFixed(0)+'M');
   setTxt('chip-cop', fmtNum(cop));
+  /* implied annual revenue line under Business Assumptions */
+  var fee=g('sl-g-fee')||30;
+  var impliedUSD=mem*fee*12;
+  setTxt('bp-implied-rev', fmt(impliedUSD,true));
 }
 
 function wireSliders(){
