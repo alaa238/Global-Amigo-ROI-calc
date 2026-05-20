@@ -103,6 +103,21 @@ input[type="range"].ramp-sl::-webkit-slider-thumb{
 .ramp-yr1-line{font-size:10.5px;color:var(--muted);}
 .ramp-yr1-line span{font-weight:700;color:var(--text-mid);}
 
+/* ADVANCED TOGGLE */
+.adv-toggle{
+  display:flex;align-items:center;gap:7px;
+  margin-top:18px;padding-top:14px;
+  border-top:1px dashed #E2E8F0;
+  cursor:pointer;user-select:none;
+}
+.adv-toggle:hover .adv-toggle-label{color:var(--text-mid);}
+.adv-toggle-arrow{font-size:8px;color:var(--muted);transition:transform .2s;flex-shrink:0;}
+.adv-toggle-arrow.open{transform:rotate(90deg);}
+.adv-toggle-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:var(--muted);}
+.adv-toggle-badge{font-size:9px;font-weight:700;background:#F3F4F6;color:var(--muted);padding:2px 7px;border-radius:4px;margin-left:auto;}
+.adv-body{display:none;margin-top:10px;}
+.adv-body.open{display:block;}
+
 /* SECTION HEADERS */
 .section-header{
   font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.9px;color:var(--muted);
@@ -355,9 +370,15 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-t
     <div class="input-row"><div class="input-info"><div class="input-name">AI trial → paid conversion</div><div class="input-desc">Brand routing + personalised follow-up during trial window</div></div><div class="input-slider-wrap"><input type="range" id="sl-t2p-ai" min="5" max="90" step="1" value="38"></div><div class="input-val" id="lv-t2p-ai">38%</div></div>
     <div class="sub-label">Membership Value</div>
     <div class="input-row"><div class="input-info"><div class="input-name">Average annual membership fee (USD)</div><div class="input-desc">Blended across Bodytech, Athletic &amp; Sports Medicine brands</div></div><div class="input-slider-wrap"><input type="range" id="sl-ann-fee" min="100" max="1000" step="10" value="250" class="blue"></div><div class="input-val" id="lv-ann-fee">$250</div></div>
-    <div class="sub-label">Sales Staff Redeployment</div>
-    <div class="input-row"><div class="input-info"><div class="input-name">Monthly sales team cost (USD)</div><div class="input-desc">Staff across sedes handling lead follow-up &amp; sales</div></div><div class="input-slider-wrap"><input type="range" id="sl-sales-staff" min="10000" max="500000" step="5000" value="50000" class="gold"></div><div class="input-val" id="lv-sales-staff">$50,000</div></div>
-    <div class="input-row"><div class="input-info"><div class="input-name">% of sales workflow AI handles</div><div class="input-desc">Lead qualification, follow-up, trial booking, reminders</div></div><div class="input-slider-wrap"><input type="range" id="sl-sales-ai" min="0" max="100" step="5" value="40" class="gold"></div><div class="input-val" id="lv-sales-ai">40%</div></div>
+    <div class="adv-toggle" onclick="toggleAdv('uc1-staff')">
+      <span class="adv-toggle-arrow" id="adv-arr-uc1-staff">&#9654;</span>
+      <span class="adv-toggle-label">Staff Redeployment Savings</span>
+      <span class="adv-toggle-badge">Optional</span>
+    </div>
+    <div class="adv-body" id="adv-body-uc1-staff">
+      <div class="input-row"><div class="input-info"><div class="input-name">Monthly sales team cost (USD)</div><div class="input-desc">Staff across sedes handling lead follow-up &amp; sales</div></div><div class="input-slider-wrap"><input type="range" id="sl-sales-staff" min="10000" max="500000" step="5000" value="50000" class="gold"></div><div class="input-val" id="lv-sales-staff">$50,000</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">% of sales workflow AI handles</div><div class="input-desc">Lead qualification, follow-up, trial booking, reminders</div></div><div class="input-slider-wrap"><input type="range" id="sl-sales-ai" min="0" max="100" step="5" value="40" class="gold"></div><div class="input-val" id="lv-sales-ai">40%</div></div>
+    </div>
   </div>
 </div>
 
@@ -370,17 +391,15 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-t
     <span class="card-value" id="wc-uc2">—</span>
   </div>
   <div class="card-body collapsed" id="body-uc2">
-    <div class="sub-label">Billing Recovery</div>
     <div class="input-row"><div class="input-info"><div class="input-name">Monthly billing volume (USD)</div><div class="input-desc">Total recurring billing across all active members</div></div><div class="input-slider-wrap"><input type="range" id="sl-billing" min="1000000" max="50000000" step="500000" value="8000000" class="blue"></div><div class="input-val" id="lv-billing">$8.0M</div></div>
     <div class="input-row"><div class="input-info"><div class="input-name">Current collection rate</div><div class="input-desc">% of monthly billing actually collected today</div></div><div class="input-slider-wrap"><input type="range" id="sl-col-curr" min="50" max="100" step="1" value="90"></div><div class="input-val" id="lv-col-curr">90%</div></div>
     <div class="input-row"><div class="input-info"><div class="input-name">AI-assisted collection rate</div><div class="input-desc">WhatsApp reminders, payment links &amp; conversational collections</div></div><div class="input-slider-wrap"><input type="range" id="sl-col-ai" min="50" max="100" step="1" value="94"></div><div class="input-val" id="lv-col-ai">94%</div></div>
-    <div class="sub-label">Past-Due Recovery</div>
-    <div class="input-row"><div class="input-info"><div class="input-name">Delinquent members</div><div class="input-desc">Members with outstanding balances (~10% of base)</div></div><div class="input-slider-wrap"><input type="range" id="sl-delin" min="5000" max="200000" step="5000" value="15000" class="blue"></div><div class="input-val" id="lv-delin">15,000</div></div>
-    <div class="input-row"><div class="input-info"><div class="input-name">Average past-due balance (USD)</div><div class="input-desc">Avg outstanding amount per delinquent member</div></div><div class="input-slider-wrap"><input type="range" id="sl-pastdue-bal" min="10" max="200" step="5" value="25" class="blue"></div><div class="input-val" id="lv-pastdue-bal">$25</div></div>
-    <div class="input-row"><div class="input-info"><div class="input-name">% AI successfully recovers</div><div class="input-desc">Past-due members who pay after AI outreach</div></div><div class="input-slider-wrap"><input type="range" id="sl-pastdue-rec" min="0" max="80" step="5" value="15" class="blue"></div><div class="input-val" id="lv-pastdue-rec">15%</div></div>
-    <div class="sub-label">Collections Staff Redeployment</div>
-    <div class="input-row"><div class="input-info"><div class="input-name">Monthly collections team cost (USD)</div><div class="input-desc">Staff handling payment reminders, dunning &amp; recovery</div></div><div class="input-slider-wrap"><input type="range" id="sl-col-staff" min="5000" max="300000" step="5000" value="25000" class="gold"></div><div class="input-val" id="lv-col-staff">$25,000</div></div>
-    <div class="input-row"><div class="input-info"><div class="input-name">% of collections workflow AI handles</div><div class="input-desc">Reminders, payment links, failed card recovery</div></div><div class="input-slider-wrap"><input type="range" id="sl-col-ai-pct" min="0" max="100" step="5" value="40" class="gold"></div><div class="input-val" id="lv-col-ai-pct">40%</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Delinquent members</div><div class="input-desc">Members with outstanding balances (~10% of active base)</div></div><div class="input-slider-wrap"><input type="range" id="sl-delin" min="5000" max="200000" step="5000" value="15000" class="blue"></div><div class="input-val" id="lv-delin">15,000</div></div>
+    <!-- hidden: pre-filled defaults still feed the calc -->
+    <input type="hidden" id="sl-pastdue-bal" value="25">
+    <input type="hidden" id="sl-pastdue-rec" value="15">
+    <input type="hidden" id="sl-col-staff" value="25000">
+    <input type="hidden" id="sl-col-ai-pct" value="40">
   </div>
 </div>
 
@@ -393,17 +412,15 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-t
     <span class="card-value" id="wc-uc3">—</span>
   </div>
   <div class="card-body collapsed" id="body-uc3">
-    <div class="sub-label">Member Base</div>
     <div class="input-row"><div class="input-info"><div class="input-name">Active member base</div><div class="input-desc">Total active paid members across all sedes and brands</div></div><div class="input-slider-wrap"><input type="range" id="sl-members" min="50000" max="1000000" step="10000" value="150000"></div><div class="input-val" id="lv-members">150,000</div></div>
     <div class="input-row"><div class="input-info"><div class="input-name">Current annual churn rate</div><div class="input-desc">Bodytech ~60%/yr, Athletic ~120%/yr — blended estimate</div></div><div class="input-slider-wrap"><input type="range" id="sl-churn" min="10" max="150" step="5" value="65"></div><div class="input-val" id="lv-churn">65%</div></div>
     <div class="input-row"><div class="input-info"><div class="input-name">Annual membership fee (USD)</div><div class="input-desc">Blended annual value of a retained member</div></div><div class="input-slider-wrap"><input type="range" id="sl-ret-fee" min="100" max="1000" step="10" value="240" class="blue"></div><div class="input-val" id="lv-ret-fee">$240</div></div>
-    <div class="sub-label">Churn Reduction</div>
-    <div class="input-row"><div class="input-info"><div class="input-name">AI churn reduction (percentage points)</div><div class="input-desc">Amigo modelling: +5pp renewal ≈ $18M/yr. Slider = full-year impact.</div></div><div class="input-slider-wrap"><input type="range" id="sl-churn-pp" min="1" max="25" step="1" value="4" class="blue"></div><div class="input-val" id="lv-churn-pp">4 pp</div></div>
-    <div class="input-row"><div class="input-info"><div class="input-name">Absence detection save rate</div><div class="input-desc">% of at-risk absent members successfully re-engaged by AI</div></div><div class="input-slider-wrap"><input type="range" id="sl-absence-save" min="0" max="60" step="5" value="15" class="blue"></div><div class="input-val" id="lv-absence-save">15%</div></div>
-    <div class="input-row"><div class="input-info"><div class="input-name">% of members showing absence signal/mo</div><div class="input-desc">Members who miss ≥2 consecutive sessions in a month</div></div><div class="input-slider-wrap"><input type="range" id="sl-absence-pct" min="2" max="30" step="1" value="8" class="blue"></div><div class="input-val" id="lv-absence-pct">8%</div></div>
-    <div class="sub-label">Retention Staff Redeployment</div>
-    <div class="input-row"><div class="input-info"><div class="input-name">Monthly retention team cost (USD)</div><div class="input-desc">Staff handling renewal calls, absence outreach &amp; recovery</div></div><div class="input-slider-wrap"><input type="range" id="sl-ret-staff" min="10000" max="500000" step="5000" value="40000" class="gold"></div><div class="input-val" id="lv-ret-staff">$40,000</div></div>
-    <div class="input-row"><div class="input-info"><div class="input-name">% of retention workflow AI handles</div><div class="input-desc">Churn scoring, outreach, renewal conversations</div></div><div class="input-slider-wrap"><input type="range" id="sl-ret-ai-pct" min="0" max="100" step="5" value="30" class="gold"></div><div class="input-val" id="lv-ret-ai-pct">30%</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">AI churn reduction (percentage points)</div><div class="input-desc">Amigo modelling: +5pp renewal ≈ $18M/yr. Slide to set full-year impact.</div></div><div class="input-slider-wrap"><input type="range" id="sl-churn-pp" min="1" max="25" step="1" value="4" class="blue"></div><div class="input-val" id="lv-churn-pp">4 pp</div></div>
+    <!-- hidden: pre-filled defaults still feed the calc -->
+    <input type="hidden" id="sl-absence-save" value="15">
+    <input type="hidden" id="sl-absence-pct" value="8">
+    <input type="hidden" id="sl-ret-staff" value="40000">
+    <input type="hidden" id="sl-ret-ai-pct" value="30">
   </div>
 </div>
 
@@ -848,10 +865,18 @@ function renderChart(items){
   container.innerHTML=html;
 }
 
+function toggleAdv(key){
+  var body=$id('adv-body-'+key), arr=$id('adv-arr-'+key);
+  if(!body)return;
+  var open=body.classList.toggle('open');
+  if(arr){arr.classList.toggle('open',open);}
+}
+
 // Expose to global scope for inline HTML handlers
 window.toggleAddon = toggleAddon;
 window.toggleCard  = toggleCard;
 window.rampChange  = rampChange;
+window.toggleAdv   = toggleAdv;
 
 // Init
 wireSliders();
