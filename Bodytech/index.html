@@ -66,7 +66,7 @@ header{
 
 /* CONTROL STRIP */
 .control-strip{
-  display:grid;grid-template-columns:auto 1fr;gap:14px;margin-bottom:28px;
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;
 }
 .ctrl-box{
   background:var(--white);border:1px solid var(--border);border-radius:var(--radius);
@@ -80,12 +80,20 @@ header{
   border:1.5px solid var(--border);background:#F9FAFB;color:var(--muted);transition:all .15s;user-select:none;}
 .pill.cur-active{background:var(--black);color:white;border-color:var(--black);}
 
-/* Global assumption list */
-.assump-list{display:flex;flex-direction:column;gap:5px;}
-.assump-item{display:flex;align-items:baseline;gap:6px;}
-.assump-item-label{font-size:11px;color:var(--muted);line-height:1;}
-.assump-item-label::before{content:'·';margin-right:4px;color:var(--orange);font-size:13px;}
-.assump-item-val{font-size:12.5px;font-weight:800;color:var(--black);}
+/* Business Parameters sliders (top section, parallel to ramp) */
+.bp-rows{display:flex;flex-direction:column;gap:8px;}
+.bp-row{display:flex;align-items:center;gap:10px;}
+.bp-lbl{font-size:11px;font-weight:600;color:var(--text-mid);width:88px;flex-shrink:0;}
+.bp-sl-wrap{flex:1;}
+.bp-val{font-size:13px;font-weight:800;color:var(--black);width:64px;text-align:right;flex-shrink:0;}
+input[type="range"].bp-sl{
+  width:100%;height:4px;cursor:pointer;appearance:none;-webkit-appearance:none;
+  background:#E5E7EB;border-radius:2px;outline:none;display:block;
+}
+input[type="range"].bp-sl::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:14px;height:14px;
+  border-radius:50%;background:var(--orange);cursor:pointer;box-shadow:0 1px 4px rgba(255,102,0,0.4);
+}
 
 /* Ramp */
 .ramp-rows{display:flex;flex-direction:column;gap:8px;}
@@ -302,23 +310,26 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-t
   <div class="ctrl-box">
     <div class="ctrl-group">
       <span class="ctrl-label">Business Assumptions</span>
-      <div class="assump-list">
-        <div class="assump-item">
-          <span class="assump-item-label">Members</span>
-          <span class="assump-item-val" id="chip-members">600K</span>
+      <div class="bp-rows">
+        <div class="bp-row">
+          <span class="bp-lbl">Members</span>
+          <div class="bp-sl-wrap"><input type="range" class="bp-sl" id="sl-g-members" min="100000" max="1500000" step="10000" value="600000"></div>
+          <span class="bp-val" id="lv-g-members">600,000</span>
         </div>
-        <div class="assump-item">
-          <span class="assump-item-label">Sedes</span>
-          <span class="assump-item-val" id="chip-sedes">82</span>
+        <div class="bp-row">
+          <span class="bp-lbl">Sedes</span>
+          <div class="bp-sl-wrap"><input type="range" class="bp-sl" id="sl-g-sedes" min="20" max="200" step="1" value="82"></div>
+          <span class="bp-val" id="lv-g-sedes">82</span>
         </div>
-        <div class="assump-item">
-          <span class="assump-item-label">Annual Revenue</span>
-          <span class="assump-item-val" id="chip-rev">$216M</span>
+        <div class="bp-row">
+          <span class="bp-lbl">COP / USD</span>
+          <div class="bp-sl-wrap"><input type="range" class="bp-sl" id="sl-g-cop" min="3000" max="6000" step="100" value="4200"></div>
+          <span class="bp-val" id="lv-g-cop">4,200</span>
         </div>
-        <div class="assump-item">
-          <span class="assump-item-label">COP Rate</span>
-          <span class="assump-item-val" id="chip-cop">4,200</span>
-        </div>
+        <!-- hidden: still feed updateChips & internal calcs -->
+        <input type="hidden" id="sl-g-fee" value="30">
+        <input type="hidden" id="sl-g-revenue" value="216000000">
+        <input type="hidden" id="sl-g-classes" value="2000000">
       </div>
     </div>
   </div>
@@ -425,27 +436,6 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-t
 <!-- ═══ ADD-ON MODULES ═══ -->
 <div class="section-header">Add-On Modules</div>
 <div class="addon-list">
-
-  <!-- Global Business Assumptions -->
-  <div class="mod-card" id="mod-global">
-    <div class="mod-header">
-      <label class="tog" onclick="event.stopPropagation()"><input type="checkbox" id="tog-global" onchange="toggleAddon('global')"><span class="tog-slider"></span></label>
-      <div class="mod-header-info">
-        <span class="mod-title">Business Assumptions</span>
-        <span class="mod-subtitle">Override default network parameters: member count, sedes &amp; COP/USD rate</span>
-      </div>
-      <span class="mod-val hidden" id="mv-global">—</span>
-    </div>
-    <div class="mod-body">
-      <div class="input-row"><div class="input-info"><div class="input-name">Total active members</div><div class="input-desc">Paid members across all brands</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-members" min="100000" max="1500000" step="10000" value="600000"></div><div class="input-val" id="lv-g-members">600,000</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">Number of sedes</div><div class="input-desc">Active club locations across Colombia</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-sedes" min="20" max="200" step="1" value="82"></div><div class="input-val" id="lv-g-sedes">82</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">COP / USD exchange rate</div><div class="input-desc">Used for all COP display outputs</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-cop" min="3000" max="6000" step="100" value="4200" class="blue"></div><div class="input-val" id="lv-g-cop">4,200</div></div>
-      <!-- hidden: still feed updateChips & calc -->
-      <input type="hidden" id="sl-g-fee" value="30">
-      <input type="hidden" id="sl-g-revenue" value="216000000">
-      <input type="hidden" id="sl-g-classes" value="2000000">
-    </div>
-  </div>
 
   <!-- Class Reservations -->
   <div class="mod-card" id="mod-class">
@@ -579,7 +569,7 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-t
 (function(){
 
 var CUR='COP', COP_RATE=4200, SCENARIO=1.0;
-var ACTIVE={global:false,class:false,coach:false,nutri:false};
+var ACTIVE={global:true,class:false,coach:false,nutri:false};  /* global always on – sliders live at top */
 
 function $id(id){return document.getElementById(id);}
 function setTxt(id,val){var el=$id(id);if(el)el.textContent=val;}
