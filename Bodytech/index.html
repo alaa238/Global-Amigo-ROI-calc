@@ -823,6 +823,12 @@ function renderChart(items){
   container.innerHTML=html;
 }
 
+// Expose to global scope for inline HTML handlers
+window.toggleAddon = toggleAddon;
+window.toggleCard  = toggleCard;
+window.setCurrency = setCurrency;
+window.rampChange  = rampChange;
+
 // Init
 wireSliders();
 setTxt('rv-ramp3',g('sl-ramp3')+'%');
