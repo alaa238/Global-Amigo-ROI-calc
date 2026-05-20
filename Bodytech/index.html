@@ -122,6 +122,8 @@ input[type="range"].ramp-sl::-webkit-slider-thumb{
 }
 .bp-stat-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:var(--orange-dark);}
 .bp-stat-val{font-size:18px;font-weight:800;color:var(--orange-dark);letter-spacing:-0.3px;}
+.bp-formula{font-size:10px;color:var(--muted);margin-top:6px;padding:0 2px;font-family:'SF Mono',Menlo,Monaco,Consolas,monospace;}
+.bp-formula strong{color:var(--text-mid);font-weight:700;}
 
 /* ADVANCED TOGGLE */
 .adv-toggle{
@@ -337,6 +339,7 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-t
           <span class="bp-stat-lbl">Annual Revenue</span>
           <span class="bp-stat-val" id="bp-implied-rev">—</span>
         </div>
+        <div class="bp-formula" id="bp-formula">—</div>
         <!-- hidden: technical params still feed updateChips & internal calcs -->
         <input type="hidden" id="sl-g-cop" value="4200">
         <input type="hidden" id="sl-g-fee" value="30">
@@ -661,6 +664,12 @@ function updateChips(){
   var fee=g('sl-g-fee')||30;
   var impliedUSD=mem*fee*12;
   setTxt('bp-implied-rev', fmt(impliedUSD,true));
+  /* formula breakdown — kept in sync with sliders */
+  var memDisp = mem>=1e6?(mem/1e6).toFixed(1)+'M':Math.round(mem/1000)+'K';
+  var formulaEl = $id('bp-formula');
+  if(formulaEl){
+    formulaEl.innerHTML = '<strong>'+memDisp+'</strong> members &times; <strong>$'+fee+'</strong>/mo &times; <strong>12</strong> &times; <strong>'+fmtNum(cop)+'</strong> COP/USD';
+  }
 }
 
 function wireSliders(){
