@@ -179,13 +179,32 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--orange);}
 .mod-card.is-active .mod-body{display:block;}
 
 /* COST CARD */
-.cost-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #F7F8F9;}
+.cost-row{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid #F7F8F9;}
 .cost-row:last-child{border-bottom:none;}
 .cost-info{flex:1;}
 .cost-name{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:1px;}
 .cost-desc{font-size:10.5px;color:var(--muted);line-height:1.35;}
-.cost-slider-wrap{width:140px;flex-shrink:0;}
-.cost-val{font-size:12px;font-weight:700;color:var(--text-mid);min-width:72px;text-align:right;}
+/* Number input group for cost fields */
+.cost-num-group{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.cost-num-field{
+  display:flex;align-items:center;
+  background:#F8F9FA;border:1.5px solid var(--border);
+  border-radius:8px;padding:6px 10px 6px 12px;gap:3px;
+  transition:border-color .15s,background .15s,box-shadow .15s;
+}
+.cost-num-field:focus-within{
+  border-color:var(--orange);background:#fff;
+  box-shadow:0 0 0 3px rgba(255,102,0,0.10);
+}
+.cost-num-pre{font-size:11.5px;font-weight:700;color:var(--muted);white-space:nowrap;user-select:none;}
+.cost-num-inp{
+  border:none;background:transparent;font-size:14px;font-weight:800;color:var(--black);
+  width:96px;outline:none;text-align:right;font-family:inherit;
+}
+.cost-num-inp::-webkit-inner-spin-button,.cost-num-inp::-webkit-outer-spin-button{opacity:1;}
+.cost-num-suf{font-size:10.5px;font-weight:600;color:var(--muted);white-space:nowrap;margin-left:2px;}
+.cost-num-ann{font-size:10px;color:var(--muted);text-align:right;min-height:14px;}
+.cost-num-ann span{font-weight:700;color:var(--text-mid);}
 .cost-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;padding-top:12px;border-top:2px solid var(--border);}
 .cost-total-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);}
 .cost-total-val{font-size:18px;font-weight:800;color:var(--black);}
@@ -494,18 +513,36 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-t
   <div class="card-body" id="body-cost">
     <div class="cost-row">
       <div class="cost-info"><div class="cost-name">Monthly platform fee <span style="font-weight:400;color:var(--muted)">(negotiable)</span></div><div class="cost-desc">Confirm final pricing with Saad</div></div>
-      <div class="cost-slider-wrap"><input type="range" id="sl-plat" min="0" max="100000" step="1000" value="20000" class="muted"></div>
-      <div class="cost-val" id="lv-plat">—</div>
+      <div class="cost-num-group">
+        <div class="cost-num-field">
+          <span class="cost-num-pre">COP $</span>
+          <input type="number" id="sl-plat" value="84000000" min="0" max="840000000" step="5000000" class="cost-num-inp" oninput="recalc()">
+          <span class="cost-num-suf">/mo</span>
+        </div>
+        <div class="cost-num-ann">Annual: <span id="lv-plat">—</span></div>
+      </div>
     </div>
     <div class="cost-row">
       <div class="cost-info"><div class="cost-name">One-time setup fee</div><div class="cost-desc">Integration, onboarding &amp; initial training</div></div>
-      <div class="cost-slider-wrap"><input type="range" id="sl-setup" min="0" max="200000" step="5000" value="0" class="muted"></div>
-      <div class="cost-val" id="lv-setup">$0</div>
+      <div class="cost-num-group">
+        <div class="cost-num-field">
+          <span class="cost-num-pre">COP $</span>
+          <input type="number" id="sl-setup" value="0" min="0" max="4200000000" step="10000000" class="cost-num-inp" oninput="recalc()">
+          <span class="cost-num-suf">one-time</span>
+        </div>
+        <div class="cost-num-ann" id="lv-setup">&nbsp;</div>
+      </div>
     </div>
     <div class="cost-row">
       <div class="cost-info"><div class="cost-name">Ongoing AI Agent usage fee</div><div class="cost-desc">Monthly usage charges for AI agent message volume</div></div>
-      <div class="cost-slider-wrap"><input type="range" id="sl-usage" min="0" max="50000" step="500" value="2000" class="muted"></div>
-      <div class="cost-val" id="lv-usage">—</div>
+      <div class="cost-num-group">
+        <div class="cost-num-field">
+          <span class="cost-num-pre">COP $</span>
+          <input type="number" id="sl-usage" value="8400000" min="0" max="210000000" step="500000" class="cost-num-inp" oninput="recalc()">
+          <span class="cost-num-suf">/mo</span>
+        </div>
+        <div class="cost-num-ann">Annual: <span id="lv-usage">—</span></div>
+      </div>
     </div>
     <div class="cost-total-row">
       <span class="cost-total-label">Total Annual Investment</span>
@@ -555,6 +592,13 @@ function fmt(n,compact){
   }
 }
 function fmtCost(v){return fmt(v);}
+function fmtCOPraw(v){
+  /* formats a value already in COP (no COP_RATE multiplication) */
+  if(Math.abs(v)>=1e9) return 'COP $'+(v/1e9).toFixed(2)+'B';
+  if(Math.abs(v)>=1e6) return 'COP $'+(v/1e6).toFixed(1)+'M';
+  if(Math.abs(v)>=1e3) return 'COP $'+(v/1e3).toFixed(0)+'K';
+  return 'COP $'+Math.round(v).toLocaleString('en-US');
+}
 
 function rampFactor(){return (3*g('sl-ramp3')+3*g('sl-ramp6')+6*g('sl-ramp12'))/1200;}
 function rampChange(){
@@ -728,7 +772,8 @@ function recalc(){
   var total_sav=uc1_sav+uc2_sav+uc3_sav+cls_sav;
   var total_benefit=total_rev+total_sav;
 
-  var plat_ann=g('sl-plat')*12, setup=g('sl-setup'), usage_ann=g('sl-usage')*12;
+  /* cost inputs now store COP values — convert back to USD for internal maths */
+  var plat_ann=(g('sl-plat')/COP_RATE)*12, setup=g('sl-setup')/COP_RATE, usage_ann=(g('sl-usage')/COP_RATE)*12;
   var total_cost=plat_ann+setup+usage_ann;
   var net_benefit=total_benefit-total_cost;
   var roi_mult=total_cost>0?net_benefit/total_cost:0;
@@ -743,10 +788,10 @@ function recalc(){
   var netEl=$id('kpi-net');
   if(netEl){netEl.textContent=fmt(net_benefit,true);netEl.style.color=net_benefit>=0?'var(--black)':'var(--neg)';}
 
-  // Cost card
-  setTxt('lv-plat',fmtCost(g('sl-plat'))+'/mo');
-  var su=g('sl-setup');setTxt('lv-setup',su===0?'$0':fmtCost(su));
-  setTxt('lv-usage',fmtCost(g('sl-usage'))+'/mo');
+  // Cost card — inputs are in COP, lv-* show annual totals
+  setTxt('lv-plat',fmtCOPraw(g('sl-plat')*12)+'/yr');
+  var su=g('sl-setup');setTxt('lv-setup',su===0?'':fmtCOPraw(su)+' total');
+  setTxt('lv-usage',fmtCOPraw(g('sl-usage')*12)+'/yr');
   setTxt('kpi-cost-card',fmt(total_cost,true)+' /yr');
   setTxt('cost-total-val',fmt(total_cost,true));
 
