@@ -88,20 +88,21 @@ header{
 .assump-item-val{font-size:12.5px;font-weight:800;color:var(--black);}
 
 /* Ramp */
-.ramp-inline{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
-.ramp-item{display:flex;align-items:center;gap:6px;}
-.ramp-lbl{font-size:11px;color:var(--text-mid);white-space:nowrap;}
-.ramp-v{font-size:11.5px;font-weight:700;color:var(--orange);min-width:30px;}
+.ramp-rows{display:flex;flex-direction:column;gap:8px;}
+.ramp-row{display:flex;align-items:center;gap:10px;}
+.ramp-mo-lbl{font-size:11px;font-weight:600;color:var(--text-mid);width:34px;flex-shrink:0;}
+.ramp-sl-wrap{flex:1;}
+.ramp-pct{font-size:13px;font-weight:800;color:var(--orange);width:38px;text-align:right;flex-shrink:0;}
 input[type="range"].ramp-sl{
-  width:80px;height:4px;cursor:pointer;appearance:none;-webkit-appearance:none;
-  background:#E5E7EB;border-radius:2px;outline:none;
+  width:100%;height:4px;cursor:pointer;appearance:none;-webkit-appearance:none;
+  background:#E5E7EB;border-radius:2px;outline:none;display:block;
 }
 input[type="range"].ramp-sl::-webkit-slider-thumb{
   -webkit-appearance:none;appearance:none;width:14px;height:14px;
   border-radius:50%;background:var(--orange);cursor:pointer;box-shadow:0 1px 4px rgba(255,102,0,0.4);
 }
-.ramp-yr1-line{font-size:10.5px;color:var(--muted);}
-.ramp-yr1-line span{font-weight:700;color:var(--text-mid);}
+.ramp-avg-line{font-size:10.5px;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.ramp-avg-line span{font-size:12px;font-weight:800;color:var(--text-mid);}
 
 /* ADVANCED TOGGLE */
 .adv-toggle{
@@ -163,31 +164,28 @@ input[type="range"].blue::-webkit-slider-thumb{background:var(--orange);}
 input[type="range"].gold::-webkit-slider-thumb{background:var(--orange);}
 input[type="range"].muted::-webkit-slider-thumb{background:var(--orange);}
 
-/* ── ADD-ON MODULES – 2-column module grid ── */
-.addon-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+/* ── ADD-ON MODULES – full-width stacked cards ── */
+.addon-list{display:flex;flex-direction:column;gap:12px;margin-bottom:14px;}
 .mod-card{
   background:var(--white);border:1.5px solid var(--border);
   border-radius:var(--radius);overflow:hidden;
   transition:border-color .25s,box-shadow .25s;
 }
-.mod-card.is-active{
-  border-color:var(--orange);
-  box-shadow:0 0 0 3px rgba(255,102,0,0.09);
-}
-.mod-card-top{display:flex;align-items:flex-start;gap:14px;padding:18px;}
-.mod-info{flex:1;}
-.mod-name{font-size:13.5px;font-weight:700;color:var(--black);}
-.mod-desc{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.45;}
-.mod-val{font-size:12px;font-weight:800;color:var(--orange);margin-top:5px;}
+.mod-card.is-active{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,102,0,0.09);}
+.mod-header{display:flex;align-items:center;gap:16px;padding:16px 20px;}
+.mod-title{font-size:13.5px;font-weight:700;color:var(--black);display:block;}
+.mod-subtitle{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4;display:block;}
+.mod-header-info{flex:1;}
+.mod-val{font-size:13px;font-weight:800;color:var(--orange);white-space:nowrap;}
 .mod-val.hidden{visibility:hidden;}
-/* toggle in mod card */
+/* toggle */
 .tog{position:relative;display:inline-block;width:40px;height:22px;flex-shrink:0;}
 .tog input{opacity:0;width:0;height:0;}
 .tog-slider{position:absolute;cursor:pointer;inset:0;background:#CBD5E1;border-radius:22px;transition:.25s;}
 .tog-slider::before{position:absolute;content:"";height:16px;width:16px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.25s;}
 .tog input:checked+.tog-slider{background:var(--orange);}
 .tog input:checked+.tog-slider::before{transform:translateX(18px);}
-.mod-body{display:none;border-top:1px solid var(--border);padding:16px 18px;}
+.mod-body{display:none;border-top:1px solid var(--border);padding:16px 20px;}
 .mod-card.is-active .mod-body{display:block;}
 
 /* COST CARD */
@@ -252,7 +250,7 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-t
   .hero{padding:36px 20px 60px;}
   .main{padding:0 16px 80px;}
   .kpi-strip{grid-template-columns:1fr 1fr;}
-  .addon-grid{grid-template-columns:1fr;}
+  .addon-list{gap:8px;}
   .input-slider-wrap,.cost-slider-wrap{width:100px;}
   .bar-name{width:110px;font-size:10px;}
 }
@@ -328,23 +326,23 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-t
   <div class="ctrl-box">
     <div class="ctrl-group">
       <span class="ctrl-label">Adoption Ramp</span>
-      <div class="ramp-inline">
-        <div class="ramp-item">
-          <span class="ramp-lbl">Mo 3</span>
-          <input type="range" class="ramp-sl" id="sl-ramp3" min="0" max="100" step="5" value="25" oninput="rampChange()">
-          <span class="ramp-v" id="rv-ramp3">25%</span>
+      <div class="ramp-rows">
+        <div class="ramp-row">
+          <span class="ramp-mo-lbl">Mo 3</span>
+          <div class="ramp-sl-wrap"><input type="range" class="ramp-sl" id="sl-ramp3" min="0" max="100" step="5" value="25" oninput="rampChange()"></div>
+          <span class="ramp-pct" id="rv-ramp3">25%</span>
         </div>
-        <div class="ramp-item">
-          <span class="ramp-lbl">Mo 6</span>
-          <input type="range" class="ramp-sl" id="sl-ramp6" min="0" max="100" step="5" value="55" oninput="rampChange()">
-          <span class="ramp-v" id="rv-ramp6">55%</span>
+        <div class="ramp-row">
+          <span class="ramp-mo-lbl">Mo 6</span>
+          <div class="ramp-sl-wrap"><input type="range" class="ramp-sl" id="sl-ramp6" min="0" max="100" step="5" value="55" oninput="rampChange()"></div>
+          <span class="ramp-pct" id="rv-ramp6">55%</span>
         </div>
-        <div class="ramp-item">
-          <span class="ramp-lbl">Mo 12</span>
-          <input type="range" class="ramp-sl" id="sl-ramp12" min="0" max="100" step="5" value="80" oninput="rampChange()">
-          <span class="ramp-v" id="rv-ramp12">80%</span>
+        <div class="ramp-row">
+          <span class="ramp-mo-lbl">Mo 12</span>
+          <div class="ramp-sl-wrap"><input type="range" class="ramp-sl" id="sl-ramp12" min="0" max="100" step="5" value="80" oninput="rampChange()"></div>
+          <span class="ramp-pct" id="rv-ramp12">80%</span>
         </div>
-        <span class="ramp-yr1-line">Yr 1 avg: <span id="ramp-yr1-val">—</span></span>
+        <div class="ramp-avg-line">Year 1 average adoption <span id="ramp-yr1-val">—</span></div>
       </div>
     </div>
   </div>
@@ -426,95 +424,99 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-t
 
 <!-- ═══ ADD-ON MODULES ═══ -->
 <div class="section-header">Add-On Modules</div>
-<div class="addon-grid">
+<div class="addon-list">
 
   <!-- Global Business Assumptions -->
   <div class="mod-card" id="mod-global">
-    <div class="mod-card-top">
-      <div class="mod-info">
-        <div class="mod-name">Business Assumptions</div>
-        <div class="mod-desc">Adjust Bodytech network parameters: member count, sedes, revenue, COP/USD rate.</div>
-        <div class="mod-val hidden" id="mv-global">—</div>
-      </div>
+    <div class="mod-header">
       <label class="tog" onclick="event.stopPropagation()"><input type="checkbox" id="tog-global" onchange="toggleAddon('global')"><span class="tog-slider"></span></label>
+      <div class="mod-header-info">
+        <span class="mod-title">Business Assumptions</span>
+        <span class="mod-subtitle">Override default network parameters: member count, sedes &amp; COP/USD rate</span>
+      </div>
+      <span class="mod-val hidden" id="mv-global">—</span>
     </div>
     <div class="mod-body">
       <div class="input-row"><div class="input-info"><div class="input-name">Total active members</div><div class="input-desc">Paid members across all brands</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-members" min="100000" max="1500000" step="10000" value="600000"></div><div class="input-val" id="lv-g-members">600,000</div></div>
       <div class="input-row"><div class="input-info"><div class="input-name">Number of sedes</div><div class="input-desc">Active club locations across Colombia</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-sedes" min="20" max="200" step="1" value="82"></div><div class="input-val" id="lv-g-sedes">82</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">Blended monthly fee (USD)</div><div class="input-desc">Average across all brands and tiers</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-fee" min="10" max="100" step="1" value="30" class="blue"></div><div class="input-val" id="lv-g-fee">$30</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">COP / USD exchange rate</div><div class="input-desc">Used for COP display across all outputs</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-cop" min="3000" max="6000" step="100" value="4200" class="blue"></div><div class="input-val" id="lv-g-cop">4,200</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">Annual revenue (USD)</div><div class="input-desc">Approx. total gym revenue (members × fee × 12)</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-revenue" min="50000000" max="500000000" step="5000000" value="216000000" class="gold"></div><div class="input-val" id="lv-g-revenue">$216M</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">Monthly class reservations</div><div class="input-desc">Total class bookings/mo network-wide</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-classes" min="500000" max="10000000" step="100000" value="2000000"></div><div class="input-val" id="lv-g-classes">2,000,000</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">COP / USD exchange rate</div><div class="input-desc">Used for all COP display outputs</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-cop" min="3000" max="6000" step="100" value="4200" class="blue"></div><div class="input-val" id="lv-g-cop">4,200</div></div>
+      <!-- hidden: still feed updateChips & calc -->
+      <input type="hidden" id="sl-g-fee" value="30">
+      <input type="hidden" id="sl-g-revenue" value="216000000">
+      <input type="hidden" id="sl-g-classes" value="2000000">
     </div>
   </div>
 
   <!-- Class Reservations -->
   <div class="mod-card" id="mod-class">
-    <div class="mod-card-top">
-      <div class="mod-info">
-        <div class="mod-name">Class Reservations &amp; Ops</div>
-        <div class="mod-desc">Reduce no-shows, recover premium slots &amp; deflect front-desk queries with AI.</div>
-        <div class="mod-val hidden" id="mv-class">—</div>
-      </div>
+    <div class="mod-header">
       <label class="tog" onclick="event.stopPropagation()"><input type="checkbox" id="tog-class" onchange="toggleAddon('class')"><span class="tog-slider"></span></label>
+      <div class="mod-header-info">
+        <span class="mod-title">Class Reservations &amp; Ops</span>
+        <span class="mod-subtitle">Reduce no-shows, recover premium slots &amp; deflect front-desk queries with AI</span>
+      </div>
+      <span class="mod-val hidden" id="mv-class">—</span>
     </div>
     <div class="mod-body">
       <div class="input-row"><div class="input-info"><div class="input-name">Monthly class reservations</div><div class="input-desc">Total booked class slots across all sedes</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-res" min="100000" max="10000000" step="100000" value="500000"></div><div class="input-val" id="lv-cls-res">500,000</div></div>
       <div class="input-row"><div class="input-info"><div class="input-name">Current class no-show rate</div><div class="input-desc">% of booked slots where member doesn't show</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-ns-curr" min="0" max="60" step="1" value="20"></div><div class="input-val" id="lv-cls-ns-curr">20%</div></div>
       <div class="input-row"><div class="input-info"><div class="input-name">AI-assisted no-show rate</div><div class="input-desc">AI reminders + waitlist backfill reduce this significantly</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-ns-ai" min="0" max="50" step="1" value="8"></div><div class="input-val" id="lv-cls-ns-ai">8%</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">Revenue per recovered slot (USD)</div><div class="input-desc">Value of a filled slot (premium class / PT session)</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-slot-rev" min="1" max="30" step="1" value="3" class="blue"></div><div class="input-val" id="lv-cls-slot-rev">$3</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">Monthly inbound member queries</div><div class="input-desc">WhatsApp + phone inquiries about schedules, policies, sedes</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-queries" min="50000" max="2000000" step="50000" value="100000"></div><div class="input-val" id="lv-cls-queries">100,000</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">% AI deflects end-to-end</div><div class="input-desc">Queries resolved without staff involvement</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-deflect" min="0" max="100" step="5" value="40"></div><div class="input-val" id="lv-cls-deflect">40%</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">Cost per deflected interaction (USD)</div><div class="input-desc">Staff cost avoided per query handled by AI</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-defl-cost" min="0.10" max="5" step="0.10" value="0.50" class="gold"></div><div class="input-val" id="lv-cls-defl-cost">$0.50</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">Monthly front-desk staff cost (USD)</div><div class="input-desc">Loaded cost of receptionist / ops teams across sedes</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-staff" min="10000" max="500000" step="5000" value="30000" class="gold"></div><div class="input-val" id="lv-cls-staff">$30,000</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">% front-desk work AI handles</div><div class="input-desc">Bookings, FAQ, concierge — addressable by AI</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-staff-ai" min="0" max="100" step="5" value="30" class="gold"></div><div class="input-val" id="lv-cls-staff-ai">30%</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Revenue per recovered slot (USD)</div><div class="input-desc">Value of a filled premium class or PT session slot</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-slot-rev" min="1" max="30" step="1" value="3" class="blue"></div><div class="input-val" id="lv-cls-slot-rev">$3</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">% of queries AI deflects</div><div class="input-desc">Member WhatsApp/phone queries resolved without staff</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-deflect" min="0" max="100" step="5" value="40"></div><div class="input-val" id="lv-cls-deflect">40%</div></div>
+      <!-- hidden defaults -->
+      <input type="hidden" id="sl-cls-queries" value="100000">
+      <input type="hidden" id="sl-cls-defl-cost" value="0.5">
+      <input type="hidden" id="sl-cls-staff" value="30000">
+      <input type="hidden" id="sl-cls-staff-ai" value="30">
     </div>
   </div>
 
   <!-- Personalized Coaching -->
   <div class="mod-card" id="mod-coach">
-    <div class="mod-card-top">
-      <div class="mod-info">
-        <div class="mod-name">Personalized Coaching</div>
-        <div class="mod-desc">AI coaching reduces churn, drives premium upsell and specialist referral revenue.</div>
-        <div class="mod-val hidden" id="mv-coach">—</div>
-      </div>
+    <div class="mod-header">
       <label class="tog" onclick="event.stopPropagation()"><input type="checkbox" id="tog-coach" onchange="toggleAddon('coach')"><span class="tog-slider"></span></label>
+      <div class="mod-header-info">
+        <span class="mod-title">Personalized Coaching</span>
+        <span class="mod-subtitle">AI coaching reduces churn and drives premium upsell revenue</span>
+      </div>
+      <span class="mod-val hidden" id="mv-coach">—</span>
     </div>
     <div class="mod-body">
-      <div class="input-row"><div class="input-info"><div class="input-name">% of members on AI coaching at Yr-1 end</div><div class="input-desc">% of total member base using AI coach by Month 12</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-pct" min="1" max="80" step="1" value="15"></div><div class="input-val" id="lv-cch-pct">15%</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">Total member base</div><div class="input-desc">Active paid members for coaching uplift calculation</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-members" min="50000" max="1000000" step="10000" value="150000"></div><div class="input-val" id="lv-cch-members">150,000</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">% of members using AI coaching (Yr 1)</div><div class="input-desc">% of total member base on AI coach by Month 12</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-pct" min="1" max="80" step="1" value="15"></div><div class="input-val" id="lv-cch-pct">15%</div></div>
       <div class="input-row"><div class="input-info"><div class="input-name">Churn reduction for coached members (pp)</div><div class="input-desc">Members seeing results churn measurably less</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-churn" min="1" max="20" step="1" value="5" class="blue"></div><div class="input-val" id="lv-cch-churn">5 pp</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">Annual membership fee (USD)</div><div class="input-desc">Value of each retained coached member</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-fee" min="100" max="1000" step="10" value="240" class="blue"></div><div class="input-val" id="lv-cch-fee">$240</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">% coached members upgrading to premium</div><div class="input-desc">PT sessions, advanced plans, wearable integration tier</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-upsell-pct" min="0" max="30" step="1" value="3" class="blue"></div><div class="input-val" id="lv-cch-upsell-pct">3%</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">% coached upgrading to premium</div><div class="input-desc">PT sessions, advanced plans, wearable integration</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-upsell-pct" min="0" max="30" step="1" value="3" class="blue"></div><div class="input-val" id="lv-cch-upsell-pct">3%</div></div>
       <div class="input-row"><div class="input-info"><div class="input-name">Monthly premium add-on value (USD)</div><div class="input-desc">Incremental monthly revenue per upgraded member</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-upsell-val" min="5" max="100" step="5" value="10" class="blue"></div><div class="input-val" id="lv-cch-upsell-val">$10</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">% coached members hitting plateau signal</div><div class="input-desc">AI detects stagnation and suggests specialist referral</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-plateau-pct" min="0" max="50" step="5" value="10" class="gold"></div><div class="input-val" id="lv-cch-plateau-pct">10%</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">% who convert to specialist session</div><div class="input-desc">Physio, deportólogo, nutritionist referral conversion</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-plateau-conv" min="0" max="60" step="5" value="20" class="gold"></div><div class="input-val" id="lv-cch-plateau-conv">20%</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">Specialist session fee (USD)</div><div class="input-desc">Revenue from referred specialist visits</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-session-fee" min="10" max="150" step="5" value="40" class="gold"></div><div class="input-val" id="lv-cch-session-fee">$40</div></div>
+      <!-- hidden defaults -->
+      <input type="hidden" id="sl-cch-members" value="150000">
+      <input type="hidden" id="sl-cch-fee" value="240">
+      <input type="hidden" id="sl-cch-plateau-pct" value="10">
+      <input type="hidden" id="sl-cch-plateau-conv" value="20">
+      <input type="hidden" id="sl-cch-session-fee" value="40">
     </div>
   </div>
 
   <!-- Nutrition & Cross-sell -->
   <div class="mod-card" id="mod-nutri">
-    <div class="mod-card-top">
-      <div class="mod-info">
-        <div class="mod-name">Nutrition &amp; Cross-sell</div>
-        <div class="mod-desc">Upsell nutrition plans and cross-sell add-on products to eligible members via AI.</div>
-        <div class="mod-val hidden" id="mv-nutri">—</div>
-      </div>
+    <div class="mod-header">
       <label class="tog" onclick="event.stopPropagation()"><input type="checkbox" id="tog-nutri" onchange="toggleAddon('nutri')"><span class="tog-slider"></span></label>
+      <div class="mod-header-info">
+        <span class="mod-title">Nutrition &amp; Cross-sell</span>
+        <span class="mod-subtitle">Upsell nutrition plans and cross-sell add-ons to eligible members via AI</span>
+      </div>
+      <span class="mod-val hidden" id="mv-nutri">—</span>
     </div>
     <div class="mod-body">
-      <div class="input-row"><div class="input-info"><div class="input-name">Eligible members / potential buyers</div><div class="input-desc">Members showing fitness goals or near nutrition desk</div></div><div class="input-slider-wrap"><input type="range" id="sl-nut-eligible" min="10000" max="500000" step="10000" value="100000"></div><div class="input-val" id="lv-nut-eligible">100,000</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">Conversion rate to nutrition add-on</div><div class="input-desc">% of eligible members who purchase a plan after AI nudge</div></div><div class="input-slider-wrap"><input type="range" id="sl-nut-conv" min="0" max="30" step="1" value="3" class="blue"></div><div class="input-val" id="lv-nut-conv">3%</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">Monthly nutrition plan revenue / member (USD)</div><div class="input-desc">Monthly incremental revenue from nutrition plan sale</div></div><div class="input-slider-wrap"><input type="range" id="sl-nut-rev" min="5" max="100" step="5" value="15" class="blue"></div><div class="input-val" id="lv-nut-rev">$15</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">% of eligible members targeted for cross-sell</div><div class="input-desc">Members AI targets with personalised campaigns</div></div><div class="input-slider-wrap"><input type="range" id="sl-xsell-pct" min="0" max="100" step="5" value="20" class="gold"></div><div class="input-val" id="lv-xsell-pct">20%</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">Cross-sell conversion rate</div><div class="input-desc">% of targeted members who purchase an add-on product</div></div><div class="input-slider-wrap"><input type="range" id="sl-xsell-conv" min="0" max="30" step="1" value="5" class="gold"></div><div class="input-val" id="lv-xsell-conv">5%</div></div>
-      <div class="input-row"><div class="input-info"><div class="input-name">Average cross-sell value / mo per member (USD)</div><div class="input-desc">Monthly incremental revenue per converted cross-sell member</div></div><div class="input-slider-wrap"><input type="range" id="sl-xsell-val" min="5" max="100" step="5" value="20" class="blue"></div><div class="input-val" id="lv-xsell-val">$20</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Eligible members</div><div class="input-desc">Members showing fitness goals or near nutrition services</div></div><div class="input-slider-wrap"><input type="range" id="sl-nut-eligible" min="10000" max="500000" step="10000" value="100000"></div><div class="input-val" id="lv-nut-eligible">100,000</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Conversion to nutrition plan</div><div class="input-desc">% of eligible members who purchase after AI nudge</div></div><div class="input-slider-wrap"><input type="range" id="sl-nut-conv" min="0" max="30" step="1" value="3" class="blue"></div><div class="input-val" id="lv-nut-conv">3%</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Monthly plan revenue / member (USD)</div><div class="input-desc">Incremental monthly revenue from each nutrition plan sold</div></div><div class="input-slider-wrap"><input type="range" id="sl-nut-rev" min="5" max="100" step="5" value="15" class="blue"></div><div class="input-val" id="lv-nut-rev">$15</div></div>
+      <!-- hidden defaults -->
+      <input type="hidden" id="sl-xsell-pct" value="20">
+      <input type="hidden" id="sl-xsell-conv" value="5">
+      <input type="hidden" id="sl-xsell-val" value="20">
     </div>
   </div>
 
-</div><!-- /addon-grid -->
+</div><!-- /addon-list -->
 
 <!-- ═══ AMIGO INVESTMENT ═══ -->
 <div class="section-header">Amigo Investment</div>
