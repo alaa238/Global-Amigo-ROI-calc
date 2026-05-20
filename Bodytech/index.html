@@ -3,1005 +3,550 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Bodytech × Amigo — AI Agent ROI Calculator</title>
+<title>Bodytech AI Revenue Agent</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
-/* ── Bodytech Brand Tokens ── */
 :root {
-  --orange:       #FF6600;
-  --orange-dark:  #CC5200;
-  --orange-light: #FFF4EC;
-  --orange-xlight:#FFF9F6;
-  --black:        #111111;
-  --black-mid:    #1F1F1F;
-  --bar1:         #FF6600;
-  --bar2:         #1A5799;
-  --text:         #111827;
-  --text-mid:     #374151;
-  --muted:        #6B7280;
-  --border:       #E2E8F0;
-  --bg:           #F5F5F5;
-  --white:        #FFFFFF;
-  --positive:     #047857;
-  --neg:          #B91C1C;
-  --radius:       12px;
-  --shadow:       0 2px 12px rgba(0,0,0,0.08);
-  --shadow-lg:    0 8px 32px rgba(0,0,0,0.14);
+  --orange:#FF6600; --orange-dark:#CC5200; --orange-light:#FFF4EC;
+  --black:#111111; --text:#111827; --text-mid:#374151; --muted:#6B7280;
+  --border:#E2E8F0; --bg:#F5F5F5; --white:#FFFFFF;
+  --positive:#047857; --neg:#B91C1C;
+  --radius:12px; --shadow:0 2px 12px rgba(0,0,0,0.08); --shadow-lg:0 8px 32px rgba(0,0,0,0.14);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+
+/* HEADER */
+header{
+  background:#fff;padding:0 48px;height:80px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;
+  box-shadow:0 1px 4px rgba(0,0,0,0.06);
+}
+.logo-left{height:78px;width:auto;object-fit:contain;display:block;}
+.logo-right{height:78px;width:auto;object-fit:contain;display:block;}
+
+/* HERO */
+.hero{
+  background:linear-gradient(150deg,#0a0a0a 0%,#1a1a1a 50%,#222 100%);
+  padding:52px 48px 72px;color:white;position:relative;overflow:hidden;
+}
+.hero::after{content:'';position:absolute;right:-80px;top:-80px;width:420px;height:420px;
+  border-radius:50%;background:radial-gradient(circle,rgba(255,102,0,0.14) 0%,transparent 70%);pointer-events:none;}
+.hero::before{content:'';position:absolute;left:40%;bottom:-60px;width:300px;height:300px;
+  border-radius:50%;background:radial-gradient(circle,rgba(255,102,0,0.07) 0%,transparent 70%);pointer-events:none;}
+.hero-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,102,0,0.18);border:1px solid rgba(255,102,0,0.35);
+  color:#ffb380;font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;
+  padding:4px 12px;border-radius:20px;margin-bottom:20px;
+}
+.hero-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--orange);}
+.hero h1{font-size:36px;font-weight:800;line-height:1.2;letter-spacing:-0.7px;max-width:640px;margin-bottom:10px;}
+.hero h1 em{font-style:normal;color:#ff9955;}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.55);max-width:520px;line-height:1.65;}
+
+/* MAIN */
+.main{max-width:920px;margin:0 auto;padding:0 32px 80px;}
+
+/* KPI STRIP */
+.kpi-strip{
+  display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:14px;
+  margin-top:-38px;margin-bottom:40px;position:relative;z-index:10;
+}
+.kpi-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-lg);padding:20px 20px 16px;border-top:3px solid transparent;}
+.kpi-card.primary{border-top-color:var(--orange);}
+.kpi-card.secondary{border-top-color:#1A5799;}
+.kpi-card.tertiary{border-top-color:var(--positive);}
+.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:var(--muted);margin-bottom:6px;}
+.kpi-value{font-size:26px;font-weight:800;color:var(--black);letter-spacing:-0.5px;line-height:1;}
+.kpi-card.primary .kpi-value{font-size:32px;color:var(--orange);}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+
+/* CONTROL STRIP */
+.control-strip{
+  background:var(--white);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px 20px;display:flex;align-items:center;gap:20px;margin-bottom:28px;flex-wrap:wrap;
+}
+.ctrl-group{display:flex;align-items:center;gap:8px;}
+.ctrl-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);white-space:nowrap;}
+.ctrl-divider{width:1px;height:32px;background:var(--border);}
+.pill-group{display:flex;gap:4px;}
+.pill{font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;cursor:pointer;
+  border:1.5px solid var(--border);background:#F9FAFB;color:var(--muted);transition:all .15s;user-select:none;}
+.pill.cur-active{background:var(--black);color:white;border-color:var(--black);}
+
+/* Global assumption chips */
+.assump-chips{display:flex;gap:8px;flex-wrap:wrap;}
+.assump-chip{
+  display:flex;align-items:center;gap:6px;
+  background:#F8F9FA;border:1px solid var(--border);
+  border-radius:8px;padding:6px 12px;
+}
+.assump-chip-label{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);}
+.assump-chip-val{font-size:13px;font-weight:800;color:var(--black);}
+
+/* Ramp */
+.ramp-inline{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.ramp-item{display:flex;align-items:center;gap:6px;}
+.ramp-lbl{font-size:11px;color:var(--text-mid);white-space:nowrap;}
+.ramp-v{font-size:11.5px;font-weight:700;color:var(--orange);min-width:30px;}
+input[type="range"].ramp-sl{
+  width:80px;height:4px;cursor:pointer;appearance:none;-webkit-appearance:none;
+  background:#E5E7EB;border-radius:2px;outline:none;
+}
+input[type="range"].ramp-sl::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:14px;height:14px;
+  border-radius:50%;background:var(--orange);cursor:pointer;box-shadow:0 1px 4px rgba(255,102,0,0.4);
+}
+.ramp-yr1-line{font-size:10.5px;color:var(--muted);}
+.ramp-yr1-line span{font-weight:700;color:var(--text-mid);}
+
+/* SECTION HEADERS */
+.section-header{
+  font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.9px;color:var(--muted);
+  padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:14px;margin-top:32px;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* AGENT CARDS */
+.agent-card{
+  background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);
+  margin-bottom:14px;border-left:4px solid var(--orange);overflow:hidden;transition:box-shadow 0.2s;
+}
+.agent-card:hover{box-shadow:var(--shadow-lg);}
+.agent-card.uc2{border-left-color:#1A5799;}
+.agent-card.uc3{border-left-color:#1A8A5C;}
+.agent-card.cost-card{border-left-color:#374151;}
+.card-header{display:flex;align-items:center;gap:14px;padding:18px 22px 18px 20px;cursor:pointer;user-select:none;}
+.card-header:hover{background:#FAFAFA;}
+.card-arrow{font-size:9px;color:var(--muted);transition:transform 0.2s;flex-shrink:0;margin-right:2px;}
+.card-arrow.open{transform:rotate(90deg);}
+.card-title{font-size:14px;font-weight:700;color:var(--black);flex:1;}
+.card-badge{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:2px 8px;border-radius:4px;}
+.badge-core{background:#FFF4EC;color:var(--orange-dark);}
+.card-value{font-size:15px;font-weight:800;color:var(--orange);letter-spacing:-0.3px;min-width:100px;text-align:right;}
+.agent-card.uc2 .card-value{color:#1A5799;}
+.agent-card.uc3 .card-value{color:#1A8A5C;}
+.card-body{padding:0 22px 22px 20px;}
+.card-body.collapsed{display:none;}
 
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-}
+/* SLIDER ROWS */
+.sub-label{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);
+  margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid #F0F2F5;}
+.sub-label:first-child{margin-top:0;}
+.input-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #F7F8F9;}
+.input-row:last-child{border-bottom:none;}
+.input-info{flex:1;min-width:0;}
+.input-name{font-size:12.5px;font-weight:600;color:var(--text);}
+.input-desc{font-size:10.5px;color:var(--muted);margin-top:1px;line-height:1.4;}
+.input-slider-wrap{width:140px;flex-shrink:0;}
+.input-val{font-size:12px;font-weight:700;color:var(--black);min-width:72px;text-align:right;}
+input[type="range"]{width:100%;height:4px;cursor:pointer;appearance:none;-webkit-appearance:none;background:#E5E7EB;border-radius:2px;outline:none;}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--orange);cursor:pointer;box-shadow:0 1px 5px rgba(255,102,0,0.4);}
+input[type="range"].blue::-webkit-slider-thumb{background:var(--orange);}
+input[type="range"].gold::-webkit-slider-thumb{background:var(--orange);}
+input[type="range"].muted::-webkit-slider-thumb{background:var(--orange);}
 
-/* ── Header ── */
-header {
-  background: #ffffff;
-  padding: 0 48px;
-  height: 72px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+/* ── ADD-ON MODULES – 2-column module grid ── */
+.addon-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.mod-card{
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+  transition:border-color .25s,box-shadow .25s;
 }
-.header-logos { display: flex; align-items: center; gap: 20px; }
-.header-logos img { height: 40px; width: auto; object-fit: contain; display: block; }
-.header-divider { width: 1px; height: 28px; background: var(--border); }
-.header-badge {
-  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
-  color: var(--muted); border: 1px solid var(--border);
-  padding: 3px 10px; border-radius: 20px;
+.mod-card.is-active{
+  border-color:var(--orange);
+  box-shadow:0 0 0 3px rgba(255,102,0,0.09);
 }
+.mod-card-top{display:flex;align-items:flex-start;gap:14px;padding:18px;}
+.mod-icon{
+  width:44px;height:44px;border-radius:10px;
+  background:#F5F5F5;display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;transition:background .25s;
+}
+.mod-card.is-active .mod-icon{background:var(--orange-light);}
+.mod-info{flex:1;}
+.mod-name{font-size:13.5px;font-weight:700;color:var(--black);}
+.mod-desc{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.45;}
+.mod-val{font-size:12px;font-weight:800;color:var(--orange);margin-top:5px;}
+.mod-val.hidden{visibility:hidden;}
+/* toggle in mod card */
+.tog{position:relative;display:inline-block;width:40px;height:22px;flex-shrink:0;}
+.tog input{opacity:0;width:0;height:0;}
+.tog-slider{position:absolute;cursor:pointer;inset:0;background:#CBD5E1;border-radius:22px;transition:.25s;}
+.tog-slider::before{position:absolute;content:"";height:16px;width:16px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.25s;}
+.tog input:checked+.tog-slider{background:var(--orange);}
+.tog input:checked+.tog-slider::before{transform:translateX(18px);}
+.mod-body{display:none;border-top:1px solid var(--border);padding:16px 18px;}
+.mod-card.is-active .mod-body{display:block;}
 
-/* ── Hero ── */
-.hero {
-  background: linear-gradient(150deg, #0a0a0a 0%, #1a1a1a 50%, #222222 100%);
-  padding: 52px 48px 72px;
-  color: white;
-  position: relative;
-  overflow: hidden;
-}
-.hero::after {
-  content: '';
-  position: absolute;
-  right: -80px; top: -80px;
-  width: 420px; height: 420px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,102,0,0.14) 0%, transparent 70%);
-  pointer-events: none;
-}
-.hero::before {
-  content: '';
-  position: absolute;
-  left: 40%; bottom: -60px;
-  width: 300px; height: 300px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,102,0,0.07) 0%, transparent 70%);
-  pointer-events: none;
-}
-.hero-pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(255,102,0,0.18); border: 1px solid rgba(255,102,0,0.35);
-  color: #ffb380; font-size: 11px; font-weight: 600;
-  letter-spacing: 0.8px; text-transform: uppercase;
-  padding: 4px 12px; border-radius: 20px; margin-bottom: 20px;
-}
-.hero-pill::before {
-  content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--orange);
-}
-.hero h1 {
-  font-size: 34px; font-weight: 800; line-height: 1.2;
-  letter-spacing: -0.7px; max-width: 600px; margin-bottom: 10px;
-}
-.hero h1 em { font-style: normal; color: #ff9955; }
-.hero-sub {
-  font-size: 15px; color: rgba(255,255,255,0.55); max-width: 520px;
-  line-height: 1.65; margin-bottom: 0;
-}
+/* COST CARD */
+.cost-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #F7F8F9;}
+.cost-row:last-child{border-bottom:none;}
+.cost-info{flex:1;}
+.cost-name{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:1px;}
+.cost-desc{font-size:10.5px;color:var(--muted);line-height:1.35;}
+.cost-slider-wrap{width:140px;flex-shrink:0;}
+.cost-val{font-size:12px;font-weight:700;color:var(--text-mid);min-width:72px;text-align:right;}
+.cost-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;padding-top:12px;border-top:2px solid var(--border);}
+.cost-total-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);}
+.cost-total-val{font-size:18px;font-weight:800;color:var(--black);}
 
-/* ── Main Container ── */
-.main {
-  max-width: 920px;
-  margin: 0 auto;
-  padding: 0 32px 100px;
-}
+/* CHART */
+.chart-wrap{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:14px;}
+.chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.chart-title{font-size:12px;font-weight:700;color:var(--text);}
+.chart-legend{display:flex;gap:14px;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--muted);}
+.legend-dot{width:10px;height:10px;border-radius:2px;}
+.legend-dot.rev{background:linear-gradient(90deg,#FF6600,#FF8C42);}
+.legend-dot.save{background:linear-gradient(90deg,#1A5799,#2E6BC4);}
+.chart-group-label{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);margin:12px 0 8px;}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.bar-row:last-child{margin-bottom:0;}
+.bar-name{font-size:11.5px;color:var(--text-mid);font-weight:500;width:160px;flex-shrink:0;}
+.bar-track{flex:1;height:22px;background:#F0F2F5;border-radius:7px;overflow:hidden;display:flex;position:relative;}
+.bar-fill{position:absolute;height:100%;}
+.bar-fill.rev{background:linear-gradient(90deg,#FF6600 0%,#FF8C42 100%);left:0;border-radius:7px 0 0 7px;}
+.bar-fill.rev.only{border-radius:7px;}
+.bar-fill.save{background:linear-gradient(90deg,#1A5799 0%,#2E6BC4 100%);border-radius:0 7px 7px 0;}
+.bar-inner-label{position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:9.5px;font-weight:700;color:white;pointer-events:none;white-space:nowrap;}
+.bar-meta{width:100px;flex-shrink:0;text-align:right;}
+.bar-total{font-size:12px;font-weight:700;color:var(--text);}
+.bar-breakdown{font-size:10px;color:var(--orange-dark);}
 
-/* ── KPI Strip ── */
-.kpi-strip {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr 1fr;
-  gap: 14px;
-  margin-top: -38px;
-  margin-bottom: 40px;
-  position: relative;
-  z-index: 10;
-}
-.kpi-card {
-  background: var(--white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
-  padding: 20px 20px 16px;
-  border-top: 3px solid transparent;
-}
-.kpi-card.primary { border-top-color: var(--orange); }
-.kpi-card.secondary { border-top-color: #1A5799; }
-.kpi-card.tertiary { border-top-color: var(--positive); }
-.kpi-label {
-  font-size: 10px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.7px; color: var(--muted); margin-bottom: 6px;
-}
-.kpi-value {
-  font-size: 26px; font-weight: 800; color: var(--black);
-  letter-spacing: -0.5px; line-height: 1;
-}
-.kpi-card.primary .kpi-value {
-  font-size: 32px; color: var(--orange);
-}
-.kpi-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+/* FOOTER */
+footer{text-align:center;padding:24px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);background:var(--white);}
 
-/* ── Control Strip ── */
-.control-strip {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  margin-bottom: 28px;
-  flex-wrap: wrap;
-}
-.ctrl-group { display: flex; align-items: center; gap: 8px; }
-.ctrl-label {
-  font-size: 10.5px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.6px; color: var(--muted); white-space: nowrap;
-}
-.ctrl-divider { width: 1px; height: 32px; background: var(--border); }
-.pill-group { display: flex; gap: 4px; }
-.pill {
-  font-size: 11px; font-weight: 700; padding: 5px 12px;
-  border-radius: 6px; cursor: pointer;
-  border: 1.5px solid var(--border);
-  background: #F9FAFB; color: var(--muted);
-  transition: all 0.15s; user-select: none;
-}
-.pill.active { background: var(--orange); color: white; border-color: var(--orange); }
-.pill.cur-active { background: var(--black); color: white; border-color: var(--black); }
-
-/* Ramp sliders inline */
-.ramp-inline { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.ramp-item { display: flex; align-items: center; gap: 6px; }
-.ramp-lbl { font-size: 11px; color: var(--text-mid); white-space: nowrap; }
-.ramp-v { font-size: 11.5px; font-weight: 700; color: var(--orange); min-width: 30px; }
-input[type="range"].ramp-sl {
-  width: 80px; height: 4px; cursor: pointer; appearance: none; -webkit-appearance: none;
-  background: #E5E7EB; border-radius: 2px; outline: none;
-}
-input[type="range"].ramp-sl::-webkit-slider-thumb {
-  -webkit-appearance: none; appearance: none;
-  width: 14px; height: 14px; border-radius: 50%;
-  background: var(--orange); cursor: pointer;
-  box-shadow: 0 1px 4px rgba(255,102,0,0.4);
-}
-.ramp-yr1-line { font-size: 10.5px; color: var(--muted); }
-.ramp-yr1-line span { font-weight: 700; color: var(--text-mid); }
-
-/* ── Section Headers ── */
-.section-header {
-  font-size: 10.5px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.9px; color: var(--muted);
-  padding-bottom: 10px; border-bottom: 1px solid var(--border);
-  margin-bottom: 14px; margin-top: 32px;
-}
-.section-header:first-of-type { margin-top: 0; }
-
-/* ── Agent Cards ── */
-.agent-card {
-  background: var(--white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  margin-bottom: 14px;
-  border-left: 4px solid var(--orange);
-  overflow: hidden;
-  transition: box-shadow 0.2s;
-}
-.agent-card:hover { box-shadow: var(--shadow-lg); }
-.agent-card.uc2 { border-left-color: #1A5799; }
-.agent-card.uc3 { border-left-color: #1A8A5C; }
-.agent-card.addon { border-left-color: #9B59B6; }
-.agent-card.cost-card { border-left-color: #374151; }
-
-.card-header {
-  display: flex; align-items: center; gap: 14px;
-  padding: 18px 22px 18px 20px; cursor: pointer;
-  user-select: none;
-}
-.card-header:hover { background: #FAFAFA; }
-.card-arrow {
-  font-size: 9px; color: var(--muted);
-  transition: transform 0.2s; flex-shrink: 0;
-  margin-right: 2px;
-}
-.card-arrow.open { transform: rotate(90deg); }
-.card-title { font-size: 14px; font-weight: 700; color: var(--black); flex: 1; }
-.card-badge {
-  font-size: 9.5px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.5px; padding: 2px 8px; border-radius: 4px;
-}
-.badge-core { background: #FFF4EC; color: var(--orange-dark); }
-.badge-addon { background: #F3E8FF; color: #7C3AED; }
-.badge-context { background: #F0F9FF; color: #0369A1; }
-.card-value {
-  font-size: 15px; font-weight: 800; color: var(--orange);
-  letter-spacing: -0.3px; min-width: 100px; text-align: right;
-}
-.agent-card.uc2 .card-value { color: #1A5799; }
-.agent-card.uc3 .card-value { color: #1A8A5C; }
-.agent-card.addon .card-value { color: #7C3AED; }
-
-.card-body { padding: 0 22px 22px 20px; }
-
-/* ── Add-on toggle ── */
-.addon-toggle-row {
-  display: flex; align-items: center; gap: 10px;
-  padding: 12px 0; border-top: 1px solid var(--border);
-  margin-top: 2px;
-}
-.addon-enabled-label {
-  font-size: 12px; font-weight: 600; color: var(--text-mid); flex: 1;
-}
-.tog {
-  position: relative; display: inline-block;
-  width: 36px; height: 20px; flex-shrink: 0;
-}
-.tog input { opacity: 0; width: 0; height: 0; }
-.tog-slider {
-  position: absolute; cursor: pointer; inset: 0;
-  background: #CBD5E1; border-radius: 20px; transition: 0.25s;
-}
-.tog-slider::before {
-  position: absolute; content: ""; height: 14px; width: 14px;
-  left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.25s;
-}
-.tog input:checked + .tog-slider { background: var(--orange); }
-.tog input:checked + .tog-slider::before { transform: translateX(16px); }
-
-/* ── Slider Rows ── */
-.sub-label {
-  font-size: 9.5px; font-weight: 800; text-transform: uppercase;
-  letter-spacing: 1px; color: var(--muted);
-  margin: 18px 0 10px; padding-bottom: 6px;
-  border-bottom: 1px solid #F0F2F5;
-}
-.sub-label:first-child { margin-top: 0; }
-.input-row {
-  display: flex; align-items: center; gap: 12px;
-  padding: 8px 0; border-bottom: 1px solid #F7F8F9;
-}
-.input-row:last-child { border-bottom: none; }
-.input-info { flex: 1; min-width: 0; }
-.input-name { font-size: 12.5px; font-weight: 600; color: var(--text); }
-.input-desc { font-size: 10.5px; color: var(--muted); margin-top: 1px; line-height: 1.4; }
-.input-slider-wrap { width: 140px; flex-shrink: 0; }
-.input-val { font-size: 12px; font-weight: 700; color: var(--black); min-width: 72px; text-align: right; }
-
-/* ── Range Inputs ── */
-input[type="range"] {
-  width: 100%; height: 4px; cursor: pointer;
-  appearance: none; -webkit-appearance: none;
-  background: #E5E7EB; border-radius: 2px; outline: none;
-}
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none; appearance: none;
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--orange); cursor: pointer;
-  box-shadow: 0 1px 5px rgba(255,102,0,0.4);
-}
-input[type="range"].blue::-webkit-slider-thumb { background: var(--orange); }
-input[type="range"].gold::-webkit-slider-thumb { background: var(--orange); }
-input[type="range"].muted::-webkit-slider-thumb { background: var(--orange); }
-
-/* ── Cost Card ── */
-.cost-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #F7F8F9; }
-.cost-row:last-child { border-bottom: none; }
-.cost-info { flex: 1; }
-.cost-name { font-size: 12.5px; font-weight: 600; color: var(--text); margin-bottom: 1px; }
-.cost-desc { font-size: 10.5px; color: var(--muted); line-height: 1.35; }
-.cost-slider-wrap { width: 140px; flex-shrink: 0; }
-.cost-val { font-size: 12px; font-weight: 700; color: var(--text-mid); min-width: 72px; text-align: right; }
-.cost-total-row {
-  display: flex; justify-content: space-between; align-items: baseline;
-  margin-top: 14px; padding-top: 12px; border-top: 2px solid var(--border);
-}
-.cost-total-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); }
-.cost-total-val { font-size: 18px; font-weight: 800; color: var(--black); }
-
-/* ── Chart ── */
-.chart-wrap {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 20px 22px;
-  margin-bottom: 14px;
-}
-.chart-header {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 16px;
-}
-.chart-title { font-size: 12px; font-weight: 700; color: var(--text); }
-.chart-legend { display: flex; gap: 14px; }
-.legend-item { display: flex; align-items: center; gap: 5px; font-size: 10.5px; color: var(--muted); }
-.legend-dot { width: 10px; height: 10px; border-radius: 2px; }
-.legend-dot.rev { background: linear-gradient(90deg, #FF6600, #FF8C42); }
-.legend-dot.save { background: linear-gradient(90deg, #1A5799, #2E6BC4); }
-.chart-group-label {
-  font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
-  color: var(--muted); margin: 12px 0 8px;
-}
-.chart-group-label:first-child { margin-top: 0; }
-.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.bar-row:last-child { margin-bottom: 0; }
-.bar-name { font-size: 11.5px; color: var(--text-mid); font-weight: 500; width: 160px; flex-shrink: 0; }
-.bar-track {
-  flex: 1; height: 22px; background: #F0F2F5;
-  border-radius: 7px; overflow: hidden; display: flex; position: relative;
-}
-.bar-fill { position: absolute; height: 100%; }
-.bar-fill.rev {
-  background: linear-gradient(90deg, #FF6600 0%, #FF8C42 100%);
-  left: 0; border-radius: 7px 0 0 7px;
-}
-.bar-fill.rev.only { border-radius: 7px; }
-.bar-fill.save {
-  background: linear-gradient(90deg, #1A5799 0%, #2E6BC4 100%);
-  border-radius: 0 7px 7px 0;
-}
-.bar-inner-label {
-  position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
-  font-size: 9.5px; font-weight: 700; color: white;
-  pointer-events: none; white-space: nowrap;
-}
-.bar-meta { width: 100px; flex-shrink: 0; text-align: right; }
-.bar-total { font-size: 12px; font-weight: 700; color: var(--text); }
-.bar-breakdown { font-size: 10px; color: var(--orange-dark); }
-
-/* ── NPV Strip ── */
-.npv-strip {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 12px; margin-bottom: 14px;
-}
-.npv-card {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 16px 18px;
-}
-.npv-label {
-  font-size: 9.5px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.9px; color: var(--muted); margin-bottom: 6px;
-}
-.npv-value { font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -0.4px; }
-.npv-sub { font-size: 10px; color: var(--muted); margin-top: 3px; }
-
-/* ── Footer ── */
-footer {
-  text-align: center; padding: 24px;
-  font-size: 11px; color: var(--muted);
-  border-top: 1px solid var(--border);
-  background: var(--white);
-}
-
-/* ── Collapsed state ── */
-.card-body.collapsed { display: none; }
-
-@media (max-width: 680px) {
-  header { padding: 0 20px; }
-  .hero { padding: 36px 20px 60px; }
-  .main { padding: 0 16px 80px; }
-  .kpi-strip { grid-template-columns: 1fr 1fr; }
-  .control-strip { gap: 12px; }
-  .input-slider-wrap, .cost-slider-wrap { width: 100px; }
-  .bar-name { width: 110px; font-size: 10px; }
+@media(max-width:680px){
+  header{padding:0 16px;}
+  .hero{padding:36px 20px 60px;}
+  .main{padding:0 16px 80px;}
+  .kpi-strip{grid-template-columns:1fr 1fr;}
+  .addon-grid{grid-template-columns:1fr;}
+  .input-slider-wrap,.cost-slider-wrap{width:100px;}
+  .bar-name{width:110px;font-size:10px;}
 }
 </style>
 </head>
 <body>
 
-<!-- ── HEADER ── -->
+<!-- HEADER -->
 <header>
-  <div class="header-logos">
-    <img src="data:image/png;base64,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" alt="Bodytech" />
-    <div class="header-divider"></div>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATAAAACYCAYAAABjw7XEAAAMTWlDQ1BJQ0MgUHJvZmlsZQAAeJyVVwdYU8kWnltSIQQIREBK6E0QkRJASggt9I4gKiEJEEqMCUHFjiy7gmsXEazoKkXR1RWQxYa6NhbF3hcLKsq6uC525U0IoMu+8r35vrnz33/O/HPOuXPvnQGA3sWXSnNRTQDyJPmy2GB/1uTkFBbpGcCAFtAAumA8XyCXcqKjwwEsw+3fy+trAFG2lx2UWv/s/69FSyiSCwBAoiFOF8oFeRD/BADeKpDK8gEgSiFvPitfqsRrIdaRQQchrlHiTBVuVeJ0Fb44aBMfy4X4EQBkdT5flgmARh/kWQWCTKhDh9ECJ4lQLIHYD2KfvLwZQogXQWwDbeCcdKU+O/0rncy/aaaPaPL5mSNYFctgIQeI5dJc/pz/Mx3/u+TlKobnsIZVPUsWEquMGebtUc6MMCVWh/itJD0yCmJtAFBcLBy0V2JmliIkQWWP2gjkXJgzwIR4kjw3jjfExwr5AWEQG0KcIcmNDB+yKcoQByltYP7QCnE+Lx5iPYhrRPLAuCGbY7IZscPzXsuQcTlD/FO+bNAHpf5nRU4CR6WPaWeJeEP6mGNhVnwSxFSIAwrEiZEQa0AcKc+JCxuySS3M4kYO28gUscpYLCCWiSTB/ip9rDxDFhQ7ZF+XJx+OHTuWJeZFDuFL+VnxIapcYY8E/EH/YSxYn0jCSRjWEcknhw/HIhQFBKpix8kiSUKcisf1pPn+saqxuJ00N3rIHvcX5QYreTOI4+UFccNjC/Lh4lTp4yXS/Oh4lZ94ZTY/NFrlD74PhAMuCAAsoIA1HcwA2UDc0dvUC+9UPUGAD2QgE4iAwxAzPCJpsEcCr3GgEPwOkQjIR8b5D/aKQAHkP41ilZx4hFNdHUDGUJ9SJQc8hjgPhIFceK8YVJKMeJAIHkFG/A+P+LAKYAy5sCr7/z0/zH5hOJAJH2IUwzOy6MOWxEBiADGEGES0xQ1wH9wLD4dXP1idcTbuMRzHF3vCY0In4QHhKqGLcHO6uEg2yssI0AX1g4byk/51fnArqOmK++PeUB0q40zcADjgLnAeDu4LZ3aFLHfIb2VWWKO0/xbBV09oyI7iREEpYyh+FJvRIzXsNFxHVJS5/jo/Kl/TR/LNHekZPT/3q+wLYRs22hL7DjuAncaOY2exVqwJsLCjWDPWjh1W4pEV92hwxQ3PFjvoTw7UGb1mvjxZZSblTvVOPU4fVX35otn5ypeRO0M6RybOzMpnceAfQ8TiSQSO41jOTs5uACj/P6rP26uYwf8Kwmz/wi35DQDvowMDAz9/4UKPAvCjO/wkHPrC2bDhr0UNgDOHBApZgYrDlRcC/HLQ4dunD4yBObCB8TgDN+AF/EAgCAVRIB4kg2nQ+yy4zmVgFpgHFoMSUAZWgnWgEmwB20EN2AP2gybQCo6DX8B5cBFcBbfh6ukGz0EfeA0+IAhCQmgIA9FHTBBLxB5xRtiIDxKIhCOxSDKShmQiEkSBzEOWIGXIaqQS2YbUIj8ih5DjyFmkE7mJ3Ed6kD+R9yiGqqM6qBFqhY5H2SgHDUPj0aloJjoTLUSL0eVoBVqN7kYb0ePoefQq2oU+R/sxgKlhTMwUc8DYGBeLwlKwDEyGLcBKsXKsGmvAWuBzvox1Yb3YO5yIM3AW7gBXcAiegAvwmfgCfBleidfgjfhJ/DJ+H+/DPxNoBEOCPcGTwCNMJmQSZhFKCOWEnYSDhFPwXeomvCYSiUyiNdEdvovJxGziXOIy4ibiXuIxYifxIbGfRCLpk+xJ3qQoEp+UTyohbSDtJh0lXSJ1k96S1cgmZGdyEDmFLCEXkcvJdeQj5EvkJ+QPFE2KJcWTEkURUuZQVlB2UFooFyjdlA9ULao11ZsaT82mLqZWUBuop6h3qK/U1NTM1DzUYtTEaovUKtT2qZ1Ru6/2Tl1b3U6dq56qrlBfrr5L/Zj6TfVXNBrNiuZHS6Hl05bTamknaPdobzUYGo4aPA2hxkKNKo1GjUsaL+gUuiWdQ59GL6SX0w/QL9B7NSmaVppcTb7mAs0qzUOa1zX7tRhaE7SitPK0lmnVaZ3VeqpN0rbSDtQWahdrb9c+of2QgTHMGVyGgLGEsYNxitGtQ9Sx1uHpZOuU6ezR6dDp09XWddFN1J2tW6V7WLeLiTGtmDxmLnMFcz/zGvP9GKMxnDGiMUvHNIy5NOaN3lg9Pz2RXqneXr2reu/1WfqB+jn6q/Sb9O8a4AZ2BjEGsww2G5wy6B2rM9ZrrGBs6dj9Y28ZooZ2hrGGcw23G7Yb9hsZGwUbSY02GJ0w6jVmGvsZZxuvNT5i3GPCMPExEZusNTlq8oyly+KwclkVrJOsPlND0xBThek20w7TD2bWZglmRWZ7ze6aU83Z5hnma83bzPssTCwiLOZZ1FvcsqRYsi2zLNdbnrZ8Y2VtlWT1rVWT1VNrPWuedaF1vfUdG5qNr81Mm2qbK7ZEW7Ztju0m24t2qJ2rXZZdld0Fe9TezV5sv8m+cxxhnMc4ybjqcdcd1B04DgUO9Q73HZmO4Y5Fjk2OL8ZbjE8Zv2r86fGfnVydcp12ON2eoD0hdELRhJYJfzrbOQucq5yvTKRNDJq4cGLzxJcu9i4il80uN1wZrhGu37q2uX5yc3eTuTW49bhbuKe5b3S/ztZhR7OXsc94EDz8PRZ6tHq883TzzPfc7/mHl4NXjled19NJ1pNEk3ZMeuht5s333ubd5cPySfPZ6tPla+rL9632feBn7if02+n3hGPLyebs5rzwd/KX+R/0f8P15M7nHgvAAoIDSgM6ArUDEwIrA+8FmQVlBtUH9QW7Bs8NPhZCCAkLWRVynWfEE/BqeX2h7qHzQ0+GqYfFhVWGPQi3C5eFt0SgEaERayLuRFpGSiKbokAUL2pN1N1o6+iZ0T/HEGOiY6piHsdOiJ0XezqOETc9ri7udbx//Ir42wk2CYqEtkR6YmpibeKbpICk1Uldk8dPnj/5fLJBsji5OYWUkpiyM6V/SuCUdVO6U11TS1KvTbWeOnvq2WkG03KnHZ5On86ffiCNkJaUVpf2kR/Fr+b3p/PSN6b3CbiC9YLnQj/hWmGPyFu0WvQkwztjdcbTTO/MNZk9Wb5Z5Vm9Yq64UvwyOyR7S/abnKicXTkDuUm5e/PIeWl5hyTakhzJyRnGM2bP6JTaS0ukXTM9Z66b2ScLk+2UI/Kp8uZ8HbjRb1fYKL5R3C/wKagqeDsrcdaB2VqzJbPb59jNWTrnSWFQ4Q9z8bmCuW3zTOctnnd/Pmf+tgXIgvQFbQvNFxYv7F4UvKhmMXVxzuJfi5yKVhf9tSRpSUuxUfGi4offBH9TX6JRIiu5/q3Xt1u+w78Tf9exdOLSDUs/lwpLz5U5lZWXfVwmWHbu+wnfV3w/sDxjeccKtxWbVxJXSlZeW+W7qma11urC1Q/XRKxpXMtaW7r2r3XT150tdynfsp66XrG+qyK8onmDxYaVGz5WZlVerfKv2rvRcOPSjW82CTdd2uy3uWGL0ZayLe+3irfe2Ba8rbHaqrp8O3F7wfbHOxJ3nP6B/UPtToOdZTs/7ZLs6qqJrTlZ615bW2dYt6IerVfU9+xO3X1xT8Ce5gaHhm17mXvL9oF9in3Pfkz78dr+sP1tB9gHGn6y/GnjQcbB0kakcU5jX1NWU1dzcnPnodBDbS1eLQd/dvx5V6tpa9Vh3cMrjlCPFB8ZOFp4tP+Y9Fjv8czjD9umt90+MfnElZMxJztOhZ0680vQLydOc04fPeN9pvWs59lD59jnms67nW9sd20/+Kvrrwc73DoaL7hfaL7ocbGlc1LnkUu+l45fDrj8yxXelfNXI692Xku4duN66vWuG8IbT2/m3nx5q+DWh9uL7hDulN7VvFt+z/Be9W+2v+3tcus6fD/gfvuDuAe3HwoePn8kf/Sxu/gx7XH5E5MntU+dn7b2BPVcfDblWfdz6fMPvSW/a/2+8YXNi5/+8PujvW9yX/dL2cuBP5e90n+16y+Xv9r6o/vvvc57/eFN6Vv9tzXv2O9Ov096/+TDrI+kjxWfbD+1fA77fGcgb2BAypfxB7cCGFAebTIA+HMXALRkABjw3EidojofDhZEdaYdROA/YdUZcrDAnUsD3NPH9MLdzXUA9u0AwArq01MBiKYBEO8B0IkTR+rwWW7w3KksRHg22Br5KT0vHfybojqTfuX36BYoVV3A6PZfCgSDGkVTh6MAAAnhSURBVHic7d3dUes6FIZh7TPnntDB7gN3QKgHd4BSD3QQ0QcdQAc+FycrLIRsS7ITe8XvM8PMHjaxFcf5rD/Lf7qu6xwAGPTP0gUAgFoEGACzCDAAZhFgAMwiwACYRYABMIsAA2AWAQbALAIMgFkEGACzCDAAZhFgAMwiwACYRYABMIsAA2AWAQbALAIMgFkEGACzCDAAZhFgAMwiwACYRYABMIsAA2AWAQbALAIMgFkEGACzCDAAZhFgAMwiwACYRYABMIsAA2AWAQbALAIMgFkEGACzCDAAZhFgAMwiwACYRYABMIsAA2AWAQbALAIMgFkEGACzCDAAZhFgAMwiwACY9e/SBVhCCMG9h+Ccc+65bRcuDYBamwmwEII7eO/CKbg0QgywaRNNyIP37mm/dyEE1zSNe317c59fX65pGue9X7p4ACrddICFENz9bue89+fgen17c03TOOe+a16pWhmA9bvJJqRuLjZN457b9hxat0z37YktNI/jC9AWPmv876YCLO7natt2E19g8bTf//rdFt5//L4/v76WKQiu7maakE/7/bmfq21b9/n1VfXllRC0pq/MNI9xy8wH2MF7d7/b/eigLw2u9xDc037v7nc797TfO6+2aU3cfLIYxkAuswEWTqHT10GfQ/qLvOove317c+0pAC19+WU0NX7/IQSTQQxk6Yw5Ho/d/vGx293ddbu7u+54PE7exv7x8dd25P8t8C8v5/fSdd2P91Z7jAALTNXA9Hwu6ecqqXFJrU22IZqm+bUdiyNZUnOMm9CWapJACROjkBI8zrmqaRFDs/BvgTQfH07HpK8ZaTGUgSGrr4FJjam2n0vX2qaQEFhbCB5U35c+LnTmYwtWXQOTWlPNfK6SWtfDQCCmtiNhuiZxYD23rQuJeWGYBwsCrMOfruu6pQuRcvDeee+Lw6umuZia+Cj7F9J0fQ/Bee+La4KXcr/bOefS70H+T1yyzHK89Z0AOZ9b/LqHRH/kNeSWI3Ve5FzM1vI+b87Sowh9akYB49G3nB//8vJjG6kRyljf769NRh/7yhIfj9Iy5xyz+HiNHd++suW+bqxsJe9xrOxxOfRob+7+cs7JsfeKfqvtA5OmY45D5cRTqVXJ/lIjlKmr61qunFLOvvLENaDS4zN2/FPHKxZPCs79rPxILTr33OgT943qPta2bc/bl/LLnMNcspCA3n7btj+2L5+bP5UFFZZO0D45V6acK2jOlTp1ZdXzqmL7x8dV1MCGyijmmBMWHx95//Jv//LSHY/Hzr+89B5L+Tv9ev2avtfVlK3kNak5gFO2nXrd0DEv+Vv8ZjbAjsdjVXDp7eZsIyUOsOPxeP4yXouc+GP7rP0SxuIgLN3vWFj0vSbnCz3W5NfizzznIllSnppAil+DfKttQg45VFa5ZfLrQ9Ocmz9T6GanNDGuNV0htzkTj7DOMRVEN737pObqjc3fez41sbS5j6ceZMgZIIqnp4yVR38ubeZ8xfi4MOUln8kAKyX9Gzq4cr7EQ/0sEl4hhB/z066xwmsoGOlL3WVwLTX7vXRZaz6f3DJNCR69j7H+P3wzGWC5J6HumH1XgVMrRNvQtzPpWsnHx0f1PnK8q/3nWOrWoqH5dUPWMkgi9PsYG7DQSqb/xMeKWlgecwGWG0Ctao7IstIlxkYoc5pRl1LzXrQ13lFwDfF7zg3YeJXbHKUhvLbQtmLVM/Fr6GCprXHpyYnxxMUcHx8f7u/fv8X7zRFfmWuv1AfvXbOyuwkuTWrKelLpXEEz97LWW7zA1DAXYH1XQ32Tt775u5R07NYE17WtvXxrF0Jwz4Wv6QummlpaatsEVxlzTcgU3YleO0IZd/RfsrN3irlCa6vNSN3szzkG8YWM+x7XxXSApdYEq+kfkmWoS1auWKLPQjcXP7++in9YoeJ7RrwYum82nO57FVNn/2N+qw2wuDqtl5B2Lj2Hp/QLKR39NSOUtSNsc6j9Ik29tehWPKtbheS8Opzm8EmtLJ4nODZnLDXfDpe3+gDTD9tw7vvLOyVA9ITWmhHK3AmKc4sXLiyVmhO29S+avh9R7klM3SN5jabj1j+LGqvtxNdTGNq2PS8/MuVDnmOEcqlnTera5ZzhucXRSD0BWY6lXt+rb2XbIXNf0JhWkWe1Aebc/yFWMkrUF0h6hHLK6OIaHpQ7tR8mXuhwa1d9vUhmvILt1NDQF9jSZbzj7g8CLM9qm5BzkX6uKeGV24y4ZBhIuacG6NabkVOb4UPiz6Z2asWSk6StudkAa5rm19O5a0coc1cylRN27kmset37OWz1qUX6fc4xbysWj3DmXhhSq7wiz00EWHyPooSOVjtCWfr0I+fmD7CxhQtLbfXWIl3rutTKIXpliZwJ1ampGtS+8pkLMGkCyWiRHqFsBjpfS+6hjGtuOXTfylziYJb9zLHd1Jyw1DHqexrTWDnk2QTa+0hQDu1rzrIJWW0150fOt5xt66e762kaqbKXTNXAb6t9qMcQGTGSEzfuoM95wEWs5nmTUpYpT0/q2+bYlbtmX7kjr1J7zb2jQR/v3H7GuPwlZZMLWMnfl+5nTM7xzz0WteceVj4K2ee8fM1M26o9efQJOvfVc6wmV9MJXTrSVlubzHldXP7csuladsnfi9e3t1nuc/Xejz5Z6Pl0TugpGt7782vkfCG46pmsgfUprYHVho7+AnD1tEmHSu7fp1acWNvzQbfGZA1sqtoTTzcXCS5b4gcTl9ZGpbZvYZWSTVl2Sf55yQMY9IMU5njqS/z0I57jZ8+cn5/eFpZ1kzWwp/3+x6xo+XfNbOtL9nPhenQNbK5JrNS+l3dTASYTCeNln5vTTdsl9EggzUWkcD4s76Y68Yfc73ZZfV/0c92m1AoTteRimBoswnWZm8haayyE4gd31MzEhw1T7jyIl3XCsjYTYEP0Sqy1M/GxbvHnmTur3rnvWrk+Rzg/1mEzTUg5+aTar5uKztHPtQV9dzj03YKml8YRhNe6bCbA5OTVN9o6R3BtUelcrvjBxViPzQSYc79vCia4tk03IVOz7GtWZsV1bSrAANwWOvEBmEWAATCLAANgFgEGwCwCDIBZBBgAswgwAGYRYADMIsAAmEWAATCLAANgFgEGwCwCDIBZBBgAswgwAGYRYADMIsAAmEWAATCLAANgFgEGwCwCDIBZBBgAswgwAGYRYADMIsAAmEWAATCLAANgFgEGwCwCDIBZBBgAswgwAGYRYADMIsAAmEWAATCLAANgFgEGwCwCDIBZBBgAswgwAGYRYADMIsAAmEWAATCLAANgFgEGwCwCDIBZBBgAswgwAGYRYADMIsAAmEWAATCLAANgFgEGwCwCDIBZBBgAswgwAGYRYADMIsAAmPUfR5JlAc4UmXEAAAAASUVORK5CYII=" alt="Amigo AI" />
-  </div>
-  <div class="header-badge">ROI Calculator — Confidential</div>
+  <img class="logo-left" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAtgUlEQVR4nO1deZAcZd1+eo7unmM3mxByhwTiBgIBRAtEwApiTgwSCmIolKuCUqJAOAoMAlJFSrEw3KJYgIKUCYmGIIdIjMTSgpKzQqISjgCBhQKS3ewxd8+83x/Z591fd3Z7erO7+ZC8T9XUHjPT/R6/+3jbUkopGBgY9IrY//cADAw+zTAMYmAQAsMgBgYhMAxiYBACwyAGBiEwDGJgEALDIAYGITAMYmAQAsMgBgYhMAxiYBACwyAGBiEwDGJgEALDIAYGITAMYmAQAsMgBgYhMAxiYBACwyAGBiEwDGJgEALDIAYGITAMYmAQAsMgBgYhMAxiYBACwyAGBiEwDGJgEALDIAYGITAMYmAQAsMgBgYhMAxiYBACwyAGBiEwDGJgEALDIAYGITAMYmAQAsMgBgYhMAxiYBACwyAGBiEwDGJgEALDIAYGITAMYmAQAsMgBgYhMAxiYBACwyAGBiEwDGJgEALDIAYGITAMYmAQAsMgBgYhMAxiYBACwyAGBiEwDGJgEALDIAYGITAMYmAQAsMgBgYhMAxiYBACwyAGBiEwDGJgEALDIAYGITAMYmAQAsMgBgYhMAxiYBACwyAGBiEwDGJgEALDIAYGITAMYmAQAsMgBgYh6BeDeJ6nfy+Xy4M+GABQSkEpFfqZWq2GWq2mP1+r1VCtVvu8nnyvVCr5rrMn9w+OJezz8r3gtfl7pVLx/U70NafBBNdPrkVwTlzDvubJ79ZbCzkfSUth4Of6ur8cd9j7nufp93vb974QiUE48UQigUqlAs/zYNv2oDAJNyc4OUlMtVoNlUpFE1IsFkMsFoNSCpZlIRaLIR6P+8ZTLBYBAJZlIR6Po1qtwvM8OI4DpRRyuRxisZi+f7Va1RtoWVbk8cdiMViW5SM0XsvzPFiWpf9nWZb+m2PnNeT1OO94PL4HK9o/cP3kGOT8Oc54PK7HXqlUemVezg/oEURk+FKphHg8jkqlglqthkQiEWl8XANeWymlr12r1Xz3C467Wq3qeSUSCViWhWq1qhkkCv1aKqK4LJVKcBxHD0wptVc2sFqt+u5DQuPEPc/Tiy2ZoFarIRaLoVwuw7ZtPW5+TxJob+jPHMnMksiifKdSqSCRSPjGxOuQuYZ6jeW+ep6HWq2m14tMTyHQ2xyAXcQr9wHwr3WlUkEymdTvcU/l3oSB6xRkAI5ZXrtYLCKRSOixKKXgeZ4WomSaqEIwEoNw8lRTyWSyLoFFhVzk3swbSlQyhiQYyQTJZFKPhwvPjaC0owSzLMvHVJLh5Hj2ZB7yb77kZgUJjuvI/w/WuvZ37NVq1UfgQcFEgRHGLIVCAalUSr8vTRlqa6ll+otcLodMJqOvzT0LjhXYRQNS+EgG5u9R1jqSyOPNE4kEkskkSqVSv+y4MMgF4+9U+VIiJxIJPQ5pvpAAOZ5isQjbtlGr1RCPx+F5njYPeA+5UPF4fDfzgoTcH18kuPGUWNwIaQ7S5CLBSLVvWZY2DwdrjcNAc4VrIjWn9N84H8nY0o+wLAvpdFq/XywWe91Hapuoc+Me5PN5zRwcT6lU0mOtVCooFAr6O2Sgzs5O3/z4XdJPPUTSIJLzya2VSgWzZs0asLSTi8ehyIWl1HIcB+l0GplMBqNGjcKhhx6KqVOnYvr06UilUgB2qWISfFdXF7LZrL62HDc/Q39q27Zt2LJlC7Zt24b29nZNNFzIMEipyvEnEgnYtg3btvG5z30Ozc3NmDJlChzH0eo+aI5JaUaiXLlyJVpaWgayvHXhui4aGxvR1NSE/fbbD+PHj8eECRN8ZhbQ4yuSUYhqtYrrrrsOmUxG+4n8Lv0PqZ0OOOAAXHDBBT6tGQa5b8lkEu+//z5WrFih6dHzPKTTaZTLZS1oYrEYUqkU2tvbMW/ePBx22GFwXXc3Uy8SVB14nuf7vVwu67/Hjh2rksnkgF7xeFwlEgmVSCRUPB7Xf9u2rVzXVel0WiWTSRWLxfT7AFQsFlOO46gpU6aom266SXV1dalqtaqUUnqMhUJB1Wo1pZRS1WpVFYtF/f9nnnlGLVq0SI0ePVplMhllWZaKxWIqmUwq27b1mOqN37Zt5TiO/k4sFtPXcV1XJZNJBUA1NTWp+fPnqxUrVqi2tjallFKVSkWPmePm36VSSc2fP1+PY6heruvq9cxkMiqTyahRo0apefPmqWXLlqn33ntPdXV1+WiiWq3qdfU8Tz3xxBMKgEomk/qacj+bmppULBZTAJTruurxxx9Xnuf55h6FBltbW9XRRx+tbNv20QR/plIpBUA5jqNisZiaOHGiev3111WlUtHXqdVqqlarqWq1Gun+dRmEGxdcIM/z1MiRIwfMILZt6xf/R8K0bVsvcjweV7Ztq1QqpVKplLJtWy9MOp1Wxx57rMrn87tNXG6mUkr95z//UV/96ldVIpFQjuP4mNRxHOU4jt5cOaa+XnKs/L6cDzeL7wNQBxxwgLrlllt8Y+wNJ510km99huIl96C3+QBQp59+ulq3bp0WMME1rlQq6tZbb1Wu6yrbtjUjUMiRedLptLJtW2UyGfXee+9FIT19r2q1qk477TQ9Ro6T6y3pxbZtlU6n1fPPP6/HKWkgKmMqFZFBgjcg9t9//0gERC0giVJqEDlJaoiGhgYtietdn4t17rnnqmq1qiUGQcmxbt061dTUpOLxuHJdV8Xjcb3IHAclEwmbxE1tILVKIpFQmUxGS+BUKuV7z7ZtZVmWJhZ+BoDKZDJq7ty5qr29Xa+tXONKpaLmzZsXWcBw/CQQzo/j4BpT4nIv+B7nSWEUXH/HcdRll12myuXybrTAv88555zdGCwWi/nWjmt87LHH6u/LPavVaj6JT2I+//zz9fzktWKxmEqn0/q61GAPPvhgVNIOxZAzSCqV8hEZVW08HleZTEa5rqssy9Ib7TiOymazenPrXZ+Lb1mWSiQSasuWLVqF1mo15XmeqlQqasuWLaqpqUkBUNls1mcOcZEp/RzH0UTNTbEsSxOf1DwAVCqVUo2NjcqyLC09+ZPX4nVSqZSWzNlsVi1cuFB5nucjBhLIzJkz+6WB0+m0npd8LxaLKcuy9HpJc5ACJp1OazOLQoIMLX8uXLhQKaX0uvJ3WhnHHXec3ndeVxI2ibipqUktXbrUR1fFYrFXSb9kyRLV2Ni4m4bgGtM8JnNce+21/dISYRhyBiExOI6jTSNJjPF4XBOs4zh6I6VWCXuRMail7rzzTj0+qV6//vWvK8uytBlEpiQBU9LRhOPik9D4XiKR0BqD8+BcEomE/kwqldLSGoAmSpqE/A4AtXbtWm1n00ZWSqlZs2ZFYhAyKtculUrpe5BApRklTVZqQI6VzCHn1dDQoOeXzWbVbbfdptdWMnW5XFZtbW1q6tSpmmDJnFxfajRe96WXXtLfl2hvb1dKKXXTTTepxsZGbabxenJv5N4tXLhQM+tgMEnkRKHqJWY8atQo7Ny5M9J3Y7EYJkyYgJEjRwIAbNtGPB7XIU/VHQp1XRcdHR14/fXXUSgUIiXfkt2hZwBYunQprrvuOl8C6rXXXsOhhx6KxsZGdHV1AejJgHueh0wmg87OTh1pkdlvjpH34WdkNpmfyWQy6Ojo0FG3YrEI13VRKpV0oosZX9u29f1PPvlkrF271hclBIB58+Zh/fr1oXPn+BmeZWSO92Peh/MNZv6VUjq6xuSdErmuWq0Gx3GQz+eRSqVQq9XQ3NyMV199VdMEf3LsGzduxIknnohSqaTzEUzQycReqVTCpEmTsGnTJjQ0NOw2t4cffhjnnXeezrzn83lks1k9RtUdhrZtG0opHHnkkdiwYQPS6bRe+4EiWr5/gPA8D67r4vvf/z4uv/xy/X+G5GTokwv5wQcfYO7cudiyZUvotfkdEjWzwkBPAuyll16C4zhob2+H67ool8u+zcrn84jH43BdF7lcDpZlIZlM+kKDLLHghjPMyJKbZDKJjo4OvSmFQkETLkPKtm0jlUrpcChzDRs3btTERWaTJSdhSCaTqFQqKJVKmDp1KkaOHOlbTxme59oqpdDW1oaPP/4Y+Xwe5XJZM6/ruqhWq3pO8Xhc/z+fz8NxHLz99tu+pC4FJxn70EMPxe9//3uceuqpiMVier2KxaJO3CaTSdi2jU8++QQXXXQRfvvb3+qcVqlUwrPPPotvf/vbujKCpSoUXAw327aNSqWCCRMmYOXKlTrkL+lgIBhyBrEsC6lUSid1AOjF52ZRw1SrVVQqFbiui/Hjx+Occ87Bj370o9DrM2nY0NCAQqGASZMmae1BCf/mm2+iVCohk8kgFov56rRUd6IpkUigq6sLjuPoJNSYMWOwePFiTJgwAWPHjtXxeKlNSVw7d+7EO++8gwceeAAtLS1IJpPI5XIAdm0Wx+m6rk5s8jqffPLJblIYiJYoZD3RsGHDcP311+Nb3/oWgF3CgcxMRpTS2/M8tLe347bbbsPtt9+uE2rUGmSscrmsibqhoQGe5yGXy6GtrQ0jRozQe8q8E+8xZ84c/PjHP8aNN96IXC4Hx3F0CYjneXrdisUiHnroIcyfPx+LFi2C53nYsmULzjzzTJ18LBQKmlnz+TySyaTOrZCW1q5di4MOOkiXzki6GhCi2mJ76oMA0Hbwz372M9+1pGMatBeLxaK66qqrIgcBEomEamhoUC0tLfraxIUXXqgjSui2t2mXyzAkPxOPx9WVV16pSqXSbpGloK0s71UqlVShUFAXXnihtolt21YNDQ0+x57+Tzwe18497WYZSp0zZ07d+afTaR2xWr16tfZhetsvOtPBtT7rrLNUMplUmUxGrwGdd+mvcf2y2azatm2bvg7HzDWQe7x48WLtzzBAweALfbL99ttPZTIZtWnTJtXS0qLGjRunfVcGa2RUjnkV+kxr1qxRhULBRzt90Wx/MeQaxHEcLeVaW1uxefNmFAoFbTeyJERWXra2tuK5557DHXfcUff6LGQDgO985zsYN26czzSh2UU7lv4KtUu1WtVmheq2xxcsWICbbrpJS3LVLY1kqQWvzdIRqnvP83DHHXdgw4YNeOutt7TU4314PdrlnZ2daGxs9PkDvdUW9YVisYhUKoViseirRwuuAQBtwqlApevs2bOxevVq7R85jqNNS1nnRr+pq6sLjY2N+vvSnJF+XKVSwd13342NGzdi06ZN8DxPm5Y0DWOxGHbs2AHbtnHRRRdh586d+OSTT/Q4qJG4JpZlob29HQCQSqVw9dVX45RTTtH3zefzSKfTegwDRlRO2lMN4rqujhJJiQ2hWSBCo5Tk6A6fBpNCjGLInIPjOOq4447T0kvG1Gu1mvrBD37gu4ZMBFqWpbLZrM59JBIJ9fLLL/eqKfqCDE9Sqi5fvlzPJ+xFzcexy7WOokHka9WqVXX3rDf8/e9/13OXSTcZZpchVsdxVEdHR6Rre56nPv74Y3XAAQfoaFgwFxaFhrhWMgJ29tlnRxrDQDDkHYWU1ozYWJaFhoYGOI6DQqGAUqmExsZGeJ6HVCqlnWgZ/WFxG0ux0+m0rvOZPHkybrjhBmzYsEFX8CYSCV241otA8P1NJ7tWq6FcLiObzeKII47QEr4eZHk9AF1dPHv2bF9x3acdSlQfy9dAEY/HMXLkSDz++OPaFwEQOQihun0nahPbtuG6Lpqbm/HrX/96wOOrhyFnENd1EYvFtFNeLBbR1dWFSqUCx3Hgui66urp0uTSdPRaelctlNDY26mateDyOXC6H5uZmPP3009i8eTN++MMfanOAUReWXctNkL9T/bKEP5VK+UqgGR6tB1nKDkAzcSqVQj6fH8ylHFLQKZdVzwN2cAG9j4cffjjWrFmjzelgg1NfoFnV1dUF27ZRKpUwbtw4PPnkk4MSxq2HIWcQhgwZZ3ccZ7cIFmPujY2NSCaT6OrqQjweRyaTgW3bOrfAUKPrunjrrbcwe/ZsHHvssXjssce0dAGgoxiyfZUgA+gF6I6elUolnb+gvRuVQGSvAb/DDf1fgOr2BYMYDBteMto3vvENXHvttahWq3AcJ9L6SP+OVdKPPPIIRo8eHbltdyAYcgah6cS8A1su2ash/6YzS2LL5XI+Jw3YJbGLxaKW/K+++ioWLVqEK664AgD09ZjLkJKxNw3C/hAyq2y0iWoCyP4SYJdZyUTo/wKCJhUZZjD6UYJC5tJLL8XZZ58NpZQOg9cbG/NW+Xweq1atwhFHHLFbg9dQYcjvwJi/53mYOnUqJk+erE0lJn0cx9E+ybBhw/DRRx9h8+bNAHpaKguFgo7ykOGoIRgt2X///XH11VfrezPKxIRZECQERmeq1Sq6urp0jD/KJsjrkukdx8E777yDQqGwVzZxoJBSnhp1sEAfgsnCdDqNe++9F88//zw++OCDPn1FgkLG8zzcfPPNmDVrlv5/f6J9e4q9snvFYhHpdBoXXHABLrvsst3aIIOJKdu20dnZiZkzZ+Lll1/WTru0XZk5lxnwG264AUuWLEE2m/U1x8iMsupOHlFaMvnHsSSTSTz22GM4++yzIxG3EiFT2Qj18MMPa3Pt0w6ZtAz6IgMFNbnc62Qyib/+9a84/PDD636fTHD++efj0ksv9TVa7Q0NvVfOxaK2oF0vzSUSLCfO0oGGhgYsXLhQLy4/l0gktAPOrDTbMePxOB599NFdEwu0eUqTSoLMKbXY9ddfj61bt0YyMWiiAdCM8txzz+GBBx7YKy2zA0W5XNY+Ih3qwYxiAdA5JN4PAMaPH4+JEyfW/S7p4sQTT9S1cBzXZ8YHYeiWEyLh0PQiZEILgA7x0gdhuJgJJm4ofY1yuYzXXntttzFMmDBBayGaZWQg3oPRMdd1dR3YmjVrfNEpSTAcK69Hc/Hee+/FggULAPQwI5lb2vVSMNAMCa5bVPOM/h0FEccpe93lektfw7Zt/OpXv9ICgvY+PyPbgCngZK99VPA6MvLUn+9zvySzfSZ8kHg8jmKx6CMWLgxNEm6KDJmWSiXfIW99QVaxuq6L7du360w9sIuAR44cqYsS0+m0Dimn02n9ffobzLi/9dZb+O53v4ulS5di5syZOPLII1GpVHRVK0PWyWQSxWIRL774Il555RW8++678DwP2WxWO6GshwJ67H0efMHsNsdCEzMsl9Pb+jJ7LAlJEpD0xwCgra0NO3bswE9/+lM888wz+rgcXpNal+taq9X0gRjpdHq3Y3g+qxhyBiEBpdNp5PN5fPTRR9qM4uFtLERj7sGyLPzzn//E8uXL616fBEdpXKlUdEUn7z9z5kx9bc/zdEg4n8/7yu4ZIWNIua2tDYVCAffff7+W8NRWJG4W3TFPA+wqgaDmpHaQDEGGZJLyK1/5ijY7KWFrtZpvHn2B98nn87jkkktw1VVX6epjac5KH4OFih0dHTpvxCJNajpqJOYeqtUqmpqasHPnzn6FwP/XMeQMwjLlrq4uLFu2DD/5yU90GDSVSukK3uABcIxS1JNS3NRSqYRkMomjjjrKV9FZKpUwduxYnHTSSfjHP/6htRUZkyYaK3zT6bTWXDypg9KY4yPBMNFJDSmrZpkIZdjYtm0Ui0XUajVdCcCS+IULF6JYLCKTyfjMxigalISfSqWwY8cOAD11UFwfagSaqfwMAD1O1qLJ6CCvw/nv3LkTtm2jubl50PyTTzuGXAxwg4KSMRaLob29XWfR6UOwl4Gh4HrgRpF4jzzySF1sR0ceAG655RatZeiLSNOKxXO0cYvFIgqFgpb6tVoN+Xxel7/Y3WdvkbFKpZLWMizso1aidgSg+0HYYzF+/Hice+65uncEgI6+RUmkcS6FQkGPhVqNQqZcLvvGFzTDZD6Ke0HhQUGWSCR0JPHUU0/9nwhfDwaGnEFkRpvqnRojFoshnU77suwkeJkcDAN9AcuycPDBB+Poo4/W3ydBdHZ24pBDDsHdd9+tfQOaSjQxpN1PwqFdz3HwM5TyJGAyAW1z2TPC8VHjsOnKdV2MGjUK69ev19UCZE65RvWQy+Vg2zYaGhp8zWPUqjSH+D9ZkSx9QVY48J5SG+ZyOc1AX/7yl3HVVVcBGLoDzD9N2CsaBICPYBhapfMn224pPYFoYbxKpaIJefny5br7jPdmo08ymcR5552H++67D+PGjfP5FJTAlJIcc7FY1MzCSBHQU96dy+U0czDJWCgUdBkFQ6csDae5pZTCl770Jaxbtw7Dhg0DAF3yDvid+nrgfJkfYhkPTSdeU0bLpNkko4scL9BT4sGW3ng8jm9+85v4wx/+sJum+yxjr3hadGopISmd2LNMk4sSj440CT8MJM4bb7xRZ1lJwLLuivb3GWecgRdeeAEXX3yx7l1OpVK+bkESiczPSJMln89DKaV9BkazUqmUDkCw8y0ej6Ojo0PXmzU1NeH222/Hk08+iebmZjQ0NGhJTOEhW0qjgD4btTXHzEiT1BT0peiTkMi5VgxasO/bdV0cc8wxWLNmDX7zm99g1KhRWljsC35IJEOSERGCG0JCCYOMuQc/K0OJALRE471kTJ6fpXnDkpMTTjgB11xzDY455hhfE5AM2wI9xA4Ao0ePxs0334xrr70Wa9aswfr167FhwwZs377dlyQjgQZNPf6/ryNKSdyU2BMmTMDRRx+Ns846C7Nnz0ZjY6NeV5loJGFS++TzeZ9wkWFaal5KeuaG+B6rm4MNXlx3OW4Zxp04cSImTpyIAw88EPPnz8dxxx2HsWPHakZig5psG+a6k+GCR3zStKaFwP5+Wg1hoOblPnBduR71QNqRdMD/BQtXe0PdU01Yr0RHlb9bloWnnnpKO4ZDBWk785XNZjFmzBiMHj06tCiQJ1sEk33SwZQBgtbWVnz44Ydoa2vTRBZlA3kdOWYu/JQpUzB8+HA4juMLswLQ/gqJiv4CmWTr1q3o6urqtUuwtyLMYMFhcB35U77H6FpjYyNGjx6te1iocemrsZcn2GXZG5HKwzg4T0LWT73xxhuhayu/M2rUKIwYMcLH5P3Jw8j7ytNq6jFZXQbp7SJScuztkm5KZWmCSK0jiY6QIWTJEDIxyPeAPSvz7osgJeFLBIUN50ETTeYk+iq2DLuvfL+vQk3uIddKagKuidx/uY78naYyo4WSEOW9gwIAgG67DgPH0lthorQYwmBZ1m7Pt+E865mxdU0sqqSgRInFYnjwwQeHvB6Gdj9/D5Zs0FehiXDeeefpjSMBvvHGG/jXv/6lIzyUHtygUqnkM/OkKVdvAWXpiPwpzZharYYZM2agubnZp+Jl3odlHyytUUqho6MDGzduxNtvv43XX38dO3bsQCwW05+j/8T7yaQpX/SvGJpmAEBGtlKpFA4++GBMnz5dO+RcW0mcknH4s1wuY8WKFZrRGZEkA3Iucj8WLFigT96vJ4wYhk4kEli5cqVOuMrxh2H69On4/Oc/r4Wh/HwkH0/tAWq1miqVSmrEiBFDfrgy+6L5u9V9sgZPumDfMrrPu/3ggw98Yy2Xy+qXv/ylamho0KdzsM/d6j7xL959Vi+PQo11n5IiT06s9+qrnzrefXLk/fff71s/iWrgsO1169ap0047TQ0fPlz38fP0EtmbHTwLWPbvs3e8tx74ePcpipY48pWnr5x55pnq2Wef9Z1OIk8MUUr5ToHcvHmzSqfT+ljVbDarT0Dk/9F9vgDH29LS4uvBr4dSqaSq1ao64IADVCqV0seN8kTOsNfy5ct3O2nF68fJ8nU1iCx+Y6TJdV3fqSR7Awxh0sljOYSM2DAixnHTj0gkEujs7NTSlyYMJZAS5SDSzmbZSb1xBaGE2ZDsPh+Ln6NjDvQUEzLn8/bbb+Piiy/G+vXrdU6GElwJJ50ajiaZEk4n7y9/l/6HLP3n+/IEk0ceeQSPPPIIZs2ahdtvvx0HHXTQbq2t0jQcMWKEDibwYDiOlXVczKHQCuEZWVELMhlm55kD1IhdXV11Q83t7e2+AIP0WaP4IHVHJ51BoCeEysagKF1hAwEjNIwYyTAxTT7+jxljSUzArgXmuBn3V90mDUtUpC8gCwvrQalwv4VhV5oUQRXP+W3atAmnn3463nnnHaRSKZTLZZ1EJfFXqz1P1mJYWZajyDH0xbiynJ1rI81Emprr1q3DCSecgBUrVmDGjBk6nJ3JZDTB1Wo1fdgeGYx+AZvcyHycdyaTwY4dO7DffvtFrudi1IvCjQJRCqK+MGzYsD4jVlEYpO4Ig5KGN2O+QoYbh+LFUCXLsaWEsm1bO1uUXuwOlKX18lQVhoi5uIwuSYkrs9gkpv68JGT9lsw8kxA9z8PWrVsxd+5cbNu2TUs4SltJ1PF4XDOz53koFAo+ARYM6XLusoRElqtTO2UyGZ17cl1XZ9S3b9+OuXPnYv369fqMAK4JiYtMzpIhXpP+ijyBRnX7e9ls1meZhIHBFNamUfuwsrgeWOtHoaKU0vsQxQepyyCSKSg5aIpISd3XSz52jPVJdOQA+K4rryfVKe8VlNaUqrZta8Jhv3rwEAWaNmSU3vrQqcqlk18P9cKNJOxgpEw66wsWLEBra6teHxYxlstlLYFlVa7sYOyLOTku2bHJCBK/RyLn/8h43AdgFwMvXLgQ//73v/W1eX9+X0YNOV8plFi1zL2Ue18PZAIZ1WN2v7dDOXpbfzk2XrM3jdIb6jIIVSchG6CY7Al75XI5ZLNZKKV0GYY8YZA+RDBsy96Neten+qUPwfN3gWhn29IcKJVKKBQK2oShxAlK6P6+AGgTkUzPigHLsnDXXXehpaVFEyy/w2gWixtlzoNROAB17y81YaVS8T0lNgqBshJAnpHMUHoUE0nWrbEOTVZUR/l+8L6sn4sy/oGirg9C24+/k2Fs28YLL7xQt6CQjUo333wzVq9erQsLpaSWcX+aSY7j4LDDDsP9998fen2ZxGIYs7fEWl+QpfHURLlcTvevDLRqNdZdkMkzsmTZfLlcxj333IPOzk49BhJ2cK1J6CQ49mbUc1Kl9KxUKto0oTlUb434/hNPPIF3330XkyZN0teNsr5MgtIPKxQKkUtogJ6DMPgd13V1HosadyhRd/d7mwyJcsqUKXWlACNEVLOyEK9cLuteBEZmaCpUKhUMGzYMhxxySOj1+T2OVR74FkmFClOFjJbJZPCLX/wCY8aMGXDFKrXj9OnTAfgTaYVCAW+88YbvVBWOR5ZhyJwPfQHHcXDNNddg7NixofenadPa2oodO3bgsccew/vvv++7T73xc882btyISZMm+UzUeuDe8hnqDO7ItakHRt54DJQ0+4cakRKF+sPdzlF/TrSjZE92Pw+CjjIlvSxhkJOWFaphkMk8St1gWUQ9yMwusKtK95RTTsGIESMizzMqZBKO1cL0A+T8GYzgw2voqALAjTfeiAsuuMAXnYsCpRRuvfVWbNiwAYsXL0ZLS0vdNeIeKaV0rRo1YNQoXyqVQi6X0yFeRt6iSH9GKpXaVRxK05cMGqUlYiCIbD8Ui0Wf/8CitXqLRI3AbjppRkhHT9rfXJAoUQpKQcbcJQNHibMz1Ct9gGBV7UAgNaPMaTCzHawUAHqkLgCdC+E8fve73+GMM87Q149iIrH0nabJrFmzsH79esyYMQPbt2+vO34ysHRso0p/tgHIo39uvfVWDB8+XAdv6n2f/ktra6vWwHz6WH/MtT1BZAZh0Z8MmUUBmYG2M9W17McAoP0QOv6yCy8MXHQuFJlKSrowsEOQji/NwdWrV2Ps2LEDNrE8z8NRRx2FadOmAYDPwZamQl9SmT0dnudh1qxZOOOMM7TfFIVIadJwLemkT5kyBVdccQWWLl0a+n0mMik0AL+ZWA98AI6s7brzzjt9T9gKg5yfZHRqkaEudYrEIPJkvP42yXAxmbMAehI/rutqKUJzQpoYURAsjJP+R5RQnvSHGBKsVqu4/PLLtf0+EFSrVdx1112YOnWqloZcBxkO5Rh4eALHLp9/MmPGDAA9YUp+LgzUxkFnPZlM4uSTT67LINQ6/K6sy4qyNqxGoOCjL0qhUI/AZQk9aZD+jDyJZagQ6eoDGYRM6wPwMQCJg6FLLiaTXFErNXv7Gfy93hhpXnHjGJIeaJQkWKov5yXNShKxDN9yXagxpHkTtVxb3ocMxfD1lClT8Oc//7nu97lnhx12mL5GVNOTYXxm/Tk/lqBEEWA076lJ++MDDRT7Rud9CBi9kmHPQqGAhoYGdHZ2Dricn9KT4dVg0CPK98kcUvP052C5oKSXwuRrX/tapGv0pjGiRJG4pjwHgNEzedBdGGTVNYUFxz9Q/zAK9o3Djeqgt1BvLBbTftdAXjQNZK97f6IvTIACPY+z648El/cJ3jMKg5GAqfF5fyCaBOfDiaTGkD3w9UCTl1E+rmPUROVAYTSIKI2gyZdKpdDe3q7NooFABiEAv8kVhUD42Wq16tNo/fGxGKHbk7nISGMwahRl/DzULh6PayZhGU0UDcIau+HDh6Otrc2XHuiPoNhT7PMMIhmDqpy1UPKUjz0Fr8e6KFlLFSXgQcJmUSEfqgn0zwYPRoN663LsDbLuKsiUUTQQT9WUuY9Vq1Yhm83qbHgYGHgpFAr43ve+h61btyKZTPpC+UOJfZ5BeLojS8lp8993332+7ro9hed5+pmHJC6Z2KwH5pAcx8Gbb77pe5JtFD9EVgID8BFlf1pWZcmRjLzVA494ZYWC53n44he/iOHDh0duueUYWckr+4GG+uihfZ5BZDk9VXe5XMbMmTMHJZMus+MyasXyiXpwXVfnER566CEsWbIEkyZNilzqEWQAEvl7772Hv/zlL3U1JPMoxWIRc+bMQXNzc78jaMz489F6LNwEorXc0kQkk9Ls2hvncu3zDMLsNqMjTBoy9j8YoUT2RgS1UZSzd5kxZhn/mWeeiZUrV2Ly5Ml7nJMql8t49NFHcckll0R21HkE6YEHHqiraqOUuTD3wZyFbdu6qjmqicc2BNnjwjaKoa7H2uejWJTqLOeQDu1gLL4sMZHwPA/Dhw/3lbWQEIIFl3xPKYUXX3wRJ554In7605+itbXV5+QGHd6gfR6Px7Fz504sW7YMV155pbbjZa6KvoksIKWDLo9QIoHWA0O6sr9EhozrlesHTVOaVTzkb6ixz2sQPs2qs7PT12S1efNmjBs3LtIzOsKQ7H5q77Rp0zBs2DAdvSFDHnTQQWhpadG9M5IQKbnlU4Jt28aHH36IZcuW4ec//zlOOOEEjBkzBmPGjNF9LWQoeQCd53l49dVXsXHjRl0Xx74MmXiUff68H099mTZtms7MS5/ks4x9nkGy2Sw6Ozt1pIh1S/Pnz0ehUBiwncuw5j333IOFCxdqoiIxXnLJJViyZIl+tjslbqlUQjqd1i0CvJbsx87lcnj66ad9nYVAT2iWzW2FQkEzHe1/RtEoqVnkyV5y9sPzuxMnTsQXvvAF7fTTTPqsY583seShA2zAoY2dSqUGnChk0xOf+Q70mHW2bePCCy/Uj2yIxWJaiwDQ9Usy0y+jOAwAsJ9cnvslP8sCRR4EkUgk9HPh2V/B7s3Ozk7NXGxtVUrh6quv3i3vMNSVtJ8G7PMMIkOXJAoSIGvDBvIiIbOaGfBHsyzLwsMPP4xRo0ZppiyVSmhqagIAfYA3D31gwSgJlX+nUinfyS3MYJdKJV8XpzxpROZjGIodNmyYJnza+osWLcLixYt3y4MMdTffpwH7PIPQ7KAEp2SnLzDQU1lkAlLek5K/VCph8uTJeOqpp3DggQfqs4537twJAFqjpNNp36EXlPzUArlcDoVCQTvAPEOMj1fgHGXFtCx94QN82tvb9TqUy2XMmTMHd999t/6cZLS9Uerx/43P/gzrgL3SXV1dAHoOerNtWxPBQF5KKV/9Eu/BCA1bjqdNm4a//e1vOOWUU+A4jn60gixVkc/1cF1Xt7DG47se3sNjRqXJxYPTkt2PmeM15IuBAx7jylzQ9ddfjz/96U86wSfrqJhg/axjn2cQdiPKY3nIHDzzdyAv2Uknm474kyec1Go1jBs3DmvXrsWqVat0xIghV16L1ysWi5qwmcdhZl62L9OUYkSMYVyGnpkk7ejoQENDAzzPw/HHH4/nn38e11xzDYCe7lE2lwU7ID/LGPIoFgmB9qzrutpBZNJK2sNs73QcZ8AhVoLP52P0R5YoyEMfZJWtTBYOBLxvR0eHvgfQE2li1EyeVjh//nzMnDkT//3vf/HHP/4Rr7zyCl5++WX9kE5+X7br9uUXSM0l8xbyeCOlFKZMmYI5c+Zg0aJFOP74430dnRwbfRzJGPKpWTxMW/pbQM9xPXTy5XpHScQy5Mxwt0xu1suFyLwLw9fUulHuXffxBwMFSxIkEXDA8nAFRmr4mf70O4SB9+3tsIn+tI4OBJyLnKOcnyzbkLVSfCY7CUpquWAH5Z6CgkkymLx2veuT6SjcOD4KHrm+wbqwKJDnD1Nw8r7ynn2B+88uRIkoDDrkDALAxxzBSlJJHEGiiVrOEAbZu8Byh+BmDiVkEi5IcFwXuQZB86XeJg50/IPVlcc50GwL5lckgfNQwP5cV55YQzMvSrWDZVk699Mb09bDkDNI8BwocjHt2aCk2hMpUw/ckCADDoYEjgJpqjD6JKVZsAGJ/os0A2i29CVc9hR9MWB/9qG1tRUjRozQJirXuK8uRDr7TGTWG5/0B7lnwYck9QVpTjHpSVMrUiXz3tAg9biW4UpZE9Rbj/meoDcC2FumVRDBTZFjk8cBBd/r61qDIUh4H0kGe7rmshhSlqHkcjmdrIxqGgXHSMbjGu6JgJNmdlQa2CsMIjeT7ZMMUQb9jGAiarBi7XJBeF15pOVQgcTSl6qXc+xrvkFHXDLGYJlYdKqDbcFR+k1isZjvEWfyMA5G34LfAaCPWAqDvG5v967HIMEDLwBEatQihpxBSPA0G4ILHrS/+ZnBNH2CLadR1fNgQQoCjgXo6fMOMqmMAPUlIPpaz/6Cz0fpS7P1B9IcCiLod/TnHtQ6ZKg9mTujl9JSiUIHe02DBCMcQRUZlJ5BiTYQSLtXLupgnJxYD9KECjZJybUAeh6JIGueevuexGBpkKAfBETT4LIZLNi1KMO5dKzlXKJEKoOMFRQo9ebPOQTXPWo18l5hEAOD/1Xs85l0A4MwGAYxMAiBYRADgxAYBjEwCIFhEAODEBgGMTAIgWEQA4MQGAYxMAiBYRADgxAYBjEwCIFhEAODEBgGMTAIgWEQA4MQGAYxMAiBYRADgxAYBjEwCIFhEAODEBgGMTAIgWEQA4MQGAYxMAiBYRADgxAYBjEwCIFhEAODEBgGMTAIgWEQA4MQGAYxMAiBYRADgxAYBjEwCIFhEAODEBgGMTAIgWEQA4MQGAYxMAiBYRADgxAYBjEwCIFhEAODEBgGMTAIgWEQA4MQGAYxMAiBYRADgxAYBjEwCIFhEAODEBgGMTAIgWEQA4MQGAYxMAiBYRADgxAYBjEwCIFhEAODEBgGMTAIgWEQA4MQGAYxMAiBYRADgxAYBjEwCIFhEAODEBgGMTAIgWEQA4MQGAYxMAiBYRADgxAYBjEwCIFhEAODEBgGMTAIgWEQA4MQGAYxMAiBYRADgxD8H64jIn0bmqKTAAAAAElFTkSuQmCC" alt="Bodytech" />
+  <img class="logo-right" src="data:image/png;base64,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" alt="Amigo AI" />
 </header>
 
-<!-- ── HERO ── -->
+<!-- HERO -->
 <div class="hero">
   <div class="hero-pill">AI Agent ROI Analysis</div>
-  <h1>Bodytech × Amigo AI<br><em>Revenue &amp; Retention Impact</em></h1>
-  <p class="hero-sub">Quantify the financial impact of deploying Amigo AI agents across Sales, Collections, and Retention for Bodytech's 600K member network.</p>
+  <h1>Bodytech AI Revenue Agent<br><em>Sales · Collections · Retention</em></h1>
+  <p class="hero-sub">Quantify the financial impact of deploying Amigo AI agents across Sales, Collections &amp; Retention for Bodytech's 600K+ member network.</p>
 </div>
 
-<!-- ── MAIN ── -->
 <div class="main">
 
-  <!-- KPI Strip -->
-  <div class="kpi-strip">
-    <div class="kpi-card primary">
-      <div class="kpi-label">Annual Total Benefit</div>
-      <div class="kpi-value" id="kpi-total">—</div>
-      <div class="kpi-sub" id="kpi-total-sub">Revenue + cost savings</div>
-    </div>
-    <div class="kpi-card secondary">
-      <div class="kpi-label">ROI Multiple</div>
-      <div class="kpi-value" id="kpi-roi">—</div>
-      <div class="kpi-sub">vs. Amigo total cost</div>
-    </div>
-    <div class="kpi-card tertiary">
-      <div class="kpi-label">Payback Period</div>
-      <div class="kpi-value" id="kpi-payback">—</div>
-      <div class="kpi-sub">Break-even timeline</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Net Annual Benefit</div>
-      <div class="kpi-value" id="kpi-net">—</div>
-      <div class="kpi-sub">After Amigo costs</div>
-    </div>
+<!-- KPI STRIP -->
+<div class="kpi-strip">
+  <div class="kpi-card primary">
+    <div class="kpi-label">Annual Total Benefit</div>
+    <div class="kpi-value" id="kpi-total">—</div>
+    <div class="kpi-sub" id="kpi-total-sub">Revenue + cost savings</div>
   </div>
+  <div class="kpi-card secondary">
+    <div class="kpi-label">ROI Multiple</div>
+    <div class="kpi-value" id="kpi-roi">—</div>
+    <div class="kpi-sub">vs. Amigo total cost</div>
+  </div>
+  <div class="kpi-card tertiary">
+    <div class="kpi-label">Payback Period</div>
+    <div class="kpi-value" id="kpi-payback">—</div>
+    <div class="kpi-sub">Break-even timeline</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Net Annual Benefit</div>
+    <div class="kpi-value" id="kpi-net">—</div>
+    <div class="kpi-sub">After Amigo costs</div>
+  </div>
+</div>
 
-  <!-- ── Control Strip ── -->
-  <div class="control-strip">
-    <div class="ctrl-group">
-      <span class="ctrl-label">Scenario</span>
-      <div class="pill-group">
-        <div class="pill active" id="sc-cons" onclick="setScenario('cons')">Conservative</div>
-        <div class="pill" id="sc-base" onclick="setScenario('base')">Base</div>
-        <div class="pill" id="sc-agg" onclick="setScenario('agg')">Aggressive</div>
+<!-- CONTROL STRIP -->
+<div class="control-strip">
+  <div class="ctrl-group">
+    <span class="ctrl-label">Business Context</span>
+    <div class="assump-chips">
+      <div class="assump-chip">
+        <span class="assump-chip-label">Members</span>
+        <span class="assump-chip-val" id="chip-members">600K</span>
       </div>
-    </div>
-    <div class="ctrl-divider"></div>
-    <div class="ctrl-group">
-      <span class="ctrl-label">Currency</span>
-      <div class="pill-group">
-        <div class="pill cur-active" id="cur-cop" onclick="setCurrency('COP')">COP</div>
-        <div class="pill" id="cur-usd" onclick="setCurrency('USD')">USD</div>
+      <div class="assump-chip">
+        <span class="assump-chip-label">Sedes</span>
+        <span class="assump-chip-val" id="chip-sedes">82</span>
       </div>
-    </div>
-    <div class="ctrl-divider"></div>
-    <div class="ctrl-group" style="flex: 1; flex-wrap: wrap; gap: 8px;">
-      <span class="ctrl-label">Adoption Ramp</span>
-      <div class="ramp-inline">
-        <div class="ramp-item">
-          <span class="ramp-lbl">Mo 3</span>
-          <input type="range" class="ramp-sl" id="sl-ramp3" min="0" max="100" step="5" value="25" oninput="rampChange()">
-          <span class="ramp-v" id="rv-ramp3">25%</span>
-        </div>
-        <div class="ramp-item">
-          <span class="ramp-lbl">Mo 6</span>
-          <input type="range" class="ramp-sl" id="sl-ramp6" min="0" max="100" step="5" value="55" oninput="rampChange()">
-          <span class="ramp-v" id="rv-ramp6">55%</span>
-        </div>
-        <div class="ramp-item">
-          <span class="ramp-lbl">Mo 12</span>
-          <input type="range" class="ramp-sl" id="sl-ramp12" min="0" max="100" step="5" value="80" oninput="rampChange()">
-          <span class="ramp-v" id="rv-ramp12">80%</span>
-        </div>
-        <span class="ramp-yr1-line">Yr 1 avg: <span id="ramp-yr1-val">—</span></span>
+      <div class="assump-chip">
+        <span class="assump-chip-label">Annual Rev</span>
+        <span class="assump-chip-val" id="chip-rev">$216M</span>
+      </div>
+      <div class="assump-chip">
+        <span class="assump-chip-label">COP Rate</span>
+        <span class="assump-chip-val" id="chip-cop">4,200</span>
       </div>
     </div>
   </div>
-
-  <!-- ═══════════════════════════════════
-       AMIGO AGENT — CORE FUNCTIONS
-  ════════════════════════════════════ -->
-  <div class="section-header">Amigo Agent — Core Functions</div>
-
-  <!-- UC1: Sales & Acquisition -->
-  <div class="agent-card uc1">
-    <div class="card-header" onclick="toggleCard('uc1')">
-      <span class="card-arrow open" id="arr-uc1">&#9654;</span>
-      <span class="card-title">Sales &amp; Acquisition Agent</span>
-      <span class="card-badge badge-core">Core</span>
-      <span class="card-value" id="wc-uc1">—</span>
-    </div>
-    <div class="card-body" id="body-uc1">
-      <div class="sub-label">Lead Conversion</div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">Monthly inbound leads</div><div class="input-desc">Cortesías &amp; trial enquiries across all sedes (web, WhatsApp, walk-in)</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-leads" min="5000" max="150000" step="1000" value="20000"></div>
-        <div class="input-val" id="lv-leads">20,000</div>
-      </div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">Current lead → trial conversion</div><div class="input-desc">% of enquiries that become cortesías today</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-conv-curr" min="1" max="50" step="1" value="8"></div>
-        <div class="input-val" id="lv-conv-curr">8%</div>
-      </div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">AI lead → trial conversion</div><div class="input-desc">WhatsApp-first instant response lifts this materially</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-conv-ai" min="1" max="60" step="1" value="14"></div>
-        <div class="input-val" id="lv-conv-ai">14%</div>
-      </div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">Current trial → paid conversion</div><div class="input-desc">% of cortesías that convert to a paid membership</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-t2p-curr" min="5" max="80" step="1" value="25"></div>
-        <div class="input-val" id="lv-t2p-curr">25%</div>
-      </div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">AI trial → paid conversion</div><div class="input-desc">Brand routing + personalised follow-up during trial window</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-t2p-ai" min="5" max="90" step="1" value="38"></div>
-        <div class="input-val" id="lv-t2p-ai">38%</div>
-      </div>
-      <div class="sub-label">Membership Value</div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">Average annual membership fee (USD)</div><div class="input-desc">Blended across Bodytech, Athletic &amp; Sports Medicine brands</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-ann-fee" min="100" max="1000" step="10" value="250" class="blue"></div>
-        <div class="input-val" id="lv-ann-fee">$250</div>
-      </div>
-      <div class="sub-label">Sales Staff Redeployment</div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">Monthly sales team cost (USD)</div><div class="input-desc">Staff across sedes handling lead follow-up &amp; sales</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-sales-staff" min="10000" max="500000" step="5000" value="50000" class="gold"></div>
-        <div class="input-val" id="lv-sales-staff">$50,000</div>
-      </div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">% of sales workflow AI handles</div><div class="input-desc">Lead qualification, follow-up, trial booking, reminders</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-sales-ai" min="0" max="100" step="5" value="40" class="gold"></div>
-        <div class="input-val" id="lv-sales-ai">40%</div>
-      </div>
+  <div class="ctrl-divider"></div>
+  <div class="ctrl-group">
+    <span class="ctrl-label">Currency</span>
+    <div class="pill-group">
+      <div class="pill cur-active" id="cur-cop" onclick="setCurrency('COP')">COP</div>
+      <div class="pill" id="cur-usd" onclick="setCurrency('USD')">USD</div>
     </div>
   </div>
-
-  <!-- UC2: Collection -->
-  <div class="agent-card uc2">
-    <div class="card-header" onclick="toggleCard('uc2')">
-      <span class="card-arrow open" id="arr-uc2">&#9654;</span>
-      <span class="card-title">Collection Agent</span>
-      <span class="card-badge badge-core">Core</span>
-      <span class="card-value" id="wc-uc2">—</span>
-    </div>
-    <div class="card-body" id="body-uc2">
-      <div class="sub-label">Billing Recovery</div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">Monthly billing volume (USD)</div><div class="input-desc">Total recurring billing across all active members</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-billing" min="1000000" max="50000000" step="500000" value="8000000" class="blue"></div>
-        <div class="input-val" id="lv-billing">$8.0M</div>
+  <div class="ctrl-divider"></div>
+  <div class="ctrl-group" style="flex:1;gap:8px;flex-wrap:wrap;">
+    <span class="ctrl-label">Adoption Ramp</span>
+    <div class="ramp-inline">
+      <div class="ramp-item">
+        <span class="ramp-lbl">Mo 3</span>
+        <input type="range" class="ramp-sl" id="sl-ramp3" min="0" max="100" step="5" value="25" oninput="rampChange()">
+        <span class="ramp-v" id="rv-ramp3">25%</span>
       </div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">Current collection rate</div><div class="input-desc">% of monthly billing actually collected today</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-col-curr" min="50" max="100" step="1" value="90"></div>
-        <div class="input-val" id="lv-col-curr">90%</div>
+      <div class="ramp-item">
+        <span class="ramp-lbl">Mo 6</span>
+        <input type="range" class="ramp-sl" id="sl-ramp6" min="0" max="100" step="5" value="55" oninput="rampChange()">
+        <span class="ramp-v" id="rv-ramp6">55%</span>
       </div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">AI-assisted collection rate</div><div class="input-desc">WhatsApp reminders, payment links &amp; conversational collections</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-col-ai" min="50" max="100" step="1" value="94"></div>
-        <div class="input-val" id="lv-col-ai">94%</div>
+      <div class="ramp-item">
+        <span class="ramp-lbl">Mo 12</span>
+        <input type="range" class="ramp-sl" id="sl-ramp12" min="0" max="100" step="5" value="80" oninput="rampChange()">
+        <span class="ramp-v" id="rv-ramp12">80%</span>
       </div>
-      <div class="sub-label">Past-Due Recovery</div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">Delinquent members</div><div class="input-desc">Members with outstanding balances (~10% of base)</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-delin" min="5000" max="200000" step="5000" value="15000" class="blue"></div>
-        <div class="input-val" id="lv-delin">15,000</div>
-      </div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">Average past-due balance (USD)</div><div class="input-desc">Avg outstanding amount per delinquent member</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-pastdue-bal" min="10" max="200" step="5" value="25" class="blue"></div>
-        <div class="input-val" id="lv-pastdue-bal">$25</div>
-      </div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">% AI successfully recovers</div><div class="input-desc">Past-due members who pay after AI outreach</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-pastdue-rec" min="0" max="80" step="5" value="15" class="blue"></div>
-        <div class="input-val" id="lv-pastdue-rec">15%</div>
-      </div>
-      <div class="sub-label">Collections Staff Redeployment</div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">Monthly collections team cost (USD)</div><div class="input-desc">Staff handling payment reminders, dunning &amp; recovery</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-col-staff" min="5000" max="300000" step="5000" value="25000" class="gold"></div>
-        <div class="input-val" id="lv-col-staff">$25,000</div>
-      </div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">% of collections workflow AI handles</div><div class="input-desc">Reminders, payment links, failed card recovery</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-col-ai-pct" min="0" max="100" step="5" value="40" class="gold"></div>
-        <div class="input-val" id="lv-col-ai-pct">40%</div>
-      </div>
+      <span class="ramp-yr1-line">Yr 1 avg: <span id="ramp-yr1-val">—</span></span>
     </div>
   </div>
+</div>
 
-  <!-- UC3: Retention -->
-  <div class="agent-card uc3">
-    <div class="card-header" onclick="toggleCard('uc3')">
-      <span class="card-arrow open" id="arr-uc3">&#9654;</span>
-      <span class="card-title">Retention &amp; Churn Agent</span>
-      <span class="card-badge badge-core">Core</span>
-      <span class="card-value" id="wc-uc3">—</span>
-    </div>
-    <div class="card-body" id="body-uc3">
-      <div class="sub-label">Member Base</div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">Active member base</div><div class="input-desc">Total active paid members across all sedes and brands</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-members" min="50000" max="1000000" step="10000" value="150000"></div>
-        <div class="input-val" id="lv-members">150,000</div>
-      </div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">Current annual churn rate</div><div class="input-desc">Bodytech ~60%/yr, Athletic ~120%/yr — blended estimate</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-churn" min="10" max="150" step="5" value="65"></div>
-        <div class="input-val" id="lv-churn">65%</div>
-      </div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">Annual membership fee (USD)</div><div class="input-desc">Blended annual value of a retained member</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-ret-fee" min="100" max="1000" step="10" value="240" class="blue"></div>
-        <div class="input-val" id="lv-ret-fee">$240</div>
-      </div>
-      <div class="sub-label">Churn Reduction</div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">AI churn reduction (percentage points)</div><div class="input-desc">Amigo modelling: +5pp renewal ≈ $18M/yr. Slider = full-year impact.</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-churn-pp" min="1" max="25" step="1" value="4" class="blue"></div>
-        <div class="input-val" id="lv-churn-pp">4 pp</div>
-      </div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">Absence detection save rate</div><div class="input-desc">% of at-risk absent members successfully re-engaged by AI</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-absence-save" min="0" max="60" step="5" value="15" class="blue"></div>
-        <div class="input-val" id="lv-absence-save">15%</div>
-      </div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">% of members showing absence signal/mo</div><div class="input-desc">Members who miss ≥2 consecutive sessions in a month</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-absence-pct" min="2" max="30" step="1" value="8" class="blue"></div>
-        <div class="input-val" id="lv-absence-pct">8%</div>
-      </div>
-      <div class="sub-label">Retention Staff Redeployment</div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">Monthly retention team cost (USD)</div><div class="input-desc">Staff handling renewal calls, absence outreach &amp; recovery</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-ret-staff" min="10000" max="500000" step="5000" value="40000" class="gold"></div>
-        <div class="input-val" id="lv-ret-staff">$40,000</div>
-      </div>
-      <div class="input-row">
-        <div class="input-info"><div class="input-name">% of retention workflow AI handles</div><div class="input-desc">Churn scoring, outreach, renewal conversations</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-ret-ai-pct" min="0" max="100" step="5" value="30" class="gold"></div>
-        <div class="input-val" id="lv-ret-ai-pct">30%</div>
-      </div>
-    </div>
+<!-- ═══ CORE FUNCTIONS ═══ -->
+<div class="section-header">Amigo Agent — Core Functions</div>
+
+<!-- UC1 Sales -->
+<div class="agent-card uc1">
+  <div class="card-header" onclick="toggleCard('uc1')">
+    <span class="card-arrow open" id="arr-uc1">&#9654;</span>
+    <span class="card-title">Sales &amp; Acquisition Agent</span>
+    <span class="card-badge badge-core">Core</span>
+    <span class="card-value" id="wc-uc1">—</span>
   </div>
+  <div class="card-body" id="body-uc1">
+    <div class="sub-label">Lead Conversion</div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Monthly inbound leads</div><div class="input-desc">Cortesías &amp; trial enquiries across all sedes (web, WhatsApp, walk-in)</div></div><div class="input-slider-wrap"><input type="range" id="sl-leads" min="5000" max="150000" step="1000" value="20000"></div><div class="input-val" id="lv-leads">20,000</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Current lead → trial conversion</div><div class="input-desc">% of enquiries that become cortesías today</div></div><div class="input-slider-wrap"><input type="range" id="sl-conv-curr" min="1" max="50" step="1" value="8"></div><div class="input-val" id="lv-conv-curr">8%</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">AI lead → trial conversion</div><div class="input-desc">WhatsApp-first instant response lifts this materially</div></div><div class="input-slider-wrap"><input type="range" id="sl-conv-ai" min="1" max="60" step="1" value="14"></div><div class="input-val" id="lv-conv-ai">14%</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Current trial → paid conversion</div><div class="input-desc">% of cortesías that convert to a paid membership</div></div><div class="input-slider-wrap"><input type="range" id="sl-t2p-curr" min="5" max="80" step="1" value="25"></div><div class="input-val" id="lv-t2p-curr">25%</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">AI trial → paid conversion</div><div class="input-desc">Brand routing + personalised follow-up during trial window</div></div><div class="input-slider-wrap"><input type="range" id="sl-t2p-ai" min="5" max="90" step="1" value="38"></div><div class="input-val" id="lv-t2p-ai">38%</div></div>
+    <div class="sub-label">Membership Value</div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Average annual membership fee (USD)</div><div class="input-desc">Blended across Bodytech, Athletic &amp; Sports Medicine brands</div></div><div class="input-slider-wrap"><input type="range" id="sl-ann-fee" min="100" max="1000" step="10" value="250" class="blue"></div><div class="input-val" id="lv-ann-fee">$250</div></div>
+    <div class="sub-label">Sales Staff Redeployment</div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Monthly sales team cost (USD)</div><div class="input-desc">Staff across sedes handling lead follow-up &amp; sales</div></div><div class="input-slider-wrap"><input type="range" id="sl-sales-staff" min="10000" max="500000" step="5000" value="50000" class="gold"></div><div class="input-val" id="lv-sales-staff">$50,000</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">% of sales workflow AI handles</div><div class="input-desc">Lead qualification, follow-up, trial booking, reminders</div></div><div class="input-slider-wrap"><input type="range" id="sl-sales-ai" min="0" max="100" step="5" value="40" class="gold"></div><div class="input-val" id="lv-sales-ai">40%</div></div>
+  </div>
+</div>
 
-  <!-- ═══════════════════════════════════
-       ADD-ON MODULES
-  ════════════════════════════════════ -->
-  <div class="section-header">Add-On Modules</div>
+<!-- UC2 Collection -->
+<div class="agent-card uc2">
+  <div class="card-header" onclick="toggleCard('uc2')">
+    <span class="card-arrow open" id="arr-uc2">&#9654;</span>
+    <span class="card-title">Collection Agent</span>
+    <span class="card-badge badge-core">Core</span>
+    <span class="card-value" id="wc-uc2">—</span>
+  </div>
+  <div class="card-body" id="body-uc2">
+    <div class="sub-label">Billing Recovery</div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Monthly billing volume (USD)</div><div class="input-desc">Total recurring billing across all active members</div></div><div class="input-slider-wrap"><input type="range" id="sl-billing" min="1000000" max="50000000" step="500000" value="8000000" class="blue"></div><div class="input-val" id="lv-billing">$8.0M</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Current collection rate</div><div class="input-desc">% of monthly billing actually collected today</div></div><div class="input-slider-wrap"><input type="range" id="sl-col-curr" min="50" max="100" step="1" value="90"></div><div class="input-val" id="lv-col-curr">90%</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">AI-assisted collection rate</div><div class="input-desc">WhatsApp reminders, payment links &amp; conversational collections</div></div><div class="input-slider-wrap"><input type="range" id="sl-col-ai" min="50" max="100" step="1" value="94"></div><div class="input-val" id="lv-col-ai">94%</div></div>
+    <div class="sub-label">Past-Due Recovery</div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Delinquent members</div><div class="input-desc">Members with outstanding balances (~10% of base)</div></div><div class="input-slider-wrap"><input type="range" id="sl-delin" min="5000" max="200000" step="5000" value="15000" class="blue"></div><div class="input-val" id="lv-delin">15,000</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Average past-due balance (USD)</div><div class="input-desc">Avg outstanding amount per delinquent member</div></div><div class="input-slider-wrap"><input type="range" id="sl-pastdue-bal" min="10" max="200" step="5" value="25" class="blue"></div><div class="input-val" id="lv-pastdue-bal">$25</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">% AI successfully recovers</div><div class="input-desc">Past-due members who pay after AI outreach</div></div><div class="input-slider-wrap"><input type="range" id="sl-pastdue-rec" min="0" max="80" step="5" value="15" class="blue"></div><div class="input-val" id="lv-pastdue-rec">15%</div></div>
+    <div class="sub-label">Collections Staff Redeployment</div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Monthly collections team cost (USD)</div><div class="input-desc">Staff handling payment reminders, dunning &amp; recovery</div></div><div class="input-slider-wrap"><input type="range" id="sl-col-staff" min="5000" max="300000" step="5000" value="25000" class="gold"></div><div class="input-val" id="lv-col-staff">$25,000</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">% of collections workflow AI handles</div><div class="input-desc">Reminders, payment links, failed card recovery</div></div><div class="input-slider-wrap"><input type="range" id="sl-col-ai-pct" min="0" max="100" step="5" value="40" class="gold"></div><div class="input-val" id="lv-col-ai-pct">40%</div></div>
+  </div>
+</div>
+
+<!-- UC3 Retention -->
+<div class="agent-card uc3">
+  <div class="card-header" onclick="toggleCard('uc3')">
+    <span class="card-arrow open" id="arr-uc3">&#9654;</span>
+    <span class="card-title">Retention &amp; Churn Agent</span>
+    <span class="card-badge badge-core">Core</span>
+    <span class="card-value" id="wc-uc3">—</span>
+  </div>
+  <div class="card-body" id="body-uc3">
+    <div class="sub-label">Member Base</div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Active member base</div><div class="input-desc">Total active paid members across all sedes and brands</div></div><div class="input-slider-wrap"><input type="range" id="sl-members" min="50000" max="1000000" step="10000" value="150000"></div><div class="input-val" id="lv-members">150,000</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Current annual churn rate</div><div class="input-desc">Bodytech ~60%/yr, Athletic ~120%/yr — blended estimate</div></div><div class="input-slider-wrap"><input type="range" id="sl-churn" min="10" max="150" step="5" value="65"></div><div class="input-val" id="lv-churn">65%</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Annual membership fee (USD)</div><div class="input-desc">Blended annual value of a retained member</div></div><div class="input-slider-wrap"><input type="range" id="sl-ret-fee" min="100" max="1000" step="10" value="240" class="blue"></div><div class="input-val" id="lv-ret-fee">$240</div></div>
+    <div class="sub-label">Churn Reduction</div>
+    <div class="input-row"><div class="input-info"><div class="input-name">AI churn reduction (percentage points)</div><div class="input-desc">Amigo modelling: +5pp renewal ≈ $18M/yr. Slider = full-year impact.</div></div><div class="input-slider-wrap"><input type="range" id="sl-churn-pp" min="1" max="25" step="1" value="4" class="blue"></div><div class="input-val" id="lv-churn-pp">4 pp</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Absence detection save rate</div><div class="input-desc">% of at-risk absent members successfully re-engaged by AI</div></div><div class="input-slider-wrap"><input type="range" id="sl-absence-save" min="0" max="60" step="5" value="15" class="blue"></div><div class="input-val" id="lv-absence-save">15%</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">% of members showing absence signal/mo</div><div class="input-desc">Members who miss ≥2 consecutive sessions in a month</div></div><div class="input-slider-wrap"><input type="range" id="sl-absence-pct" min="2" max="30" step="1" value="8" class="blue"></div><div class="input-val" id="lv-absence-pct">8%</div></div>
+    <div class="sub-label">Retention Staff Redeployment</div>
+    <div class="input-row"><div class="input-info"><div class="input-name">Monthly retention team cost (USD)</div><div class="input-desc">Staff handling renewal calls, absence outreach &amp; recovery</div></div><div class="input-slider-wrap"><input type="range" id="sl-ret-staff" min="10000" max="500000" step="5000" value="40000" class="gold"></div><div class="input-val" id="lv-ret-staff">$40,000</div></div>
+    <div class="input-row"><div class="input-info"><div class="input-name">% of retention workflow AI handles</div><div class="input-desc">Churn scoring, outreach, renewal conversations</div></div><div class="input-slider-wrap"><input type="range" id="sl-ret-ai-pct" min="0" max="100" step="5" value="30" class="gold"></div><div class="input-val" id="lv-ret-ai-pct">30%</div></div>
+  </div>
+</div>
+
+<!-- ═══ ADD-ON MODULES ═══ -->
+<div class="section-header">Add-On Modules</div>
+<div class="addon-grid">
 
   <!-- Global Business Assumptions -->
-  <div class="agent-card addon" id="card-global">
-    <div class="card-header" onclick="toggleCard('global')">
-      <span class="card-arrow" id="arr-global">&#9654;</span>
-      <span class="card-title">Global Business Assumptions</span>
-      <span class="card-badge badge-context">Context</span>
-      <span class="card-value" style="font-size:12px;color:var(--muted);font-weight:600;">Reference</span>
+  <div class="mod-card" id="mod-global">
+    <div class="mod-card-top">
+      <div class="mod-icon">🌐</div>
+      <div class="mod-info">
+        <div class="mod-name">Business Assumptions</div>
+        <div class="mod-desc">Adjust Bodytech network parameters: member count, sedes, revenue, COP/USD rate.</div>
+        <div class="mod-val hidden" id="mv-global">—</div>
+      </div>
+      <label class="tog" onclick="event.stopPropagation()"><input type="checkbox" id="tog-global" onchange="toggleAddon('global')"><span class="tog-slider"></span></label>
     </div>
-    <div class="card-body collapsed" id="body-global">
-      <div class="addon-toggle-row">
-        <span class="addon-enabled-label">Include in calculation</span>
-        <label class="tog"><input type="checkbox" id="tog-global" onchange="toggleAgent('global')"><span class="tog-slider"></span></label>
-      </div>
-      <div id="global-content" style="display:none">
-        <div class="sub-label">Bodytech Network Overview</div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Total active members</div><div class="input-desc">Paid members across Bodytech, Athletic &amp; Sports Medicine</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-g-members" min="100000" max="1500000" step="10000" value="600000"></div>
-          <div class="input-val" id="lv-g-members">600,000</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Number of sedes (locations)</div><div class="input-desc">Active club locations across Colombia</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-g-sedes" min="20" max="200" step="1" value="82"></div>
-          <div class="input-val" id="lv-g-sedes">82</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Blended monthly fee (USD)</div><div class="input-desc">Average across all brands and tiers</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-g-fee" min="10" max="100" step="1" value="30" class="blue"></div>
-          <div class="input-val" id="lv-g-fee">$30</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">COP / USD exchange rate</div><div class="input-desc">Used for COP display across all outputs</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-g-cop" min="3000" max="6000" step="100" value="4200" class="blue"></div>
-          <div class="input-val" id="lv-g-cop">4,200</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Annual revenue (USD)</div><div class="input-desc">Approx. total gym revenue (members × fee × 12)</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-g-revenue" min="50000000" max="500000000" step="5000000" value="216000000" class="gold"></div>
-          <div class="input-val" id="lv-g-revenue">$216M</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Monthly class reservations</div><div class="input-desc">Total class bookings/mo network-wide</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-g-classes" min="500000" max="10000000" step="100000" value="2000000"></div>
-          <div class="input-val" id="lv-g-classes">2,000,000</div>
-        </div>
-      </div>
+    <div class="mod-body">
+      <div class="input-row"><div class="input-info"><div class="input-name">Total active members</div><div class="input-desc">Paid members across all brands</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-members" min="100000" max="1500000" step="10000" value="600000"></div><div class="input-val" id="lv-g-members">600,000</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Number of sedes</div><div class="input-desc">Active club locations across Colombia</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-sedes" min="20" max="200" step="1" value="82"></div><div class="input-val" id="lv-g-sedes">82</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Blended monthly fee (USD)</div><div class="input-desc">Average across all brands and tiers</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-fee" min="10" max="100" step="1" value="30" class="blue"></div><div class="input-val" id="lv-g-fee">$30</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">COP / USD exchange rate</div><div class="input-desc">Used for COP display across all outputs</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-cop" min="3000" max="6000" step="100" value="4200" class="blue"></div><div class="input-val" id="lv-g-cop">4,200</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Annual revenue (USD)</div><div class="input-desc">Approx. total gym revenue (members × fee × 12)</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-revenue" min="50000000" max="500000000" step="5000000" value="216000000" class="gold"></div><div class="input-val" id="lv-g-revenue">$216M</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Monthly class reservations</div><div class="input-desc">Total class bookings/mo network-wide</div></div><div class="input-slider-wrap"><input type="range" id="sl-g-classes" min="500000" max="10000000" step="100000" value="2000000"></div><div class="input-val" id="lv-g-classes">2,000,000</div></div>
     </div>
   </div>
 
-  <!-- CLASS: Reservations & Operations -->
-  <div class="agent-card addon" id="card-class">
-    <div class="card-header" onclick="toggleCard('class')">
-      <span class="card-arrow" id="arr-class">&#9654;</span>
-      <span class="card-title">Class Reservations &amp; Operations Agent</span>
-      <span class="card-badge badge-addon">Add-On</span>
-      <span class="card-value" id="wc-class">—</span>
+  <!-- Class Reservations -->
+  <div class="mod-card" id="mod-class">
+    <div class="mod-card-top">
+      <div class="mod-icon">🗓️</div>
+      <div class="mod-info">
+        <div class="mod-name">Class Reservations &amp; Ops</div>
+        <div class="mod-desc">Reduce no-shows, recover premium slots &amp; deflect front-desk queries with AI.</div>
+        <div class="mod-val hidden" id="mv-class">—</div>
+      </div>
+      <label class="tog" onclick="event.stopPropagation()"><input type="checkbox" id="tog-class" onchange="toggleAddon('class')"><span class="tog-slider"></span></label>
     </div>
-    <div class="card-body collapsed" id="body-class">
-      <div class="addon-toggle-row">
-        <span class="addon-enabled-label">Include in calculation</span>
-        <label class="tog"><input type="checkbox" id="tog-class" onchange="toggleAgent('class')"><span class="tog-slider"></span></label>
-      </div>
-      <div id="class-content" style="display:none">
-        <div class="sub-label">Class No-Show Reduction</div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Monthly class reservations</div><div class="input-desc">Total booked class slots across all sedes</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cls-res" min="100000" max="10000000" step="100000" value="500000"></div>
-          <div class="input-val" id="lv-cls-res">500,000</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Current class no-show rate</div><div class="input-desc">% of booked slots where member doesn't show</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cls-ns-curr" min="0" max="60" step="1" value="20"></div>
-          <div class="input-val" id="lv-cls-ns-curr">20%</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">AI-assisted no-show rate</div><div class="input-desc">AI reminders + waitlist backfill reduce this significantly</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cls-ns-ai" min="0" max="50" step="1" value="8"></div>
-          <div class="input-val" id="lv-cls-ns-ai">8%</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Revenue per recovered class slot (USD)</div><div class="input-desc">Value of a filled slot (premium group class / PT session)</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cls-slot-rev" min="1" max="30" step="1" value="3" class="blue"></div>
-          <div class="input-val" id="lv-cls-slot-rev">$3</div>
-        </div>
-        <div class="sub-label">Front-Desk Deflection</div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Monthly inbound member queries</div><div class="input-desc">WhatsApp + phone inquiries about schedules, policies, sedes</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cls-queries" min="50000" max="2000000" step="50000" value="100000"></div>
-          <div class="input-val" id="lv-cls-queries">100,000</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">% AI deflects end-to-end</div><div class="input-desc">Queries resolved without staff involvement</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cls-deflect" min="0" max="100" step="5" value="40"></div>
-          <div class="input-val" id="lv-cls-deflect">40%</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Cost per deflected interaction (USD)</div><div class="input-desc">Staff cost avoided per query handled by AI</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cls-defl-cost" min="0.10" max="5" step="0.10" value="0.50" class="gold"></div>
-          <div class="input-val" id="lv-cls-defl-cost">$0.50</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Monthly front-desk &amp; concierge staff cost (USD)</div><div class="input-desc">Loaded cost of receptionist / ops teams across sedes</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cls-staff" min="10000" max="500000" step="5000" value="30000" class="gold"></div>
-          <div class="input-val" id="lv-cls-staff">$30,000</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">% front-desk work AI handles</div><div class="input-desc">Bookings, FAQ, concierge — addressable by conversational AI</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cls-staff-ai" min="0" max="100" step="5" value="30" class="gold"></div>
-          <div class="input-val" id="lv-cls-staff-ai">30%</div>
-        </div>
-      </div>
+    <div class="mod-body">
+      <div class="input-row"><div class="input-info"><div class="input-name">Monthly class reservations</div><div class="input-desc">Total booked class slots across all sedes</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-res" min="100000" max="10000000" step="100000" value="500000"></div><div class="input-val" id="lv-cls-res">500,000</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Current class no-show rate</div><div class="input-desc">% of booked slots where member doesn't show</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-ns-curr" min="0" max="60" step="1" value="20"></div><div class="input-val" id="lv-cls-ns-curr">20%</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">AI-assisted no-show rate</div><div class="input-desc">AI reminders + waitlist backfill reduce this significantly</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-ns-ai" min="0" max="50" step="1" value="8"></div><div class="input-val" id="lv-cls-ns-ai">8%</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Revenue per recovered slot (USD)</div><div class="input-desc">Value of a filled slot (premium class / PT session)</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-slot-rev" min="1" max="30" step="1" value="3" class="blue"></div><div class="input-val" id="lv-cls-slot-rev">$3</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Monthly inbound member queries</div><div class="input-desc">WhatsApp + phone inquiries about schedules, policies, sedes</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-queries" min="50000" max="2000000" step="50000" value="100000"></div><div class="input-val" id="lv-cls-queries">100,000</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">% AI deflects end-to-end</div><div class="input-desc">Queries resolved without staff involvement</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-deflect" min="0" max="100" step="5" value="40"></div><div class="input-val" id="lv-cls-deflect">40%</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Cost per deflected interaction (USD)</div><div class="input-desc">Staff cost avoided per query handled by AI</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-defl-cost" min="0.10" max="5" step="0.10" value="0.50" class="gold"></div><div class="input-val" id="lv-cls-defl-cost">$0.50</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Monthly front-desk staff cost (USD)</div><div class="input-desc">Loaded cost of receptionist / ops teams across sedes</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-staff" min="10000" max="500000" step="5000" value="30000" class="gold"></div><div class="input-val" id="lv-cls-staff">$30,000</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">% front-desk work AI handles</div><div class="input-desc">Bookings, FAQ, concierge — addressable by AI</div></div><div class="input-slider-wrap"><input type="range" id="sl-cls-staff-ai" min="0" max="100" step="5" value="30" class="gold"></div><div class="input-val" id="lv-cls-staff-ai">30%</div></div>
     </div>
   </div>
 
-  <!-- COACH: Personalized Coaching -->
-  <div class="agent-card addon" id="card-coach">
-    <div class="card-header" onclick="toggleCard('coach')">
-      <span class="card-arrow" id="arr-coach">&#9654;</span>
-      <span class="card-title">Personalized Coaching Agent</span>
-      <span class="card-badge badge-addon">Add-On</span>
-      <span class="card-value" id="wc-coach">—</span>
+  <!-- Personalized Coaching -->
+  <div class="mod-card" id="mod-coach">
+    <div class="mod-card-top">
+      <div class="mod-icon">🏋️</div>
+      <div class="mod-info">
+        <div class="mod-name">Personalized Coaching</div>
+        <div class="mod-desc">AI coaching reduces churn, drives premium upsell and specialist referral revenue.</div>
+        <div class="mod-val hidden" id="mv-coach">—</div>
+      </div>
+      <label class="tog" onclick="event.stopPropagation()"><input type="checkbox" id="tog-coach" onchange="toggleAddon('coach')"><span class="tog-slider"></span></label>
     </div>
-    <div class="card-body collapsed" id="body-coach">
-      <div class="addon-toggle-row">
-        <span class="addon-enabled-label">Include in calculation</span>
-        <label class="tog"><input type="checkbox" id="tog-coach" onchange="toggleAgent('coach')"><span class="tog-slider"></span></label>
-      </div>
-      <div id="coach-content" style="display:none">
-        <div class="sub-label">Coached Member Base</div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">% of members on AI coaching at Yr-1 end</div><div class="input-desc">% of total member base using AI coach by Month 12</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cch-pct" min="1" max="80" step="1" value="15"></div>
-          <div class="input-val" id="lv-cch-pct">15%</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Total member base (pulls from UC3)</div><div class="input-desc">Active paid members for coaching uplift calculation</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cch-members" min="50000" max="1000000" step="10000" value="150000"></div>
-          <div class="input-val" id="lv-cch-members">150,000</div>
-        </div>
-        <div class="sub-label">Retention Uplift from Coaching</div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Churn reduction for coached members (pp)</div><div class="input-desc">Members seeing results churn measurably less</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cch-churn" min="1" max="20" step="1" value="5" class="blue"></div>
-          <div class="input-val" id="lv-cch-churn">5 pp</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Annual membership fee (USD)</div><div class="input-desc">Value of each retained coached member</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cch-fee" min="100" max="1000" step="10" value="240" class="blue"></div>
-          <div class="input-val" id="lv-cch-fee">$240</div>
-        </div>
-        <div class="sub-label">Premium Upsell</div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">% coached members upgrading to premium add-on</div><div class="input-desc">PT sessions, advanced plans, wearable integration tier</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cch-upsell-pct" min="0" max="30" step="1" value="3" class="blue"></div>
-          <div class="input-val" id="lv-cch-upsell-pct">3%</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Monthly premium add-on value (USD)</div><div class="input-desc">Incremental monthly revenue per upgraded member</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cch-upsell-val" min="5" max="100" step="5" value="10" class="blue"></div>
-          <div class="input-val" id="lv-cch-upsell-val">$10</div>
-        </div>
-        <div class="sub-label">Specialist Referral Revenue</div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">% coached members hitting plateau signal</div><div class="input-desc">AI detects stagnation and suggests specialist referral</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cch-plateau-pct" min="0" max="50" step="5" value="10" class="gold"></div>
-          <div class="input-val" id="lv-cch-plateau-pct">10%</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">% who convert to specialist session</div><div class="input-desc">Physio, deportólogo, nutritionist referral conversion</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cch-plateau-conv" min="0" max="60" step="5" value="20" class="gold"></div>
-          <div class="input-val" id="lv-cch-plateau-conv">20%</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Specialist session fee (USD)</div><div class="input-desc">Revenue from referred specialist visits</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-cch-session-fee" min="10" max="150" step="5" value="40" class="gold"></div>
-          <div class="input-val" id="lv-cch-session-fee">$40</div>
-        </div>
-      </div>
+    <div class="mod-body">
+      <div class="input-row"><div class="input-info"><div class="input-name">% of members on AI coaching at Yr-1 end</div><div class="input-desc">% of total member base using AI coach by Month 12</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-pct" min="1" max="80" step="1" value="15"></div><div class="input-val" id="lv-cch-pct">15%</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Total member base</div><div class="input-desc">Active paid members for coaching uplift calculation</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-members" min="50000" max="1000000" step="10000" value="150000"></div><div class="input-val" id="lv-cch-members">150,000</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Churn reduction for coached members (pp)</div><div class="input-desc">Members seeing results churn measurably less</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-churn" min="1" max="20" step="1" value="5" class="blue"></div><div class="input-val" id="lv-cch-churn">5 pp</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Annual membership fee (USD)</div><div class="input-desc">Value of each retained coached member</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-fee" min="100" max="1000" step="10" value="240" class="blue"></div><div class="input-val" id="lv-cch-fee">$240</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">% coached members upgrading to premium</div><div class="input-desc">PT sessions, advanced plans, wearable integration tier</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-upsell-pct" min="0" max="30" step="1" value="3" class="blue"></div><div class="input-val" id="lv-cch-upsell-pct">3%</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Monthly premium add-on value (USD)</div><div class="input-desc">Incremental monthly revenue per upgraded member</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-upsell-val" min="5" max="100" step="5" value="10" class="blue"></div><div class="input-val" id="lv-cch-upsell-val">$10</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">% coached members hitting plateau signal</div><div class="input-desc">AI detects stagnation and suggests specialist referral</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-plateau-pct" min="0" max="50" step="5" value="10" class="gold"></div><div class="input-val" id="lv-cch-plateau-pct">10%</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">% who convert to specialist session</div><div class="input-desc">Physio, deportólogo, nutritionist referral conversion</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-plateau-conv" min="0" max="60" step="5" value="20" class="gold"></div><div class="input-val" id="lv-cch-plateau-conv">20%</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Specialist session fee (USD)</div><div class="input-desc">Revenue from referred specialist visits</div></div><div class="input-slider-wrap"><input type="range" id="sl-cch-session-fee" min="10" max="150" step="5" value="40" class="gold"></div><div class="input-val" id="lv-cch-session-fee">$40</div></div>
     </div>
   </div>
 
-  <!-- NUTRI: Nutrition & Cross-sell -->
-  <div class="agent-card addon" id="card-nutri">
-    <div class="card-header" onclick="toggleCard('nutri')">
-      <span class="card-arrow" id="arr-nutri">&#9654;</span>
-      <span class="card-title">Nutrition &amp; Cross-sell Agent</span>
-      <span class="card-badge badge-addon">Add-On</span>
-      <span class="card-value" id="wc-nutri">—</span>
+  <!-- Nutrition & Cross-sell -->
+  <div class="mod-card" id="mod-nutri">
+    <div class="mod-card-top">
+      <div class="mod-icon">🥗</div>
+      <div class="mod-info">
+        <div class="mod-name">Nutrition &amp; Cross-sell</div>
+        <div class="mod-desc">Upsell nutrition plans and cross-sell add-on products to eligible members via AI.</div>
+        <div class="mod-val hidden" id="mv-nutri">—</div>
+      </div>
+      <label class="tog" onclick="event.stopPropagation()"><input type="checkbox" id="tog-nutri" onchange="toggleAddon('nutri')"><span class="tog-slider"></span></label>
     </div>
-    <div class="card-body collapsed" id="body-nutri">
-      <div class="addon-toggle-row">
-        <span class="addon-enabled-label">Include in calculation</span>
-        <label class="tog"><input type="checkbox" id="tog-nutri" onchange="toggleAgent('nutri')"><span class="tog-slider"></span></label>
-      </div>
-      <div id="nutri-content" style="display:none">
-        <div class="sub-label">Nutrition Plan Upsell</div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Eligible members / potential buyers</div><div class="input-desc">Members in proximity to nutrition desk or showing fitness goals</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-nut-eligible" min="10000" max="500000" step="10000" value="100000"></div>
-          <div class="input-val" id="lv-nut-eligible">100,000</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Conversion rate to nutrition add-on</div><div class="input-desc">% of eligible members who purchase a plan after AI nudge</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-nut-conv" min="0" max="30" step="1" value="3" class="blue"></div>
-          <div class="input-val" id="lv-nut-conv">3%</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Monthly nutrition plan revenue per member (USD)</div><div class="input-desc">Monthly incremental revenue from nutrition plan sale</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-nut-rev" min="5" max="100" step="5" value="15" class="blue"></div>
-          <div class="input-val" id="lv-nut-rev">$15</div>
-        </div>
-        <div class="sub-label">General Cross-Sell</div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">% of eligible members targeted for cross-sell</div><div class="input-desc">Members AI targets with personalised cross-sell campaigns</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-xsell-pct" min="0" max="100" step="5" value="20" class="gold"></div>
-          <div class="input-val" id="lv-xsell-pct">20%</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Cross-sell conversion rate</div><div class="input-desc">% of targeted members who purchase an add-on product</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-xsell-conv" min="0" max="30" step="1" value="5" class="gold"></div>
-          <div class="input-val" id="lv-xsell-conv">5%</div>
-        </div>
-        <div class="input-row">
-          <div class="input-info"><div class="input-name">Average cross-sell value / mo per member (USD)</div><div class="input-desc">Monthly incremental revenue per converted cross-sell member</div></div>
-          <div class="input-slider-wrap"><input type="range" id="sl-xsell-val" min="5" max="100" step="5" value="20" class="blue"></div>
-          <div class="input-val" id="lv-xsell-val">$20</div>
-        </div>
-      </div>
+    <div class="mod-body">
+      <div class="input-row"><div class="input-info"><div class="input-name">Eligible members / potential buyers</div><div class="input-desc">Members showing fitness goals or near nutrition desk</div></div><div class="input-slider-wrap"><input type="range" id="sl-nut-eligible" min="10000" max="500000" step="10000" value="100000"></div><div class="input-val" id="lv-nut-eligible">100,000</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Conversion rate to nutrition add-on</div><div class="input-desc">% of eligible members who purchase a plan after AI nudge</div></div><div class="input-slider-wrap"><input type="range" id="sl-nut-conv" min="0" max="30" step="1" value="3" class="blue"></div><div class="input-val" id="lv-nut-conv">3%</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Monthly nutrition plan revenue / member (USD)</div><div class="input-desc">Monthly incremental revenue from nutrition plan sale</div></div><div class="input-slider-wrap"><input type="range" id="sl-nut-rev" min="5" max="100" step="5" value="15" class="blue"></div><div class="input-val" id="lv-nut-rev">$15</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">% of eligible members targeted for cross-sell</div><div class="input-desc">Members AI targets with personalised campaigns</div></div><div class="input-slider-wrap"><input type="range" id="sl-xsell-pct" min="0" max="100" step="5" value="20" class="gold"></div><div class="input-val" id="lv-xsell-pct">20%</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Cross-sell conversion rate</div><div class="input-desc">% of targeted members who purchase an add-on product</div></div><div class="input-slider-wrap"><input type="range" id="sl-xsell-conv" min="0" max="30" step="1" value="5" class="gold"></div><div class="input-val" id="lv-xsell-conv">5%</div></div>
+      <div class="input-row"><div class="input-info"><div class="input-name">Average cross-sell value / mo per member (USD)</div><div class="input-desc">Monthly incremental revenue per converted cross-sell member</div></div><div class="input-slider-wrap"><input type="range" id="sl-xsell-val" min="5" max="100" step="5" value="20" class="blue"></div><div class="input-val" id="lv-xsell-val">$20</div></div>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════
-       AMIGO INVESTMENT
-  ════════════════════════════════════ -->
-  <div class="section-header">Amigo Investment</div>
+</div><!-- /addon-grid -->
 
-  <div class="agent-card cost-card">
-    <div class="card-header" onclick="toggleCard('cost')">
-      <span class="card-arrow open" id="arr-cost">&#9654;</span>
-      <span class="card-title">Amigo Platform Cost</span>
-      <span class="card-value" id="kpi-cost-card">—</span>
+<!-- ═══ AMIGO INVESTMENT ═══ -->
+<div class="section-header">Amigo Investment</div>
+<div class="agent-card cost-card">
+  <div class="card-header" onclick="toggleCard('cost')">
+    <span class="card-arrow open" id="arr-cost">&#9654;</span>
+    <span class="card-title">Amigo Platform Cost</span>
+    <span class="card-value" id="kpi-cost-card">—</span>
+  </div>
+  <div class="card-body" id="body-cost">
+    <div class="cost-row">
+      <div class="cost-info"><div class="cost-name">Monthly platform fee <span style="font-weight:400;color:var(--muted)">(negotiable)</span></div><div class="cost-desc">Confirm final pricing with Saad</div></div>
+      <div class="cost-slider-wrap"><input type="range" id="sl-plat" min="0" max="100000" step="1000" value="20000" class="muted"></div>
+      <div class="cost-val" id="lv-plat">—</div>
     </div>
-    <div class="card-body" id="body-cost">
-      <div class="cost-row">
-        <div class="cost-info">
-          <div class="cost-name">Monthly platform fee <span style="font-weight:400;color:var(--muted)">(negotiable)</span></div>
-          <div class="cost-desc">Confirm final pricing with Saad</div>
-        </div>
-        <div class="cost-slider-wrap"><input type="range" id="sl-plat" min="0" max="100000" step="1000" value="20000" class="muted"></div>
-        <div class="cost-val" id="lv-plat">—</div>
-      </div>
-      <div class="cost-row">
-        <div class="cost-info">
-          <div class="cost-name">One-time setup fee</div>
-          <div class="cost-desc">Integration, onboarding &amp; initial training</div>
-        </div>
-        <div class="cost-slider-wrap"><input type="range" id="sl-setup" min="0" max="200000" step="5000" value="0" class="muted"></div>
-        <div class="cost-val" id="lv-setup">$0</div>
-      </div>
-      <div class="cost-row">
-        <div class="cost-info">
-          <div class="cost-name">Ongoing AI Agent usage fee</div>
-          <div class="cost-desc">Monthly usage charges for AI agent message volume</div>
-        </div>
-        <div class="cost-slider-wrap"><input type="range" id="sl-usage" min="0" max="50000" step="500" value="2000" class="muted"></div>
-        <div class="cost-val" id="lv-usage">—</div>
-      </div>
-      <div class="cost-total-row">
-        <span class="cost-total-label">Total Annual Investment</span>
-        <span class="cost-total-val" id="cost-total-val">—</span>
-      </div>
+    <div class="cost-row">
+      <div class="cost-info"><div class="cost-name">One-time setup fee</div><div class="cost-desc">Integration, onboarding &amp; initial training</div></div>
+      <div class="cost-slider-wrap"><input type="range" id="sl-setup" min="0" max="200000" step="5000" value="0" class="muted"></div>
+      <div class="cost-val" id="lv-setup">$0</div>
+    </div>
+    <div class="cost-row">
+      <div class="cost-info"><div class="cost-name">Ongoing AI Agent usage fee</div><div class="cost-desc">Monthly usage charges for AI agent message volume</div></div>
+      <div class="cost-slider-wrap"><input type="range" id="sl-usage" min="0" max="50000" step="500" value="2000" class="muted"></div>
+      <div class="cost-val" id="lv-usage">—</div>
+    </div>
+    <div class="cost-total-row">
+      <span class="cost-total-label">Total Annual Investment</span>
+      <span class="cost-total-val" id="cost-total-val">—</span>
     </div>
   </div>
+</div>
 
-  <!-- ═══════════════════════════════════
-       BAR CHART
-  ════════════════════════════════════ -->
-  <div class="section-header">Annual Benefit by Agent</div>
-  <div class="chart-wrap">
-    <div id="chart-container">Loading...</div>
-  </div>
-
-  <!-- ═══════════════════════════════════
-       NPV STRIP
-  ════════════════════════════════════ -->
-  <div class="section-header">Net Present Value (12% Annual Discount)</div>
-  <div class="npv-strip">
-    <div class="npv-card">
-      <div class="npv-label">NPV — 12 Months</div>
-      <div class="npv-value" id="npv-12">—</div>
-      <div class="npv-sub">Discounted at 12% annual</div>
-    </div>
-    <div class="npv-card">
-      <div class="npv-label">NPV — 24 Months</div>
-      <div class="npv-value" id="npv-24">—</div>
-      <div class="npv-sub">Discounted at 12% annual</div>
-    </div>
-    <div class="npv-card">
-      <div class="npv-label">NPV — 36 Months</div>
-      <div class="npv-value" id="npv-36">—</div>
-      <div class="npv-sub">Discounted at 12% annual</div>
-    </div>
-  </div>
+<!-- ═══ BAR CHART ═══ -->
+<div class="section-header">Annual Benefit by Agent</div>
+<div class="chart-wrap"><div id="chart-container">Loading...</div></div>
 
 </div><!-- /main -->
 
-<footer>
-  Confidential — Prepared for Bodytech × Amigo AI &nbsp;|&nbsp; Figures are projections based on assumptions entered above &nbsp;|&nbsp; Amigo AI © 2026
-</footer>
+<footer>Figures are projections based on assumptions entered above</footer>
 
 <script>
 (function(){
 
-/* ── State ── */
-var CUR = 'COP';
-var COP_RATE = 4200;
-var SCENARIO = 0.6;
-var ACTIVE = { global:false, class:false, coach:false, nutri:false };
+var CUR='COP', COP_RATE=4200, SCENARIO=1.0;
+var ACTIVE={global:false,class:false,coach:false,nutri:false};
 
-/* ── Helpers ── */
-function $id(id){ return document.getElementById(id); }
-function setTxt(id, val){ var el=$id(id); if(el) el.textContent=val; }
-function g(id){ return parseFloat($id(id).value)||0; }
-function fmtNum(n){ return Math.round(n).toLocaleString('en-US'); }
+function $id(id){return document.getElementById(id);}
+function setTxt(id,val){var el=$id(id);if(el)el.textContent=val;}
+function g(id){return parseFloat($id(id).value)||0;}
+function fmtNum(n){return Math.round(n).toLocaleString('en-US');}
 
-function fmt(n, compact){
+function fmt(n,compact){
   if(CUR==='COP'){
-    var v = n * COP_RATE;
+    var v=n*COP_RATE;
     if(compact){
       if(Math.abs(v)>=1e9) return 'COP $'+(v/1e9).toFixed(1)+'B';
       if(Math.abs(v)>=1e6) return 'COP $'+(v/1e6).toFixed(1)+'M';
@@ -1020,359 +565,270 @@ function fmt(n, compact){
     return '$'+Math.round(n).toLocaleString('en-US');
   }
 }
+function fmtCost(v){return CUR==='COP'?fmt(v):'$'+Math.round(v).toLocaleString('en-US');}
 
-function fmtCost(v){
-  if(CUR==='COP') return fmt(v);
-  return '$'+Math.round(v).toLocaleString('en-US');
-}
-
-/* ── Ramp ── */
-function rampFactor(){
-  return (3*g('sl-ramp3') + 3*g('sl-ramp6') + 6*g('sl-ramp12')) / 1200;
-}
+function rampFactor(){return (3*g('sl-ramp3')+3*g('sl-ramp6')+6*g('sl-ramp12'))/1200;}
 function rampChange(){
-  setTxt('rv-ramp3', g('sl-ramp3')+'%');
-  setTxt('rv-ramp6', g('sl-ramp6')+'%');
-  setTxt('rv-ramp12', g('sl-ramp12')+'%');
+  setTxt('rv-ramp3',g('sl-ramp3')+'%');
+  setTxt('rv-ramp6',g('sl-ramp6')+'%');
+  setTxt('rv-ramp12',g('sl-ramp12')+'%');
   recalc();
 }
 
-/* ── Scenario ── */
-function setScenario(s){
-  ['cons','base','agg'].forEach(function(x){ $id('sc-'+x).classList.remove('active'); });
-  $id('sc-'+s).classList.add('active');
-  SCENARIO = (s==='cons') ? 0.6 : (s==='agg') ? 1.4 : 1.0;
-  recalc();
-}
-
-/* ── Currency ── */
 function setCurrency(c){
   $id('cur-cop').classList.remove('cur-active');
   $id('cur-usd').classList.remove('cur-active');
   $id('cur-'+(c==='COP'?'cop':'usd')).classList.add('cur-active');
-  CUR = c;
-  recalc();
+  CUR=c; recalc();
 }
 
-/* ── Card Toggle ── */
 function toggleCard(key){
-  var body = $id('body-'+key);
-  var arr  = $id('arr-'+key);
+  var body=$id('body-'+key), arr=$id('arr-'+key);
   if(!body) return;
-  var isCollapsed = body.classList.contains('collapsed');
-  if(isCollapsed){
-    body.classList.remove('collapsed');
-    if(arr) arr.classList.add('open');
-  } else {
-    body.classList.add('collapsed');
-    if(arr) arr.classList.remove('open');
-  }
+  var collapsed=body.classList.contains('collapsed');
+  if(collapsed){body.classList.remove('collapsed');if(arr)arr.classList.add('open');}
+  else{body.classList.add('collapsed');if(arr)arr.classList.remove('open');}
 }
 
-/* ── Agent Toggle (add-ons) ── */
-function toggleAgent(key){
-  var chk = $id('tog-'+key);
-  var content = $id(key+'-content');
-  ACTIVE[key] = chk && chk.checked;
-  if(content) content.style.display = ACTIVE[key] ? '' : 'none';
+function toggleAddon(key){
+  var chk=$id('tog-'+key);
+  ACTIVE[key]=chk&&chk.checked;
+  var card=$id('mod-'+key);
+  if(card){
+    if(ACTIVE[key])card.classList.add('is-active');
+    else card.classList.remove('is-active');
+  }
+  if(ACTIVE.global) COP_RATE=g('sl-g-cop')||4200;
   recalc();
+  updateChips();
 }
 
-/* ── NPV ── */
-function calcNPV(months, annualDiscount, annualNetBenefit, upfrontCost){
-  var r = Math.pow(1+annualDiscount, 1/12) - 1;
-  var monthlyBenefit = annualNetBenefit / 12;
-  var pv = 0;
-  for(var m=1; m<=months; m++){
-    pv += monthlyBenefit / Math.pow(1+r, m);
-  }
-  return pv - upfrontCost;
+function updateChips(){
+  var mem=ACTIVE.global?g('sl-g-members'):600000;
+  var sed=ACTIVE.global?g('sl-g-sedes'):82;
+  var rev=ACTIVE.global?g('sl-g-revenue'):216000000;
+  var cop=ACTIVE.global?g('sl-g-cop'):4200;
+  setTxt('chip-members', mem>=1e6?(mem/1e6).toFixed(1)+'M':Math.round(mem/1000)+'K');
+  setTxt('chip-sedes', Math.round(sed));
+  setTxt('chip-rev', rev>=1e9?'$'+(rev/1e9).toFixed(0)+'B':'$'+(rev/1e6).toFixed(0)+'M');
+  setTxt('chip-cop', fmtNum(cop));
 }
 
-/* ── Wire sliders ── */
 function wireSliders(){
-  var pairs = [
-    ['sl-leads','lv-leads', function(v){ return fmtNum(v); }],
-    ['sl-conv-curr','lv-conv-curr', function(v){ return v+'%'; }],
-    ['sl-conv-ai','lv-conv-ai', function(v){ return v+'%'; }],
-    ['sl-t2p-curr','lv-t2p-curr', function(v){ return v+'%'; }],
-    ['sl-t2p-ai','lv-t2p-ai', function(v){ return v+'%'; }],
-    ['sl-ann-fee','lv-ann-fee', function(v){ return fmtCost(v); }],
-    ['sl-sales-staff','lv-sales-staff', function(v){ return fmtCost(v); }],
-    ['sl-sales-ai','lv-sales-ai', function(v){ return v+'%'; }],
-    ['sl-billing','lv-billing', function(v){ return fmt(v,true); }],
-    ['sl-col-curr','lv-col-curr', function(v){ return v+'%'; }],
-    ['sl-col-ai','lv-col-ai', function(v){ return v+'%'; }],
-    ['sl-delin','lv-delin', function(v){ return fmtNum(v); }],
-    ['sl-pastdue-bal','lv-pastdue-bal', function(v){ return fmtCost(v); }],
-    ['sl-pastdue-rec','lv-pastdue-rec', function(v){ return v+'%'; }],
-    ['sl-col-staff','lv-col-staff', function(v){ return fmtCost(v); }],
-    ['sl-col-ai-pct','lv-col-ai-pct', function(v){ return v+'%'; }],
-    ['sl-members','lv-members', function(v){ return fmtNum(v); }],
-    ['sl-churn','lv-churn', function(v){ return v+'%'; }],
-    ['sl-ret-fee','lv-ret-fee', function(v){ return fmtCost(v); }],
-    ['sl-churn-pp','lv-churn-pp', function(v){ return v+' pp'; }],
-    ['sl-absence-save','lv-absence-save', function(v){ return v+'%'; }],
-    ['sl-absence-pct','lv-absence-pct', function(v){ return v+'%'; }],
-    ['sl-ret-staff','lv-ret-staff', function(v){ return fmtCost(v); }],
-    ['sl-ret-ai-pct','lv-ret-ai-pct', function(v){ return v+'%'; }],
-    ['sl-g-members','lv-g-members', function(v){ return fmtNum(v); }],
-    ['sl-g-sedes','lv-g-sedes', function(v){ return fmtNum(v); }],
-    ['sl-g-fee','lv-g-fee', function(v){ return fmtCost(v); }],
-    ['sl-g-cop','lv-g-cop', function(v){ return fmtNum(v); }],
-    ['sl-g-revenue','lv-g-revenue', function(v){ return fmt(v,true); }],
-    ['sl-g-classes','lv-g-classes', function(v){ return fmtNum(v); }],
-    ['sl-cls-res','lv-cls-res', function(v){ return fmtNum(v); }],
-    ['sl-cls-ns-curr','lv-cls-ns-curr', function(v){ return v+'%'; }],
-    ['sl-cls-ns-ai','lv-cls-ns-ai', function(v){ return v+'%'; }],
-    ['sl-cls-slot-rev','lv-cls-slot-rev', function(v){ return fmtCost(v); }],
-    ['sl-cls-queries','lv-cls-queries', function(v){ return fmtNum(v); }],
-    ['sl-cls-deflect','lv-cls-deflect', function(v){ return v+'%'; }],
-    ['sl-cls-defl-cost','lv-cls-defl-cost', function(v){ return fmtCost(v); }],
-    ['sl-cls-staff','lv-cls-staff', function(v){ return fmtCost(v); }],
-    ['sl-cls-staff-ai','lv-cls-staff-ai', function(v){ return v+'%'; }],
-    ['sl-cch-pct','lv-cch-pct', function(v){ return v+'%'; }],
-    ['sl-cch-members','lv-cch-members', function(v){ return fmtNum(v); }],
-    ['sl-cch-churn','lv-cch-churn', function(v){ return v+' pp'; }],
-    ['sl-cch-fee','lv-cch-fee', function(v){ return fmtCost(v); }],
-    ['sl-cch-upsell-pct','lv-cch-upsell-pct', function(v){ return v+'%'; }],
-    ['sl-cch-upsell-val','lv-cch-upsell-val', function(v){ return fmtCost(v); }],
-    ['sl-cch-plateau-pct','lv-cch-plateau-pct', function(v){ return v+'%'; }],
-    ['sl-cch-plateau-conv','lv-cch-plateau-conv', function(v){ return v+'%'; }],
-    ['sl-cch-session-fee','lv-cch-session-fee', function(v){ return fmtCost(v); }],
-    ['sl-nut-eligible','lv-nut-eligible', function(v){ return fmtNum(v); }],
-    ['sl-nut-conv','lv-nut-conv', function(v){ return v+'%'; }],
-    ['sl-nut-rev','lv-nut-rev', function(v){ return fmtCost(v); }],
-    ['sl-xsell-pct','lv-xsell-pct', function(v){ return v+'%'; }],
-    ['sl-xsell-conv','lv-xsell-conv', function(v){ return v+'%'; }],
-    ['sl-xsell-val','lv-xsell-val', function(v){ return fmtCost(v); }],
+  var pairs=[
+    ['sl-leads','lv-leads',function(v){return fmtNum(v);}],
+    ['sl-conv-curr','lv-conv-curr',function(v){return v+'%';}],
+    ['sl-conv-ai','lv-conv-ai',function(v){return v+'%';}],
+    ['sl-t2p-curr','lv-t2p-curr',function(v){return v+'%';}],
+    ['sl-t2p-ai','lv-t2p-ai',function(v){return v+'%';}],
+    ['sl-ann-fee','lv-ann-fee',function(v){return fmtCost(v);}],
+    ['sl-sales-staff','lv-sales-staff',function(v){return fmtCost(v);}],
+    ['sl-sales-ai','lv-sales-ai',function(v){return v+'%';}],
+    ['sl-billing','lv-billing',function(v){return fmt(v,true);}],
+    ['sl-col-curr','lv-col-curr',function(v){return v+'%';}],
+    ['sl-col-ai','lv-col-ai',function(v){return v+'%';}],
+    ['sl-delin','lv-delin',function(v){return fmtNum(v);}],
+    ['sl-pastdue-bal','lv-pastdue-bal',function(v){return fmtCost(v);}],
+    ['sl-pastdue-rec','lv-pastdue-rec',function(v){return v+'%';}],
+    ['sl-col-staff','lv-col-staff',function(v){return fmtCost(v);}],
+    ['sl-col-ai-pct','lv-col-ai-pct',function(v){return v+'%';}],
+    ['sl-members','lv-members',function(v){return fmtNum(v);}],
+    ['sl-churn','lv-churn',function(v){return v+'%';}],
+    ['sl-ret-fee','lv-ret-fee',function(v){return fmtCost(v);}],
+    ['sl-churn-pp','lv-churn-pp',function(v){return v+' pp';}],
+    ['sl-absence-save','lv-absence-save',function(v){return v+'%';}],
+    ['sl-absence-pct','lv-absence-pct',function(v){return v+'%';}],
+    ['sl-ret-staff','lv-ret-staff',function(v){return fmtCost(v);}],
+    ['sl-ret-ai-pct','lv-ret-ai-pct',function(v){return v+'%';}],
+    ['sl-g-members','lv-g-members',function(v){return fmtNum(v);}],
+    ['sl-g-sedes','lv-g-sedes',function(v){return fmtNum(v);}],
+    ['sl-g-fee','lv-g-fee',function(v){return fmtCost(v);}],
+    ['sl-g-cop','lv-g-cop',function(v){return fmtNum(v);}],
+    ['sl-g-revenue','lv-g-revenue',function(v){return fmt(v,true);}],
+    ['sl-g-classes','lv-g-classes',function(v){return fmtNum(v);}],
+    ['sl-cls-res','lv-cls-res',function(v){return fmtNum(v);}],
+    ['sl-cls-ns-curr','lv-cls-ns-curr',function(v){return v+'%';}],
+    ['sl-cls-ns-ai','lv-cls-ns-ai',function(v){return v+'%';}],
+    ['sl-cls-slot-rev','lv-cls-slot-rev',function(v){return fmtCost(v);}],
+    ['sl-cls-queries','lv-cls-queries',function(v){return fmtNum(v);}],
+    ['sl-cls-deflect','lv-cls-deflect',function(v){return v+'%';}],
+    ['sl-cls-defl-cost','lv-cls-defl-cost',function(v){return fmtCost(v);}],
+    ['sl-cls-staff','lv-cls-staff',function(v){return fmtCost(v);}],
+    ['sl-cls-staff-ai','lv-cls-staff-ai',function(v){return v+'%';}],
+    ['sl-cch-pct','lv-cch-pct',function(v){return v+'%';}],
+    ['sl-cch-members','lv-cch-members',function(v){return fmtNum(v);}],
+    ['sl-cch-churn','lv-cch-churn',function(v){return v+' pp';}],
+    ['sl-cch-fee','lv-cch-fee',function(v){return fmtCost(v);}],
+    ['sl-cch-upsell-pct','lv-cch-upsell-pct',function(v){return v+'%';}],
+    ['sl-cch-upsell-val','lv-cch-upsell-val',function(v){return fmtCost(v);}],
+    ['sl-cch-plateau-pct','lv-cch-plateau-pct',function(v){return v+'%';}],
+    ['sl-cch-plateau-conv','lv-cch-plateau-conv',function(v){return v+'%';}],
+    ['sl-cch-session-fee','lv-cch-session-fee',function(v){return fmtCost(v);}],
+    ['sl-nut-eligible','lv-nut-eligible',function(v){return fmtNum(v);}],
+    ['sl-nut-conv','lv-nut-conv',function(v){return v+'%';}],
+    ['sl-nut-rev','lv-nut-rev',function(v){return fmtCost(v);}],
+    ['sl-xsell-pct','lv-xsell-pct',function(v){return v+'%';}],
+    ['sl-xsell-conv','lv-xsell-conv',function(v){return v+'%';}],
+    ['sl-xsell-val','lv-xsell-val',function(v){return fmtCost(v);}],
   ];
   pairs.forEach(function(p){
     var el=$id(p[0]);
     if(!el) return;
-    el.addEventListener('input', function(){
-      setTxt(p[1], p[2](parseFloat(this.value)));
+    el.addEventListener('input',function(){
+      setTxt(p[1],p[2](parseFloat(this.value)));
       recalc();
+      if(ACTIVE.global) updateChips();
     });
   });
-  // Cost sliders
   ['sl-plat','sl-setup','sl-usage'].forEach(function(id){
-    var el=$id(id);
-    if(el) el.addEventListener('input', recalc);
+    var el=$id(id);if(el)el.addEventListener('input',recalc);
   });
 }
 
-/* ── Recalc ── */
 function recalc(){
-  var rf = rampFactor();
-  var sc = SCENARIO;
-  if(ACTIVE.global) COP_RATE = g('sl-g-cop') || 4200;
+  var rf=rampFactor(), sc=SCENARIO;
+  if(ACTIVE.global) COP_RATE=g('sl-g-cop')||4200;
+  setTxt('ramp-yr1-val',(rf*100).toFixed(1)+'%');
 
-  var yr1pct = (rf*100).toFixed(1)+'%';
-  setTxt('ramp-yr1-val', yr1pct);
+  // UC1
+  var leads=g('sl-leads'),conv_curr=g('sl-conv-curr')/100,conv_ai=g('sl-conv-ai')/100;
+  var t2p_curr=g('sl-t2p-curr')/100,t2p_ai=g('sl-t2p-ai')/100,ann_fee=g('sl-ann-fee');
+  var incr_trials=leads*(conv_ai-conv_curr);
+  var paid_from_incr=incr_trials*t2p_ai;
+  var base_trials=leads*conv_curr;
+  var paid_from_conv=base_trials*(t2p_ai-t2p_curr);
+  var uc1_rev=(paid_from_incr+paid_from_conv)*12*ann_fee*sc*rf;
+  var uc1_sav=g('sl-sales-staff')*(g('sl-sales-ai')/100)*12*sc;
 
-  // UC1: Sales & Acquisition
-  var uc1_rev=0, uc1_sav=0;
-  var leads = g('sl-leads');
-  var conv_curr = g('sl-conv-curr')/100;
-  var conv_ai   = g('sl-conv-ai')/100;
-  var t2p_curr  = g('sl-t2p-curr')/100;
-  var t2p_ai    = g('sl-t2p-ai')/100;
-  var ann_fee   = g('sl-ann-fee');
-  var incr_trials = leads * (conv_ai - conv_curr);
-  var paid_from_incr = incr_trials * t2p_ai;
-  var base_trials = leads * conv_curr;
-  var paid_from_conv = base_trials * (t2p_ai - t2p_curr);
-  var incr_paid_mo = paid_from_incr + paid_from_conv;
-  uc1_rev = incr_paid_mo * 12 * ann_fee * sc * rf;
-  uc1_sav = g('sl-sales-staff') * (g('sl-sales-ai')/100) * 12 * sc;
+  // UC2
+  var billing=g('sl-billing'),col_curr=g('sl-col-curr')/100,col_ai=g('sl-col-ai')/100;
+  var uc2_rev=billing*Math.max(0,col_ai-col_curr)*12*sc*rf;
+  uc2_rev+=g('sl-delin')*g('sl-pastdue-bal')*(g('sl-pastdue-rec')/100)*sc*rf;
+  var uc2_sav=g('sl-col-staff')*(g('sl-col-ai-pct')/100)*12*sc;
 
-  // UC2: Collection
-  var uc2_rev=0, uc2_sav=0;
-  var billing   = g('sl-billing');
-  var col_curr  = g('sl-col-curr')/100;
-  var col_ai    = g('sl-col-ai')/100;
-  uc2_rev = billing * Math.max(0, col_ai - col_curr) * 12 * sc * rf;
-  var pastdue_total = g('sl-delin') * g('sl-pastdue-bal') * (g('sl-pastdue-rec')/100);
-  uc2_rev += pastdue_total * sc * rf;
-  uc2_sav = g('sl-col-staff') * (g('sl-col-ai-pct')/100) * 12 * sc;
+  // UC3
+  var members=g('sl-members'),ret_fee=g('sl-ret-fee'),churn_pp=g('sl-churn-pp')/100;
+  var retained=members*churn_pp*sc*rf;
+  var uc3_rev=retained*ret_fee;
+  var at_risk=members*(g('sl-absence-pct')/100);
+  uc3_rev+=at_risk*(g('sl-absence-save')/100)*12*ret_fee*0.5*sc*rf;
+  var uc3_sav=g('sl-ret-staff')*(g('sl-ret-ai-pct')/100)*12*sc;
 
-  // UC3: Retention
-  var uc3_rev=0, uc3_sav=0;
-  var members   = g('sl-members');
-  var ret_fee   = g('sl-ret-fee');
-  var churn_pp  = g('sl-churn-pp')/100;
-  var retained  = members * churn_pp * sc * rf;
-  uc3_rev = retained * ret_fee;
-  var at_risk_mo = members * (g('sl-absence-pct')/100);
-  var saved_mo   = at_risk_mo * (g('sl-absence-save')/100);
-  uc3_rev += saved_mo * 12 * ret_fee * 0.5 * sc * rf;
-  uc3_sav = g('sl-ret-staff') * (g('sl-ret-ai-pct')/100) * 12 * sc;
-
-  // CLASS: Reservations & Operations
-  var cls_rev=0, cls_sav=0;
+  // CLASS
+  var cls_rev=0,cls_sav=0;
   if(ACTIVE.class){
-    var res = g('sl-cls-res');
-    var ns_curr = g('sl-cls-ns-curr')/100;
-    var ns_ai   = g('sl-cls-ns-ai')/100;
-    var slot_rev = g('sl-cls-slot-rev');
-    var recovered = res * (ns_curr - ns_ai);
-    cls_rev = recovered * slot_rev * 12 * sc * rf;
-    var deflect_sav = g('sl-cls-queries') * (g('sl-cls-deflect')/100) * g('sl-cls-defl-cost');
-    cls_sav = deflect_sav * 12 * sc * rf;
-    cls_sav += g('sl-cls-staff') * (g('sl-cls-staff-ai')/100) * 12 * sc;
+    var recovered=g('sl-cls-res')*(g('sl-cls-ns-curr')/100-g('sl-cls-ns-ai')/100);
+    cls_rev=recovered*g('sl-cls-slot-rev')*12*sc*rf;
+    cls_sav=g('sl-cls-queries')*(g('sl-cls-deflect')/100)*g('sl-cls-defl-cost')*12*sc*rf;
+    cls_sav+=g('sl-cls-staff')*(g('sl-cls-staff-ai')/100)*12*sc;
   }
 
-  // COACH: Personalized Coaching
-  var cch_rev=0, cch_sav=0;
+  // COACH
+  var cch_rev=0;
   if(ACTIVE.coach){
-    var cch_members = g('sl-cch-members') * (g('sl-cch-pct')/100) * rf;
-    var cch_fee = g('sl-cch-fee');
-    cch_rev = cch_members * (g('sl-cch-churn')/100) * cch_fee * sc;
-    cch_rev += cch_members * (g('sl-cch-upsell-pct')/100) * g('sl-cch-upsell-val') * 12 * sc;
-    var plateau = cch_members * (g('sl-cch-plateau-pct')/100);
-    var referral_mo = plateau * (g('sl-cch-plateau-conv')/100);
-    cch_rev += referral_mo * g('sl-cch-session-fee') * 12 * sc;
+    var cch_m=g('sl-cch-members')*(g('sl-cch-pct')/100)*rf;
+    cch_rev=cch_m*(g('sl-cch-churn')/100)*g('sl-cch-fee')*sc;
+    cch_rev+=cch_m*(g('sl-cch-upsell-pct')/100)*g('sl-cch-upsell-val')*12*sc;
+    var plateau=cch_m*(g('sl-cch-plateau-pct')/100);
+    cch_rev+=plateau*(g('sl-cch-plateau-conv')/100)*g('sl-cch-session-fee')*12*sc;
   }
 
-  // NUTRI: Nutrition & Cross-sell
+  // NUTRI
   var nut_rev=0;
   if(ACTIVE.nutri){
-    var eligible = g('sl-nut-eligible');
-    nut_rev = eligible * (g('sl-nut-conv')/100) * g('sl-nut-rev') * 12 * sc * rf;
-    var xsell_mo = eligible * (g('sl-xsell-pct')/100);
-    nut_rev += xsell_mo * (g('sl-xsell-conv')/100) * g('sl-xsell-val') * 12 * sc * rf;
+    var elig=g('sl-nut-eligible');
+    nut_rev=elig*(g('sl-nut-conv')/100)*g('sl-nut-rev')*12*sc*rf;
+    nut_rev+=elig*(g('sl-xsell-pct')/100)*(g('sl-xsell-conv')/100)*g('sl-xsell-val')*12*sc*rf;
   }
 
-  // Totals
-  var total_rev = uc1_rev + uc2_rev + uc3_rev + cls_rev + cch_rev + nut_rev;
-  var total_sav = uc1_sav + uc2_sav + uc3_sav + cls_sav + cch_sav;
-  var total_benefit = total_rev + total_sav;
+  var total_rev=uc1_rev+uc2_rev+uc3_rev+cls_rev+cch_rev+nut_rev;
+  var total_sav=uc1_sav+uc2_sav+uc3_sav+cls_sav;
+  var total_benefit=total_rev+total_sav;
 
-  var plat_ann  = g('sl-plat') * 12;
-  var setup     = g('sl-setup');
-  var usage_ann = g('sl-usage') * 12;
-  var total_cost = plat_ann + setup + usage_ann;
+  var plat_ann=g('sl-plat')*12, setup=g('sl-setup'), usage_ann=g('sl-usage')*12;
+  var total_cost=plat_ann+setup+usage_ann;
+  var net_benefit=total_benefit-total_cost;
+  var roi_mult=total_cost>0?net_benefit/total_cost:0;
+  var payback_mo=total_benefit>0?(total_cost/(total_benefit/12)):null;
 
-  var net_benefit = total_benefit - total_cost;
-  var roi_mult = total_cost > 0 ? net_benefit / total_cost : 0;
-  var payback_mo = total_benefit > 0 ? (total_cost / (total_benefit/12)) : null;
-
-  var npv12 = calcNPV(12, 0.12, total_benefit, setup);
-  var npv24 = calcNPV(24, 0.12, total_benefit, setup);
-  var npv36 = calcNPV(36, 0.12, total_benefit, setup);
-  var cs12 = calcNPV(12, 0.12, -(plat_ann+usage_ann), 0);
-  var cs24 = calcNPV(24, 0.12, -(plat_ann+usage_ann), 0);
-  var cs36 = calcNPV(36, 0.12, -(plat_ann+usage_ann), 0);
-  npv12 += cs12; npv24 += cs24; npv36 += cs36;
-
-  // KPI Strip
-  setTxt('kpi-total', fmt(total_benefit, true));
-  setTxt('kpi-total-sub', fmt(total_rev,true)+' rev · '+fmt(total_sav,true)+' sav');
-  setTxt('kpi-roi', total_cost>0 ? roi_mult.toFixed(1)+'×' : '—');
-  if(payback_mo!==null && total_benefit>0){
-    setTxt('kpi-payback', payback_mo<1 ? '<1 mo' : payback_mo.toFixed(1)+' mo');
-  } else {
-    setTxt('kpi-payback', '—');
-  }
-  var netEl = $id('kpi-net');
-  if(netEl){
-    netEl.textContent = fmt(net_benefit, true);
-    netEl.style.color = net_benefit >= 0 ? 'var(--black)' : 'var(--neg)';
-  }
+  // KPI
+  setTxt('kpi-total',fmt(total_benefit,true));
+  setTxt('kpi-total-sub',fmt(total_rev,true)+' rev · '+fmt(total_sav,true)+' sav');
+  setTxt('kpi-roi',total_cost>0?roi_mult.toFixed(1)+'×':'—');
+  if(payback_mo!==null&&total_benefit>0){setTxt('kpi-payback',payback_mo<1?'<1 mo':payback_mo.toFixed(1)+' mo');}
+  else{setTxt('kpi-payback','—');}
+  var netEl=$id('kpi-net');
+  if(netEl){netEl.textContent=fmt(net_benefit,true);netEl.style.color=net_benefit>=0?'var(--black)':'var(--neg)';}
 
   // Cost card
-  var plat = g('sl-plat');
-  var su   = g('sl-setup');
-  var us   = g('sl-usage');
-  setTxt('lv-plat',  fmtCost(plat)+'/mo');
-  setTxt('lv-setup', su===0 ? '$0' : fmtCost(su));
-  setTxt('lv-usage', fmtCost(us)+'/mo');
-  setTxt('kpi-cost-card', fmt(total_cost, true)+' /yr');
-  setTxt('cost-total-val', fmt(total_cost, true));
+  setTxt('lv-plat',fmtCost(g('sl-plat'))+'/mo');
+  var su=g('sl-setup');setTxt('lv-setup',su===0?'$0':fmtCost(su));
+  setTxt('lv-usage',fmtCost(g('sl-usage'))+'/mo');
+  setTxt('kpi-cost-card',fmt(total_cost,true)+' /yr');
+  setTxt('cost-total-val',fmt(total_cost,true));
 
   // Card values
-  setTxt('wc-uc1', fmt(uc1_rev+uc1_sav, true));
-  setTxt('wc-uc2', fmt(uc2_rev+uc2_sav, true));
-  setTxt('wc-uc3', fmt(uc3_rev+uc3_sav, true));
-  setTxt('wc-class', ACTIVE.class ? fmt(cls_rev+cls_sav, true) : '—');
-  setTxt('wc-coach', ACTIVE.coach ? fmt(cch_rev+cch_sav, true) : '—');
-  setTxt('wc-nutri', ACTIVE.nutri ? fmt(nut_rev, true) : '—');
+  setTxt('wc-uc1',fmt(uc1_rev+uc1_sav,true));
+  setTxt('wc-uc2',fmt(uc2_rev+uc2_sav,true));
+  setTxt('wc-uc3',fmt(uc3_rev+uc3_sav,true));
 
-  // NPV
-  setTxt('npv-12', fmt(npv12, true));
-  setTxt('npv-24', fmt(npv24, true));
-  setTxt('npv-36', fmt(npv36, true));
+  // Module values
+  function setModVal(id,val,active){
+    var el=$id(id);if(!el)return;
+    if(active){el.textContent=fmt(val,true);el.classList.remove('hidden');}
+    else{el.classList.add('hidden');}
+  }
+  setModVal('mv-class',cls_rev+cls_sav,ACTIVE.class);
+  setModVal('mv-coach',cch_rev,ACTIVE.coach);
+  setModVal('mv-nutri',nut_rev,ACTIVE.nutri);
 
   // Chart
   renderChart([
-    {label:'Sales & Acquisition',  rev:uc1_rev, sav:uc1_sav, active:true,         core:true},
-    {label:'Collection',            rev:uc2_rev, sav:uc2_sav, active:true,         core:true},
-    {label:'Retention & Churn',     rev:uc3_rev, sav:uc3_sav, active:true,         core:true},
-    {label:'Class Reservations',    rev:cls_rev, sav:cls_sav, active:ACTIVE.class, core:false},
-    {label:'Personalized Coaching', rev:cch_rev, sav:cch_sav, active:ACTIVE.coach, core:false},
-    {label:'Nutrition & Cross-sell',rev:nut_rev, sav:0,       active:ACTIVE.nutri, core:false},
+    {label:'Sales & Acquisition',rev:uc1_rev,sav:uc1_sav,active:true,core:true},
+    {label:'Collection',rev:uc2_rev,sav:uc2_sav,active:true,core:true},
+    {label:'Retention & Churn',rev:uc3_rev,sav:uc3_sav,active:true,core:true},
+    {label:'Class Reservations',rev:cls_rev,sav:cls_sav,active:ACTIVE.class,core:false},
+    {label:'Personalized Coaching',rev:cch_rev,sav:0,active:ACTIVE.coach,core:false},
+    {label:'Nutrition & Cross-sell',rev:nut_rev,sav:0,active:ACTIVE.nutri,core:false},
   ]);
 }
 
-/* ── Bar Chart ── */
 function renderChart(items){
-  var container=$id('chart-container');
-  if(!container) return;
-  var active = items.filter(function(i){return i.active && (i.rev+i.sav)>0;});
-  if(!active.length){
-    container.innerHTML='<div style="font-size:12px;color:var(--muted);font-style:italic;padding:8px 0;">All core agents are active. Enable add-ons above to expand the chart.</div>';
-    return;
-  }
-  var maxVal = Math.max.apply(null, active.map(function(i){return i.rev+i.sav;}));
-  var coreItems  = active.filter(function(i){return  i.core;});
-  var addonItems = active.filter(function(i){return !i.core;});
-
-  var html = '<div class="chart-header">';
-  html += '<div class="chart-title">Annual Benefit by Agent</div>';
-  html += '<div class="chart-legend">';
-  html += '<div class="legend-item"><div class="legend-dot rev"></div>Revenue Uplift</div>';
-  html += '<div class="legend-item"><div class="legend-dot save"></div>Cost Savings</div>';
-  html += '</div></div>';
-
-  function renderGroup(label, arr){
-    if(!arr.length) return;
-    html += '<div class="chart-group-label">'+label+'</div>';
+  var container=$id('chart-container');if(!container)return;
+  var active=items.filter(function(i){return i.active&&(i.rev+i.sav)>0;});
+  if(!active.length){container.innerHTML='<div style="font-size:12px;color:var(--muted);font-style:italic;padding:8px 0;">Enable add-ons above to expand the chart.</div>';return;}
+  var maxVal=Math.max.apply(null,active.map(function(i){return i.rev+i.sav;}));
+  var coreItems=active.filter(function(i){return i.core;});
+  var addonItems=active.filter(function(i){return !i.core;});
+  var html='<div class="chart-header"><div class="chart-title">Annual Benefit by Agent</div><div class="chart-legend"><div class="legend-item"><div class="legend-dot rev"></div>Revenue Uplift</div><div class="legend-item"><div class="legend-dot save"></div>Cost Savings</div></div></div>';
+  function renderGroup(label,arr){
+    if(!arr.length)return;
+    html+='<div class="chart-group-label">'+label+'</div>';
     arr.forEach(function(item){
-      var total  = item.rev + item.sav;
-      var revPct = maxVal > 0 ? (item.rev / maxVal * 100) : 0;
-      var savPct = maxVal > 0 ? (item.sav / maxVal * 100) : 0;
-      var onlyRev = item.sav === 0;
-      var revLine = item.rev > 0 ? '<div class="bar-breakdown">Rev '+fmt(item.rev,true)+'</div>' : '';
-      var innerLabel = revPct > 18 ? fmt(item.rev, true) : '';
-
-      html += '<div class="bar-row">';
-      html += '<div class="bar-name">'+item.label+'</div>';
-      html += '<div class="bar-track">';
-      html += '<div class="bar-fill rev'+(onlyRev?' only':'')+'" style="width:'+revPct.toFixed(1)+'%;left:0;"></div>';
-      if(item.sav > 0){
-        html += '<div class="bar-fill save" style="width:'+savPct.toFixed(1)+'%;left:'+revPct.toFixed(1)+'%;"></div>';
-      }
-      if(innerLabel){
-        html += '<div class="bar-inner-label">'+innerLabel+'</div>';
-      }
-      html += '</div>';
-      html += '<div class="bar-meta"><div class="bar-total">'+fmt(total,true)+'</div>'+revLine+'</div>';
-      html += '</div>';
+      var total=item.rev+item.sav;
+      var revPct=maxVal>0?(item.rev/maxVal*100):0;
+      var savPct=maxVal>0?(item.sav/maxVal*100):0;
+      var onlyRev=item.sav===0;
+      var revLine=item.rev>0?'<div class="bar-breakdown">Rev '+fmt(item.rev,true)+'</div>':'';
+      var innerLabel=revPct>18?fmt(item.rev,true):'';
+      html+='<div class="bar-row"><div class="bar-name">'+item.label+'</div><div class="bar-track">';
+      html+='<div class="bar-fill rev'+(onlyRev?' only':'')+'" style="width:'+revPct.toFixed(1)+'%;left:0;"></div>';
+      if(item.sav>0)html+='<div class="bar-fill save" style="width:'+savPct.toFixed(1)+'%;left:'+revPct.toFixed(1)+'%;"></div>';
+      if(innerLabel)html+='<div class="bar-inner-label">'+innerLabel+'</div>';
+      html+='</div><div class="bar-meta"><div class="bar-total">'+fmt(total,true)+'</div>'+revLine+'</div></div>';
     });
   }
-
-  renderGroup('Core Functions', coreItems);
-  renderGroup('Add-On Modules', addonItems);
-  container.innerHTML = html;
+  renderGroup('Core Functions',coreItems);
+  renderGroup('Add-On Modules',addonItems);
+  container.innerHTML=html;
 }
 
-/* ── Init ── */
+// Init
 wireSliders();
-// Init ramp display
-setTxt('rv-ramp3', g('sl-ramp3')+'%');
-setTxt('rv-ramp6', g('sl-ramp6')+'%');
-setTxt('rv-ramp12', g('sl-ramp12')+'%');
+setTxt('rv-ramp3',g('sl-ramp3')+'%');
+setTxt('rv-ramp6',g('sl-ramp6')+'%');
+setTxt('rv-ramp12',g('sl-ramp12')+'%');
+updateChips();
 recalc();
 
 })();
