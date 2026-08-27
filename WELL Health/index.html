@@ -38,7 +38,9 @@ body{font-family:'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica 
 
 /* ── OPTION HERO ── */
 .option-hero{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:26px;}
-.opt-panel{border-radius:var(--r);padding:22px 26px;color:white;}
+.opt-panel{border-radius:var(--r);padding:22px 26px;color:white;cursor:pointer;transition:box-shadow .15s;}
+.opt-panel.selected{box-shadow:0 0 0 3px var(--blue);}
+.hero-hint{font-size:11px;color:var(--text-muted);margin-top:10px;}
 .opt-panel.opt-a{background:var(--navy);}
 .opt-panel.opt-b{background:var(--blue-xxlight);color:var(--ink);}
 .opt-eyebrow{font-size:10px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;opacity:.7;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
@@ -53,7 +55,7 @@ body{font-family:'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica 
 .opt-panel.opt-b .opt-years{color:var(--text-mid);opacity:1;}
 
 /* ── KPI TILES ── */
-.sub-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px;}
+.sub-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px;}
 .sub-card{background:var(--tint);border-radius:var(--r);padding:16px 18px;}
 .sc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;
   color:var(--text-muted);margin-bottom:6px;}
@@ -119,6 +121,10 @@ td.opt-b-col{font-weight:700;color:var(--blue);}
 .input-val{width:92px;text-align:right;font-size:13px;font-weight:700;color:var(--navy);flex-shrink:0;}
 .check-row{display:flex;align-items:center;gap:7px;padding:8px 0 2px;}
 .check-row label{font-size:11.5px;color:var(--text-mid);cursor:pointer;}
+
+/* deactivated business lines: visible in the layout, not interactive yet */
+.section.inactive{opacity:.5;pointer-events:none;}
+.section.inactive .acc-header{cursor:default;}
 
 /* toggle switch */
 .tog{position:relative;display:inline-block;width:34px;height:19px;flex-shrink:0;}
@@ -210,13 +216,13 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
 
   <!-- OPTION HERO -->
   <div class="option-hero">
-    <div class="opt-panel opt-a">
+    <div class="opt-panel opt-a selected" id="opt-a-panel">
       <div class="opt-eyebrow">Option A · Consumption <span class="opt-badge">Recommended</span></div>
       <div class="opt-value" id="hero-a">$0</div>
       <div class="opt-sub">Three-year total. Platform &amp; team fee plus metered usage at the rate card.</div>
       <div class="opt-years" id="hero-a-years"></div>
     </div>
-    <div class="opt-panel opt-b">
+    <div class="opt-panel opt-b" id="opt-b-panel">
       <div class="opt-eyebrow">Option B · Revenue Share</div>
       <div class="opt-value" id="hero-b">$0</div>
       <div class="opt-sub">Three-year total. Platform &amp; team fee plus a share of platform-driven revenue, compute included.</div>
@@ -224,27 +230,19 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     </div>
   </div>
 
+  <div class="hero-hint">Select Option A or Option B above to see its cost breakdown below.</div>
+
   <!-- KPI TILES -->
   <div class="sub-metrics">
     <div class="sub-card">
-      <div class="sc-label">Year 1 Cost, Option A</div>
-      <div class="sc-value" id="sc-y1a">$0</div>
-      <div class="sc-sub" id="sc-y1a-sub">At year-1 members</div>
-    </div>
-    <div class="sub-card">
-      <div class="sc-label">Cost / Member / Month, Yr 1</div>
+      <div class="sc-label" id="sc-cpm-label">Cost / Member / Month, Yr 1</div>
       <div class="sc-value" id="sc-cpm">$0</div>
-      <div class="sc-sub">Option A, all-in</div>
+      <div class="sc-sub" id="sc-cpm-sub">Option A, all-in</div>
     </div>
     <div class="sub-card">
       <div class="sc-label">3-Yr Value, Your Model</div>
       <div class="sc-value" id="sc-rev">$0</div>
       <div class="sc-sub" id="sc-rev-sub">Projected, WellChoice's own figures</div>
-    </div>
-    <div class="sub-card">
-      <div class="sc-label">3-Yr What You Keep, Opt. A</div>
-      <div class="sc-value" id="sc-keep">$0</div>
-      <div class="sc-sub" id="sc-keep-sub">Value less Amigo cost</div>
     </div>
   </div>
 
@@ -272,20 +270,6 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     <div class="keep-note" id="proj-note"></div>
   </div>
 
-  <!-- PER-LINE BREAKDOWN -->
-  <div class="section">
-    <div class="section-eyebrow">By Business Line, Three-Year Totals</div>
-    <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr><th>Business line</th><th>Consumption cost</th><th>Value</th><th style="text-align:left;padding-left:24px;">Value basis</th></tr>
-      </thead>
-      <tbody id="line-body"></tbody>
-    </table>
-    </div>
-    <div class="keep-note">Lines join this table, the projection and the return view automatically when toggled on below. Consumption is priced at each year's pooled tier, so added lines can move every line to a better rate.</div>
-  </div>
-
   <!-- WHAT YOU KEEP -->
   <div class="section">
     <div class="section-eyebrow">The Return, Projected on Your Own Numbers</div>
@@ -309,9 +293,19 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     </div>
     <div class="acc-body" id="body-platform">
       <div class="input-row">
-        <div class="input-info"><div class="input-name">Platform &amp; team fee / month</div><div class="input-desc">One fee across every line. $15,000 list, shown with the 20% partnership discount.</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-platform" min="0" max="30000" step="500" value="12000" class="muted"></div>
-        <div class="input-val" id="lv-platform">$12,000</div>
+        <div class="input-info"><div class="input-name">Platform (technology) / month</div><div class="input-desc">$4,000 per month in the proposal. Managed and improved infrastructure.</div></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-platform-tech" min="0" max="15000" step="500" value="4000" class="muted"></div>
+        <div class="input-val" id="lv-platform-tech">$4,000</div>
+      </div>
+      <div class="input-row">
+        <div class="input-info"><div class="input-name">Dedicated team / month</div><div class="input-desc">$8,000 per month in the proposal. Three people total: engineers, clinical and strategy.</div></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-platform-team" min="0" max="20000" step="500" value="8000" class="muted"></div>
+        <div class="input-val" id="lv-platform-team">$8,000</div>
+      </div>
+      <div class="input-row">
+        <div class="input-info"><div class="input-name">Combined fee / month</div><div class="input-desc">The proposal lists $15,000 per month, shown with the 20% partnership discount applied.</div></div>
+        <div class="input-slider-wrap"></div>
+        <div class="input-val" id="lv-platform-combined">$12,000</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">90-day pilot fee</div><div class="input-desc">Credited in full on a two-year commitment.</div></div>
@@ -324,7 +318,7 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Simulation &amp; training compute / yr</div><div class="input-desc">Estimated need. Amigo covers it up to the credit below; any excess is paid out of pocket.</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-simneed" min="0" max="200000" step="5000" value="25000" class="muted"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-simneed" min="0" max="100000" step="5000" value="25000" class="muted"></div>
         <div class="input-val" id="lv-simneed">$25,000</div>
       </div>
       <div class="input-row">
@@ -413,14 +407,14 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     </div>
   </div>
 
-  <!-- CLINICS MODULE -->
-  <div class="section">
+  <!-- CLINICS MODULE (deactivated pending research) -->
+  <div class="section inactive">
     <div class="acc-header" data-acc="clinics">
       <span class="acc-arrow" id="arrow-clinics">&#9654;</span>
-      <label class="tog"><input type="checkbox" id="tog-clinics"><span class="tog-slider"></span></label>
+      <label class="tog"><input type="checkbox" id="tog-clinics" disabled><span class="tog-slider"></span></label>
       <span class="acc-title">Primary, Integrated &amp; Allied Care · Intake, Routing &amp; Admin</span>
-      <span class="acc-badge badge-placeholder">Placeholder, pending research</span>
-      <span class="acc-value" id="clinics-total">Off</span>
+      <span class="acc-badge badge-placeholder">Coming after the research pass</span>
+      <span class="acc-value" id="clinics-total" data-offlabel="Pending research">Pending research</span>
     </div>
     <div class="acc-body" id="body-clinics" style="display:none">
       <div class="input-row">
@@ -452,14 +446,14 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     </div>
   </div>
 
-  <!-- DIAGNOSTICS MODULE -->
-  <div class="section">
+  <!-- DIAGNOSTICS MODULE (deactivated pending research) -->
+  <div class="section inactive">
     <div class="acc-header" data-acc="dx">
       <span class="acc-arrow" id="arrow-dx">&#9654;</span>
-      <label class="tog"><input type="checkbox" id="tog-dx"><span class="tog-slider"></span></label>
+      <label class="tog"><input type="checkbox" id="tog-dx" disabled><span class="tog-slider"></span></label>
       <span class="acc-title">Specialized Care &amp; Diagnostics · Booking &amp; Results Follow-Up</span>
-      <span class="acc-badge badge-placeholder">Placeholder, pending research</span>
-      <span class="acc-value" id="dx-total">Off</span>
+      <span class="acc-badge badge-placeholder">Coming after the research pass</span>
+      <span class="acc-value" id="dx-total" data-offlabel="Pending research">Pending research</span>
     </div>
     <div class="acc-body" id="body-dx" style="display:none">
       <div class="input-row">
@@ -491,14 +485,14 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     </div>
   </div>
 
-  <!-- WELLSTAR MODULE -->
-  <div class="section">
+  <!-- WELLSTAR MODULE (deactivated pending research) -->
+  <div class="section inactive">
     <div class="acc-header" data-acc="ws">
       <span class="acc-arrow" id="arrow-ws">&#9654;</span>
-      <label class="tog"><input type="checkbox" id="tog-ws"><span class="tog-slider"></span></label>
+      <label class="tog"><input type="checkbox" id="tog-ws" disabled><span class="tog-slider"></span></label>
       <span class="acc-title">WELLSTAR · White-Label Agents in Provider Technology</span>
-      <span class="acc-badge badge-placeholder">Placeholder, pending research</span>
-      <span class="acc-value" id="ws-total">Off</span>
+      <span class="acc-badge badge-placeholder">Coming after the research pass</span>
+      <span class="acc-value" id="ws-total" data-offlabel="Pending research">Pending research</span>
     </div>
     <div class="acc-body" id="body-ws" style="display:none">
       <div class="input-row">
@@ -582,6 +576,7 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
   }
 
   var tierMode = "auto";
+  var selectedOpt = "a";
 
   function recalc(){
     var wcOn = $("tog-wc").checked;
@@ -589,7 +584,9 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     var dxOn = $("tog-dx").checked;
     var wsOn = $("tog-ws").checked;
 
-    var platform = num("sl-platform") * 12;
+    var platformMo = num("sl-platform-tech") + num("sl-platform-team");
+    $("lv-platform-combined").textContent = "$" + fmtInt(platformMo);
+    var platform = platformMo * 12;
     var pilot = num("sl-pilot");
     var pilotCredited = $("ck-pilot-credit").checked;
     var simNet = Math.max(0, num("sl-simneed") - num("sl-simcredit"));
@@ -647,14 +644,18 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     $("hero-a-years").textContent = "Years 1-3: " + years.map(function(y){ return fmtUSD(y.optA); }).join(" · ");
     $("hero-b-years").textContent = "Years 1-3: " + years.map(function(y){ return fmtUSD(y.optB); }).join(" · ");
 
-    // KPI tiles
-    $("sc-y1a").textContent = fmtUSD(years[0].optA);
-    $("sc-y1a-sub").textContent = wcOn ? "At " + fmtInt(years[0].members) + " members" : "WellChoice toggled off";
-    $("sc-cpm").textContent = (wcOn && years[0].members > 0) ? "$" + (years[0].optA / years[0].members / 12).toFixed(2) : "n/a";
+    // KPI tiles (reflect the selected option)
+    var selName = selectedOpt === "a" ? "Option A" : "Option B";
+    var selY1 = selectedOpt === "a" ? years[0].optA : years[0].optB;
+    var selTot = selectedOpt === "a" ? totA : totB;
+    $("sc-cpm").textContent = (wcOn && years[0].members > 0) ? "$" + (selY1 / years[0].members / 12).toFixed(2) : "n/a";
+    $("sc-cpm-sub").textContent = wcOn
+      ? selName + ", all-in, at " + fmtInt(years[0].members) + " year-1 members"
+      : "WellChoice toggled off";
     $("sc-rev").textContent = fmtUSD(totValue);
-    $("sc-rev-sub").textContent = anyLine ? "Commerce revenue + operating cost avoided" : "Projected, WellChoice's own figures";
-    $("sc-keep").textContent = fmtUSD(totValue - totA);
-    $("sc-keep-sub").textContent = totA > 0 ? (totValue / totA).toFixed(1) + "x the three-year cost" : "";
+    $("sc-rev-sub").textContent = (anyLine ? "Commerce revenue + operating cost avoided. " : "WellChoice's own model, projected. ") +
+      "You keep " + fmtUSD(totValue - selTot) + " under " + selName +
+      (selTot > 0 ? " (" + (totValue / selTot).toFixed(1) + "x cost)." : ".");
 
     // Chart
     var maxCost = Math.max.apply(null, years.map(function(y){ return Math.max(y.optA, y.optB); }).concat([1]));
@@ -729,26 +730,18 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     $("platform-total").textContent = fmtUSD(platform) + " / yr";
     var wcCost3 = lineCost3(wc);
     $("wc-total").textContent = wcOn ? fmtUSD(wcCost3) + " / 3 yrs" : "Off";
-    function chip(id, line){ $(id).textContent = line ? fmtUSD(lineCost3(line)) + " / 3 yrs" : "Off"; }
+    function chip(id, line){
+      var el = $(id);
+      el.textContent = line ? fmtUSD(lineCost3(line)) + " / 3 yrs" : (el.getAttribute("data-offlabel") || "Off");
+    }
     chip("clinics-total", cl); chip("dx-total", dx); chip("ws-total", ws);
 
-    var lb = [];
-    function lineRow(name, cost3, value3, basis){
-      lb.push("<tr><td>" + name + "</td><td>" + fmtUSD(cost3) +
-        "</td><td style='font-weight:700;color:var(--navy);'>" + fmtUSD(value3) +
-        "</td><td style='text-align:left;padding-left:24px;color:var(--text-muted);'>" + basis + "</td></tr>");
-    }
-    if (wcOn) lineRow("WellChoice", wcCost3, totRev, "Commerce revenue, WellChoice's model");
-    if (clOn) lineRow("Primary, integrated &amp; allied care", lineCost3(cl), clValueYr * 3, "Operating cost avoided, placeholder");
-    if (dxOn) lineRow("Specialized care &amp; diagnostics", lineCost3(dx), dxValueYr * 3, "Operating cost avoided, placeholder");
-    if (wsOn) lineRow("WELLSTAR provider technology", lineCost3(ws), wsValueYr * 3, "Platform value, placeholder");
-    if (!lb.length) lb.push("<tr><td colspan='4' style='text-align:left;color:var(--text-muted);'>Toggle a business line on below.</td></tr>");
-    $("line-body").innerHTML = lb.join("");
   }
 
   // ── Label bindings ──
   var labels = {
-    "sl-platform": function(v){ return "$" + fmtInt(v); },
+    "sl-platform-tech": function(v){ return "$" + fmtInt(v); },
+    "sl-platform-team": function(v){ return "$" + fmtInt(v); },
     "sl-pilot": function(v){ return "$" + fmtInt(v); },
     "sl-simneed": function(v){ return "$" + fmtInt(v); },
     "sl-simcredit": function(v){ return "$" + fmtInt(v); },
@@ -801,6 +794,16 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
   ["sl-onb","sl-msgs","sl-voice"].forEach(function(id){
     $(id).addEventListener("input", function(){
       ["pre-low","pre-base","pre-high"].forEach(function(b){ $(b).classList.remove("active"); });
+    });
+  });
+
+  // ── Option selection: KPI tiles follow the selected option ──
+  [["opt-a-panel","a"],["opt-b-panel","b"]].forEach(function(pair){
+    $(pair[0]).addEventListener("click", function(){
+      selectedOpt = pair[1];
+      $("opt-a-panel").classList.toggle("selected", selectedOpt === "a");
+      $("opt-b-panel").classList.toggle("selected", selectedOpt === "b");
+      recalc();
     });
   });
 
