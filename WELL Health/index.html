@@ -6,126 +6,88 @@
 <title>WellChoice × Amigo — Multi-Year Cost &amp; Return Calculator</title>
 <style>
 :root {
-  --navy:#004776; --navy-deep:#00355a; --navy-mid:#004776;
-  --blue:#0084de; --blue-light:#0084de; --blue-xlight:#e8f3fb; --blue-xxlight:#f3f9fd;
+  --navy:#004776; --navy-deep:#00355a;
+  --blue:#0084de; --blue-xlight:#e8f3fb; --blue-xxlight:#f3f9fd;
   --ink:#212933; --text-mid:#3d4854; --text-muted:#6b7683;
-  --gold:#004776; --gold-light:#f3f9fd;
-  --green:#004776; --green-light:#f3f9fd;
-  --warn-bg:#f3f9fd; --warn-border:#dfe6ec; --warn-text:#6b7683;
-  --border:#dfe6ec; --bg:#f5f8fa; --white:#ffffff;
-  --r:10px; --r-sm:6px;
+  --border:#e3e9ee; --tint:#f4f7f9; --white:#ffffff;
+  --r:8px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;}
 body{font-family:'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
-  background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;}
-
-/* ── APP SHELL ── */
-.app{display:flex;flex-direction:column;height:100vh;}
-.app-header{flex-shrink:0;}
-.app-body{display:flex;flex:1;overflow:hidden;min-height:0;}
+  background:#ffffff;color:var(--ink);font-size:14px;line-height:1.5;}
 
 /* ── LOGO BAR ── */
-.logo-bar{background:#fff;border-bottom:1px solid #e8edef;padding:12px 28px;
-  display:flex;align-items:center;justify-content:space-between;gap:16px;}
-.logo-wellhealth{height:38px;width:auto;display:block;}
+.logo-bar{background:#fff;border-bottom:1px solid var(--border);}
+.logo-inner{max-width:920px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.logo-wellhealth{height:36px;width:auto;display:block;}
 
-/* ── SITE HEADER ── */
-.site-header{background:linear-gradient(135deg,var(--navy-deep) 0%,var(--navy) 55%,var(--navy) 100%);
-  padding:16px 28px;color:white;}
-.site-header h1{font-size:20px;font-weight:800;letter-spacing:-0.3px;line-height:1.2;}
-.site-header p{font-size:12px;opacity:0.72;margin-top:4px;}
+/* ── PAGE COLUMN ── */
+.page{max-width:920px;margin:0 auto;padding:36px 24px 90px;}
 
-/* ── SIDEBAR ── */
-.sidebar{width:264px;flex-shrink:0;overflow-y:auto;border-right:1px solid var(--border);
-  background:white;display:flex;flex-direction:column;}
-.sb-top{padding:16px 0 8px;}
-.sb-section-label{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:1.1px;
-  color:var(--text-muted);padding:12px 18px 6px;margin-top:4px;}
-.sb-section-label:first-child{margin-top:0;}
-.toggle-row{display:flex;align-items:center;gap:10px;padding:7px 18px;transition:background 0.15s;}
-.toggle-row:hover{background:#f7fafc;}
-.toggle-label{font-size:12.5px;color:var(--text-mid);line-height:1.3;flex:1;}
-.toggle-label.core-label{font-weight:600;}
-.toggle-note{display:block;font-size:9.5px;color:var(--text-muted);}
-.tog{position:relative;display:inline-block;width:34px;height:19px;flex-shrink:0;}
-.tog input{opacity:0;width:0;height:0;}
-.tog-slider{position:absolute;cursor:pointer;inset:0;background:#cbd5e1;border-radius:19px;transition:.25s;}
-.tog-slider::before{position:absolute;content:"";height:13px;width:13px;left:3px;bottom:3px;
-  background:white;border-radius:50%;transition:.25s;}
-.tog input:checked+.tog-slider{background:var(--blue);}
-.tog input:checked+.tog-slider::before{transform:translateX(15px);}
+/* ── TITLE BAND ── */
+.title-card{background:linear-gradient(135deg,var(--navy-deep) 0%,var(--navy) 100%);
+  padding:34px 38px 36px;color:white;position:relative;overflow:hidden;}
+.title-card::after{content:'';position:absolute;right:-70px;top:-70px;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle, rgba(0,132,222,0.25) 0%, transparent 70%);pointer-events:none;}
+.tc-eyebrow{font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:10px;}
+.title-card h1{font-size:28px;font-weight:800;letter-spacing:-0.5px;line-height:1.15;}
+.title-card p{font-size:13px;color:rgba(255,255,255,0.72);margin-top:8px;max-width:560px;line-height:1.6;}
 
-.sb-cost{border-top:1px solid var(--border);padding:14px 18px 18px;background:#fafbfc;}
-.sb-cost-title{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;
-  color:var(--text-muted);margin-bottom:12px;}
-.sb-cost-row{margin-bottom:14px;}
-.sb-cost-row:last-child{margin-bottom:0;}
-.sb-cost-name{font-size:11.5px;font-weight:600;color:var(--ink);margin-bottom:1px;}
-.sb-cost-desc{font-size:10px;color:var(--text-muted);margin-bottom:5px;line-height:1.35;}
-.sb-cost-val-row{display:flex;align-items:center;gap:8px;}
-.sb-cost-val{font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;min-width:72px;text-align:right;}
-.sb-check-row{display:flex;align-items:center;gap:7px;margin-top:6px;}
-.sb-check-row label{font-size:10.5px;color:var(--text-mid);cursor:pointer;}
-.sb-currency{border-top:1px solid var(--border);padding:10px 18px;font-size:10px;color:var(--text-muted);line-height:1.5;}
-
-/* ── MAIN PANE ── */
-.main-pane{flex:1;overflow-y:auto;padding:24px 32px 60px;background:var(--bg);}
+/* ── CONTENT INSET ── */
+.content{padding:0 10px;}
 
 /* ── OPTION HERO ── */
-.option-hero{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-.opt-panel{border-radius:var(--r);padding:20px 24px;color:white;position:relative;}
-.opt-panel.opt-a{background:linear-gradient(135deg,var(--navy-deep) 0%,var(--navy) 100%);}
-.opt-panel.opt-b{background:white;border:1px solid var(--border);color:var(--ink);}
-.opt-eyebrow{font-size:10px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;opacity:.7;display:flex;align-items:center;gap:8px;}
+.option-hero{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:26px;}
+.opt-panel{border-radius:var(--r);padding:22px 26px;color:white;}
+.opt-panel.opt-a{background:var(--navy);}
+.opt-panel.opt-b{background:var(--blue-xxlight);color:var(--ink);}
+.opt-eyebrow{font-size:10px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;opacity:.7;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .opt-badge{background:var(--blue);color:white;font-size:9px;font-weight:800;letter-spacing:.6px;
   padding:2px 8px;border-radius:20px;text-transform:uppercase;opacity:1;}
 .opt-panel.opt-b .opt-eyebrow{color:var(--text-muted);opacity:1;}
-.opt-value{font-size:38px;font-weight:900;letter-spacing:-1.5px;line-height:1.1;margin:6px 0 2px;}
+.opt-value{font-size:36px;font-weight:900;letter-spacing:-1.4px;line-height:1.1;margin:8px 0 4px;}
 .opt-panel.opt-b .opt-value{color:var(--blue);}
-.opt-sub{font-size:11px;opacity:.6;}
+.opt-sub{font-size:11px;opacity:.65;line-height:1.5;}
 .opt-panel.opt-b .opt-sub{color:var(--text-muted);opacity:1;}
-.opt-years{font-size:11px;margin-top:8px;opacity:.85;font-weight:600;}
+.opt-years{font-size:11px;margin-top:10px;opacity:.85;font-weight:600;}
 .opt-panel.opt-b .opt-years{color:var(--text-mid);opacity:1;}
 
-/* ── SUB METRICS ── */
-.sub-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px;}
-.sub-card{background:white;border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;}
+/* ── KPI TILES ── */
+.sub-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px;}
+.sub-card{background:var(--tint);border-radius:var(--r);padding:16px 18px;}
 .sc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;
-  color:var(--text-muted);margin-bottom:5px;}
-.sc-value{font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1;white-space:nowrap;}
-.sc-value.a-color{color:var(--navy);}
-.sc-value.rev-color{color:var(--navy);}
-.sc-value.keep-color{color:var(--navy);}
-.sc-sub{font-size:10.5px;color:var(--text-muted);margin-top:4px;}
+  color:var(--text-muted);margin-bottom:6px;}
+.sc-value{font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1;white-space:nowrap;color:var(--navy);}
+.sc-sub{font-size:10.5px;color:var(--text-muted);margin-top:5px;line-height:1.4;}
+
+/* ── FLAT SECTIONS ── */
+.section{padding:28px 0 24px;border-bottom:1px solid var(--border);}
+.section:last-of-type{border-bottom:none;}
+.section-eyebrow{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;
+  color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.tbl-wrap{overflow-x:auto;}
 
 /* ── CHART ── */
-.chart-section{background:white;border:1px solid var(--border);border-radius:var(--r);
-  padding:18px 20px;margin-bottom:24px;}
-.chart-group-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;
-  color:var(--text-muted);margin-bottom:12px;}
-.legend{display:flex;gap:16px;margin-bottom:12px;}
+.legend{display:flex;gap:16px;margin-bottom:14px;}
 .legend span{font-size:11px;color:var(--text-mid);display:flex;align-items:center;gap:6px;}
 .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
 .dot.a{background:var(--navy);}
 .dot.b{background:var(--blue);}
 .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
 .bar-row:last-child{margin-bottom:0;}
-.bar-name{width:150px;font-size:12px;color:var(--text-mid);flex-shrink:0;font-weight:500;}
+.bar-name{width:168px;font-size:12px;color:var(--text-mid);flex-shrink:0;font-weight:500;}
 .bar-track{flex:1;height:9px;background:#eef2f5;border-radius:5px;overflow:hidden;}
 .bar-fill{height:100%;border-radius:5px;transition:width .4s cubic-bezier(.4,0,.2,1);min-width:2px;}
 .bar-fill.a{background:var(--navy);}
 .bar-fill.b{background:var(--blue);}
 .bar-val{width:80px;text-align:right;font-size:12px;font-weight:700;color:var(--ink);flex-shrink:0;}
 
-/* ── TABLE ── */
-.table-card{background:white;border:1px solid var(--border);border-radius:var(--r);
-  padding:18px 20px;margin-bottom:24px;overflow-x:auto;}
+/* ── TABLES ── */
 table{width:100%;border-collapse:collapse;font-size:12px;}
 th{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--text-muted);
-  text-align:right;padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap;}
+  text-align:right;padding:8px 9px;border-bottom:1px solid var(--border);white-space:nowrap;}
 th:first-child{text-align:left;}
-td{padding:9px 10px;text-align:right;border-bottom:1px solid #f0f4f6;white-space:nowrap;color:var(--text-mid);}
+td{padding:9px;text-align:right;border-bottom:1px solid #f0f4f6;white-space:nowrap;color:var(--text-mid);}
 td:first-child{text-align:left;font-weight:600;color:var(--ink);}
 tr:last-child td{border-bottom:none;}
 tr.total-row td{font-weight:800;color:var(--navy);border-top:2px solid var(--border);}
@@ -134,81 +96,80 @@ tr.total-row td{font-weight:800;color:var(--navy);border-top:2px solid var(--bor
 td.opt-a-col,th.opt-a-col{background:var(--blue-xxlight);}
 td.opt-a-col{font-weight:700;color:var(--navy);}
 td.opt-b-col{font-weight:700;color:var(--blue);}
+.keep-note{font-size:11px;color:var(--text-muted);margin-top:12px;line-height:1.55;}
 
-/* ── ACCORDIONS ── */
-.acc-section{background:white;border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;}
-.acc-header{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;
-  user-select:none;transition:background .15s;}
-.acc-header:hover{background:#f7fafc;}
-.acc-arrow{font-size:10px;color:var(--text-muted);transition:transform .2s;flex-shrink:0;}
+/* ── INPUT SECTIONS ── */
+.acc-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;flex-wrap:wrap;}
+.acc-arrow{font-size:9px;color:var(--text-muted);transition:transform .2s;flex-shrink:0;}
 .acc-arrow.open{transform:rotate(90deg);}
-.acc-title{font-size:13.5px;font-weight:700;color:var(--ink);flex:1;letter-spacing:-.1px;}
-.acc-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0;}
+.acc-title{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:1.1px;color:var(--navy);flex:1;min-width:200px;}
+.acc-badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;flex-shrink:0;text-transform:none;letter-spacing:0;}
 .badge-core{background:var(--blue-xlight);color:var(--navy);}
-.badge-placeholder{background:var(--warn-bg);color:var(--warn-text);border:1px solid var(--warn-border);}
-.acc-value{font-size:13px;font-weight:800;color:var(--navy);flex-shrink:0;white-space:nowrap;}
-.acc-body{padding:4px 18px 18px;border-top:1px solid #f0f4f6;}
-
-/* ── INPUT ROWS ── */
+.badge-placeholder{background:var(--tint);color:var(--text-muted);border:1px solid var(--border);}
+.acc-value{font-size:12.5px;font-weight:800;color:var(--navy);flex-shrink:0;white-space:nowrap;margin-left:auto;}
+.acc-body{padding-top:6px;}
 .sub-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;
-  color:var(--text-muted);margin:16px 0 8px;}
-.sub-label:first-child{margin-top:4px;}
-.input-row{display:flex;align-items:center;gap:16px;padding:8px 0;border-bottom:1px solid #f0f4f6;}
+  color:var(--text-muted);margin:16px 0 6px;}
+.input-row{display:flex;align-items:center;gap:18px;padding:9px 0;border-bottom:1px solid #f0f4f6;}
 .input-row:last-child{border-bottom:none;}
-.input-info{width:250px;flex-shrink:0;}
+.input-info{width:260px;flex-shrink:0;}
 .input-name{font-size:12.5px;font-weight:600;color:var(--ink);line-height:1.3;}
-.input-desc{font-size:11px;color:var(--text-muted);margin-top:2px;line-height:1.3;}
+.input-desc{font-size:11px;color:var(--text-muted);margin-top:2px;line-height:1.35;}
 .input-slider-wrap{flex:1;}
 .input-val{width:92px;text-align:right;font-size:13px;font-weight:700;color:var(--navy);flex-shrink:0;}
+.check-row{display:flex;align-items:center;gap:7px;padding:8px 0 2px;}
+.check-row label{font-size:11.5px;color:var(--text-mid);cursor:pointer;}
+
+/* toggle switch */
+.tog{position:relative;display:inline-block;width:34px;height:19px;flex-shrink:0;}
+.tog input{opacity:0;width:0;height:0;}
+.tog-slider{position:absolute;cursor:pointer;inset:0;background:#cbd5e1;border-radius:19px;transition:.25s;}
+.tog-slider::before{position:absolute;content:"";height:13px;width:13px;left:3px;bottom:3px;
+  background:white;border-radius:50%;transition:.25s;}
+.tog input:checked+.tog-slider{background:var(--blue);}
+.tog input:checked+.tog-slider::before{transform:translateX(15px);}
 
 /* presets + segmented control */
-.preset-row{display:flex;align-items:center;gap:8px;margin:4px 0 10px;}
+.preset-row{display:flex;align-items:center;gap:8px;margin:6px 0 10px;}
 .preset-label{font-size:11px;color:var(--text-muted);font-weight:600;}
 .preset-btn{font-size:11px;font-weight:700;color:var(--navy);background:var(--blue-xxlight);
   border:1px solid var(--border);border-radius:20px;padding:3px 12px;cursor:pointer;font-family:inherit;}
 .preset-btn:hover{background:var(--blue-xlight);}
 .preset-btn.active{background:var(--navy);color:white;border-color:var(--navy);}
-.seg{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;flex-wrap:wrap;}
 .seg button{font-size:11px;font-weight:600;padding:5px 12px;border:none;background:white;
   color:var(--text-mid);cursor:pointer;font-family:inherit;}
 .seg button.active{background:var(--navy);color:white;}
-.mode-note{font-size:10.5px;color:var(--text-muted);margin-top:6px;line-height:1.45;}
+.mode-note{font-size:10.5px;color:var(--text-muted);margin-top:8px;line-height:1.5;}
 
 /* ── SLIDERS ── */
 input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:4px;
   border-radius:2px;background:var(--border);outline:none;cursor:pointer;}
 input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
-  width:17px;height:17px;border-radius:50%;background:var(--blue);cursor:pointer;
+  width:16px;height:16px;border-radius:50%;background:var(--blue);cursor:pointer;
   border:2.5px solid white;box-shadow:0 1px 5px rgba(0,132,222,.4);transition:transform .12s;}
 input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.15);}
-input[type="range"]::-moz-range-thumb{width:14px;height:14px;border:2.5px solid white;border-radius:50%;
+input[type="range"]::-moz-range-thumb{width:13px;height:13px;border:2.5px solid white;border-radius:50%;
   background:var(--blue);cursor:pointer;box-shadow:0 1px 5px rgba(0,132,222,.4);}
 input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box-shadow:0 1px 5px rgba(107,118,131,.35);}
 
-/* ── KEEP TABLE ── */
-.keep-note{font-size:11px;color:var(--text-muted);margin-top:10px;line-height:1.5;}
+/* ── FOOTNOTE ── */
+.footnote{font-size:11.5px;color:var(--text-muted);line-height:1.7;padding-top:26px;}
+.footnote p+p{margin-top:8px;}
 
-/* ── DISCLAIMER ── */
-.disclaimer{border-left:4px solid var(--blue);padding:14px 18px;background:var(--blue-xxlight);
-  border-radius:0 var(--r-sm) var(--r-sm) 0;font-size:12px;color:var(--text-mid);line-height:1.7;margin-top:8px;}
-.disclaimer p+p{margin-top:7px;}
-
-@media (max-width:900px){
-  .app{height:auto;}
-  .app-body{flex-direction:column;overflow:visible;}
-  .sidebar{width:100%;border-right:none;border-bottom:1px solid var(--border);}
-  .main-pane{overflow:visible;padding:20px 16px 40px;}
+@media (max-width:760px){
   .option-hero,.sub-metrics{grid-template-columns:1fr;}
   .input-info{width:170px;}
+  .content{padding:0;}
+  .title-card{padding:26px 24px;}
 }
 </style>
 </head>
 <body>
-<div class="app">
 
-<!-- FIXED HEADER -->
-<div class="app-header">
-  <div class="logo-bar">
+<!-- LOGO BAR -->
+<div class="logo-bar">
+  <div class="logo-inner">
     <img class="logo-wellhealth" src="data:image/png;base64,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" alt="WELL Health Technologies Corp">
     <svg viewBox="130 238 218 65" height="34" width="114" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Amigo" style="margin-left:auto;flex-shrink:0">
       <mask id="am-mk0" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="137" y="241" width="56" height="56"><path d="M192.309 241.41H137.486V296.766H192.309V241.41Z" fill="white"/></mask>
@@ -234,81 +195,18 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
       </g>
     </svg>
   </div>
-  <header class="site-header">
-    <h1>Multi-Year Cost &amp; Return Calculator</h1>
-    <p>Toggle business lines in the sidebar, then adjust the assumptions to compare the two commercial options over three years.</p>
-  </header>
 </div>
 
-<!-- BODY -->
-<div class="app-body">
+<main class="page">
 
-<!-- ── SIDEBAR ── -->
-<aside class="sidebar">
-  <div class="sb-top">
-    <div class="sb-section-label">Business Lines</div>
-    <div class="toggle-row">
-      <label class="tog"><input type="checkbox" id="tog-wc" checked><span class="tog-slider"></span></label>
-      <span class="toggle-label core-label">WellChoice<span class="toggle-note">Sized on validated numbers</span></span>
-    </div>
-    <div class="toggle-row">
-      <label class="tog"><input type="checkbox" id="tog-clinics"><span class="tog-slider"></span></label>
-      <span class="toggle-label">Primary, integrated &amp; allied care<span class="toggle-note">Clinics. Assumptions pending research</span></span>
-    </div>
-    <div class="toggle-row">
-      <label class="tog"><input type="checkbox" id="tog-dx"><span class="tog-slider"></span></label>
-      <span class="toggle-label">Specialized care &amp; diagnostics<span class="toggle-note">MyHealth. Assumptions pending research</span></span>
-    </div>
-    <div class="toggle-row">
-      <label class="tog"><input type="checkbox" id="tog-ws"><span class="tog-slider"></span></label>
-      <span class="toggle-label">WELLSTAR provider technology<span class="toggle-note">Assumptions pending research</span></span>
-    </div>
+  <!-- TITLE BAND -->
+  <div class="title-card">
+    <div class="tc-eyebrow">WellChoice × Amigo</div>
+    <h1>Multi-Year Cost &amp; Return Calculator</h1>
+    <p>Toggle each business line on or off, adjust the assumptions, and compare the two commercial options over three years. All figures in US dollars.</p>
   </div>
 
-  <div class="sb-cost">
-    <div class="sb-cost-title">Platform, All Business Lines</div>
-    <div class="sb-cost-row">
-      <div class="sb-cost-name">Platform &amp; team fee / month</div>
-      <div class="sb-cost-desc">One fee across every line. $15,000 list, shown with the 20% partnership discount.</div>
-      <div class="sb-cost-val-row">
-        <input type="range" id="sl-platform" min="0" max="30000" step="500" value="12000" class="muted" style="flex:1;">
-        <span class="sb-cost-val" id="lv-platform">$12,000</span>
-      </div>
-    </div>
-    <div class="sb-cost-row">
-      <div class="sb-cost-name">90-day pilot fee</div>
-      <div class="sb-cost-desc">Credited in full on a two-year commitment.</div>
-      <div class="sb-cost-val-row">
-        <input type="range" id="sl-pilot" min="0" max="100000" step="5000" value="50000" class="muted" style="flex:1;">
-        <span class="sb-cost-val" id="lv-pilot">$50,000</span>
-      </div>
-      <div class="sb-check-row">
-        <input type="checkbox" id="ck-pilot-credit" checked>
-        <label for="ck-pilot-credit">Credited back (two-year commit)</label>
-      </div>
-    </div>
-    <div class="sb-cost-row">
-      <div class="sb-cost-name">Simulation &amp; training compute / yr</div>
-      <div class="sb-cost-desc">Estimated need. Amigo covers it up to the credit below; any excess is paid out of pocket.</div>
-      <div class="sb-cost-val-row">
-        <input type="range" id="sl-simneed" min="0" max="200000" step="5000" value="25000" class="muted" style="flex:1;">
-        <span class="sb-cost-val" id="lv-simneed">$25,000</span>
-      </div>
-    </div>
-    <div class="sb-cost-row">
-      <div class="sb-cost-name">Amigo simulation credit / yr</div>
-      <div class="sb-cost-desc">Included with the platform. Acts as a net cost reduction.</div>
-      <div class="sb-cost-val-row">
-        <input type="range" id="sl-simcredit" min="0" max="100000" step="5000" value="25000" class="muted" style="flex:1;">
-        <span class="sb-cost-val" id="lv-simcredit">$25,000</span>
-      </div>
-    </div>
-  </div>
-  <div class="sb-currency">All figures in US dollars. Rates and fees follow the Amigo × WellChoice proposal, August 2026.</div>
-</aside>
-
-<!-- ── MAIN PANE ── -->
-<main class="main-pane">
+  <div class="content">
 
   <!-- OPTION HERO -->
   <div class="option-hero">
@@ -326,40 +224,41 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     </div>
   </div>
 
-  <!-- SUB METRICS -->
+  <!-- KPI TILES -->
   <div class="sub-metrics">
     <div class="sub-card">
       <div class="sc-label">Year 1 Cost, Option A</div>
-      <div class="sc-value a-color" id="sc-y1a">$0</div>
+      <div class="sc-value" id="sc-y1a">$0</div>
       <div class="sc-sub" id="sc-y1a-sub">At year-1 members</div>
     </div>
     <div class="sub-card">
       <div class="sc-label">Cost / Member / Month, Yr 1</div>
-      <div class="sc-value a-color" id="sc-cpm">$0</div>
+      <div class="sc-value" id="sc-cpm">$0</div>
       <div class="sc-sub">Option A, all-in</div>
     </div>
     <div class="sub-card">
       <div class="sc-label">3-Yr Value, Your Model</div>
-      <div class="sc-value rev-color" id="sc-rev">$0</div>
+      <div class="sc-value" id="sc-rev">$0</div>
       <div class="sc-sub" id="sc-rev-sub">Projected, WellChoice's own figures</div>
     </div>
     <div class="sub-card">
       <div class="sc-label">3-Yr What You Keep, Opt. A</div>
-      <div class="sc-value keep-color" id="sc-keep">$0</div>
+      <div class="sc-value" id="sc-keep">$0</div>
       <div class="sc-sub" id="sc-keep-sub">Value less Amigo cost</div>
     </div>
   </div>
 
   <!-- BAR CHART -->
-  <div class="chart-section">
-    <div class="chart-group-label">Annual Cost, Option A vs Option B</div>
+  <div class="section">
+    <div class="section-eyebrow">Annual Cost, Option A vs Option B</div>
     <div class="legend"><span><span class="dot a"></span>Option A · consumption</span><span><span class="dot b"></span>Option B · revenue share</span></div>
     <div id="chart-container"></div>
   </div>
 
   <!-- THREE-YEAR TABLE -->
-  <div class="table-card">
-    <div class="chart-group-label">Three-Year Projection, Side by Side</div>
+  <div class="section">
+    <div class="section-eyebrow">Three-Year Projection, Side by Side</div>
+    <div class="tbl-wrap">
     <table id="proj-table">
       <thead>
         <tr>
@@ -369,44 +268,97 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
       </thead>
       <tbody id="proj-body"></tbody>
     </table>
+    </div>
     <div class="keep-note" id="proj-note"></div>
   </div>
 
   <!-- PER-LINE BREAKDOWN -->
-  <div class="table-card">
-    <div class="chart-group-label">By Business Line, Three-Year Totals</div>
+  <div class="section">
+    <div class="section-eyebrow">By Business Line, Three-Year Totals</div>
+    <div class="tbl-wrap">
     <table>
       <thead>
         <tr><th>Business line</th><th>Consumption cost</th><th>Value</th><th style="text-align:left;padding-left:24px;">Value basis</th></tr>
       </thead>
       <tbody id="line-body"></tbody>
     </table>
-    <div class="keep-note">Lines join this table, the projection and the return view automatically when toggled on in the sidebar. Consumption is priced at each year's pooled tier, so added lines can move every line to a better rate.</div>
+    </div>
+    <div class="keep-note">Lines join this table, the projection and the return view automatically when toggled on below. Consumption is priced at each year's pooled tier, so added lines can move every line to a better rate.</div>
+  </div>
+
+  <!-- WHAT YOU KEEP -->
+  <div class="section">
+    <div class="section-eyebrow">The Return, Projected on Your Own Numbers</div>
+    <div class="tbl-wrap">
+    <table id="keep-table">
+      <thead>
+        <tr><th>Year</th><th>Value, all lines</th><th class="opt-a-col">Option A cost</th><th class="opt-a-col">You keep</th><th>Option B cost</th><th>You keep</th></tr>
+      </thead>
+      <tbody id="keep-body"></tbody>
+    </table>
+    </div>
+    <div class="keep-note" id="keep-note"></div>
+  </div>
+
+  <!-- PLATFORM SECTION -->
+  <div class="section">
+    <div class="acc-header" data-acc="platform">
+      <span class="acc-arrow open" id="arrow-platform">&#9654;</span>
+      <span class="acc-title">Platform, Pilot &amp; Simulation Credit · All Business Lines</span>
+      <span class="acc-value" id="platform-total">$0</span>
+    </div>
+    <div class="acc-body" id="body-platform">
+      <div class="input-row">
+        <div class="input-info"><div class="input-name">Platform &amp; team fee / month</div><div class="input-desc">One fee across every line. $15,000 list, shown with the 20% partnership discount.</div></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-platform" min="0" max="30000" step="500" value="12000" class="muted"></div>
+        <div class="input-val" id="lv-platform">$12,000</div>
+      </div>
+      <div class="input-row">
+        <div class="input-info"><div class="input-name">90-day pilot fee</div><div class="input-desc">Credited in full on a two-year commitment.</div></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-pilot" min="0" max="100000" step="5000" value="50000" class="muted"></div>
+        <div class="input-val" id="lv-pilot">$50,000</div>
+      </div>
+      <div class="check-row">
+        <input type="checkbox" id="ck-pilot-credit" checked>
+        <label for="ck-pilot-credit">Pilot credited back on a two-year commitment</label>
+      </div>
+      <div class="input-row">
+        <div class="input-info"><div class="input-name">Simulation &amp; training compute / yr</div><div class="input-desc">Estimated need. Amigo covers it up to the credit below; any excess is paid out of pocket.</div></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-simneed" min="0" max="200000" step="5000" value="25000" class="muted"></div>
+        <div class="input-val" id="lv-simneed">$25,000</div>
+      </div>
+      <div class="input-row">
+        <div class="input-info"><div class="input-name">Amigo simulation credit / yr</div><div class="input-desc">Included with the platform. Acts as a net cost reduction.</div></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-simcredit" min="0" max="100000" step="5000" value="25000" class="muted"></div>
+        <div class="input-val" id="lv-simcredit">$25,000</div>
+      </div>
+    </div>
   </div>
 
   <!-- WELLCHOICE MODULE -->
-  <div class="acc-section" id="acc-wc">
+  <div class="section">
     <div class="acc-header" data-acc="wc">
       <span class="acc-arrow open" id="arrow-wc">&#9654;</span>
-      <span class="acc-title">WellChoice · members, usage and commercial inputs</span>
-      <span class="acc-badge badge-core">Core</span>
+      <label class="tog"><input type="checkbox" id="tog-wc" checked><span class="tog-slider"></span></label>
+      <span class="acc-title">WellChoice · Members, Usage &amp; Commercial Inputs</span>
+      <span class="acc-badge badge-core">Sized on validated numbers</span>
       <span class="acc-value" id="wc-total">$0</span>
     </div>
     <div class="acc-body" id="body-wc">
       <div class="sub-label">Monthly-Active Members by Year</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Year 1 members</div><div class="input-desc">WellChoice's own model: about 10,000</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-m1" min="1000" max="50000" step="1000" value="10000" class="navy"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-m1" min="1000" max="50000" step="1000" value="10000"></div>
         <div class="input-val" id="lv-m1">10,000</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Year 2 members</div><div class="input-desc">WellChoice's own model: about 30,000</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-m2" min="5000" max="150000" step="5000" value="30000" class="navy"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-m2" min="5000" max="150000" step="5000" value="30000"></div>
         <div class="input-val" id="lv-m2">30,000</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Year 3 members</div><div class="input-desc">WellChoice's own model: about 100,000</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-m3" min="10000" max="300000" step="10000" value="100000" class="navy"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-m3" min="10000" max="300000" step="10000" value="100000"></div>
         <div class="input-val" id="lv-m3">100,000</div>
       </div>
 
@@ -436,12 +388,12 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
       <div class="sub-label">Revenue Model (Option B and the return view)</div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Revenue per engaged member / yr</div><div class="input-desc">WellChoice's own model: about $200 ($2M at 10,000 members)</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-rpm" min="50" max="500" step="10" value="200" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-rpm" min="50" max="500" step="10" value="200"></div>
         <div class="input-val" id="lv-rpm">$200</div>
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Revenue share, Option B</div><div class="input-desc">Set to any value. The proposal uses 15% of platform-driven revenue.</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-share" min="0" max="30" step="1" value="15" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-share" min="0" max="30" step="1" value="15"></div>
         <div class="input-val" id="lv-share">15%</div>
       </div>
 
@@ -462,17 +414,18 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
   </div>
 
   <!-- CLINICS MODULE -->
-  <div class="acc-section" id="acc-clinics" style="display:none">
+  <div class="section">
     <div class="acc-header" data-acc="clinics">
       <span class="acc-arrow" id="arrow-clinics">&#9654;</span>
-      <span class="acc-title">Primary, integrated &amp; allied care · intake, routing and admin workflows</span>
+      <label class="tog"><input type="checkbox" id="tog-clinics"><span class="tog-slider"></span></label>
+      <span class="acc-title">Primary, Integrated &amp; Allied Care · Intake, Routing &amp; Admin</span>
       <span class="acc-badge badge-placeholder">Placeholder, pending research</span>
-      <span class="acc-value" id="clinics-total">$0</span>
+      <span class="acc-value" id="clinics-total">Off</span>
     </div>
     <div class="acc-body" id="body-clinics" style="display:none">
       <div class="input-row">
         <div class="input-info"><div class="input-name">Patient encounters per year</div><div class="input-desc">WELL reported a ~5.6M annualized run rate at Q2-2026</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cl-enc" min="1000000" max="8000000" step="100000" value="5600000" class="navy"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cl-enc" min="1000000" max="8000000" step="100000" value="5600000"></div>
         <div class="input-val" id="lv-cl-enc">5.6M</div>
       </div>
       <div class="input-row">
@@ -492,7 +445,7 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Operating cost avoided per routed encounter</div><div class="input-desc">Staff handling cost the agent absorbs. Placeholder until the research pass.</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-cl-value" min="0" max="20" step="0.5" value="4" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-cl-value" min="0" max="20" step="0.5" value="4"></div>
         <div class="input-val" id="lv-cl-value">$4.00</div>
       </div>
       <div class="mode-note">This line is priced on consumption under both options. Its value counts as operating cost avoided, and it feeds the projection and return views automatically; the revenue share does not apply here.</div>
@@ -500,17 +453,18 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
   </div>
 
   <!-- DIAGNOSTICS MODULE -->
-  <div class="acc-section" id="acc-dx" style="display:none">
+  <div class="section">
     <div class="acc-header" data-acc="dx">
       <span class="acc-arrow" id="arrow-dx">&#9654;</span>
-      <span class="acc-title">Specialized care &amp; diagnostics · booking and results follow-up (MyHealth, WELL Diagnostics)</span>
+      <label class="tog"><input type="checkbox" id="tog-dx"><span class="tog-slider"></span></label>
+      <span class="acc-title">Specialized Care &amp; Diagnostics · Booking &amp; Results Follow-Up</span>
       <span class="acc-badge badge-placeholder">Placeholder, pending research</span>
-      <span class="acc-value" id="dx-total">$0</span>
+      <span class="acc-value" id="dx-total">Off</span>
     </div>
     <div class="acc-body" id="body-dx" style="display:none">
       <div class="input-row">
         <div class="input-info"><div class="input-name">Diagnostic encounters per year</div><div class="input-desc">85+ locations. Volume placeholder until the research pass.</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-dx-enc" min="100000" max="5000000" step="100000" value="1500000" class="navy"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-dx-enc" min="100000" max="5000000" step="100000" value="1500000"></div>
         <div class="input-val" id="lv-dx-enc">1.5M</div>
       </div>
       <div class="input-row">
@@ -530,7 +484,7 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Operating cost avoided per routed encounter</div><div class="input-desc">Staff handling cost the agent absorbs. Placeholder until the research pass.</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-dx-value" min="0" max="20" step="0.5" value="3" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-dx-value" min="0" max="20" step="0.5" value="3"></div>
         <div class="input-val" id="lv-dx-value">$3.00</div>
       </div>
       <div class="mode-note">This line is priced on consumption under both options. Its value counts as operating cost avoided, and it feeds the projection and return views automatically; the revenue share does not apply here.</div>
@@ -538,17 +492,18 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
   </div>
 
   <!-- WELLSTAR MODULE -->
-  <div class="acc-section" id="acc-ws" style="display:none">
+  <div class="section">
     <div class="acc-header" data-acc="ws">
       <span class="acc-arrow" id="arrow-ws">&#9654;</span>
-      <span class="acc-title">WELLSTAR · white-label agents in provider technology (EMR, engagement, RCM)</span>
+      <label class="tog"><input type="checkbox" id="tog-ws"><span class="tog-slider"></span></label>
+      <span class="acc-title">WELLSTAR · White-Label Agents in Provider Technology</span>
       <span class="acc-badge badge-placeholder">Placeholder, pending research</span>
-      <span class="acc-value" id="ws-total">$0</span>
+      <span class="acc-value" id="ws-total">Off</span>
     </div>
     <div class="acc-body" id="body-ws" style="display:none">
       <div class="input-row">
         <div class="input-info"><div class="input-name">Agent interactions per year</div><div class="input-desc">Across WELLSTAR customer clinics. Reseller economics differ; treat as directional.</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-ws-int" min="0" max="5000000" step="50000" value="500000" class="navy"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-ws-int" min="0" max="5000000" step="50000" value="500000"></div>
         <div class="input-val" id="lv-ws-int">500K</div>
       </div>
       <div class="input-row">
@@ -558,34 +513,21 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
       </div>
       <div class="input-row">
         <div class="input-info"><div class="input-name">Value per interaction</div><div class="input-desc">Directional platform value per agent interaction. Placeholder until the research pass.</div></div>
-        <div class="input-slider-wrap"><input type="range" id="sl-ws-value" min="0" max="5" step="0.25" value="0.5" class="gold"></div>
+        <div class="input-slider-wrap"><input type="range" id="sl-ws-value" min="0" max="5" step="0.25" value="0.5"></div>
         <div class="input-val" id="lv-ws-value">$0.50</div>
       </div>
       <div class="mode-note">This line is priced on consumption under both options, and its value feeds the projection and return views automatically. The reseller commercial model is a separate conversation and is not modeled here.</div>
     </div>
   </div>
 
-  <!-- WHAT YOU KEEP -->
-  <div class="table-card" style="margin-top:24px;">
-    <div class="chart-group-label">The Return, Projected on Your Own Numbers</div>
-    <table id="keep-table">
-      <thead>
-        <tr><th>Year</th><th>Value, all lines</th><th class="opt-a-col">Option A cost</th><th class="opt-a-col">You keep</th><th>Option B cost</th><th>You keep</th></tr>
-      </thead>
-      <tbody id="keep-body"></tbody>
-    </table>
-    <div class="keep-note" id="keep-note"></div>
-  </div>
-
-  <!-- DISCLAIMER -->
-  <div class="disclaimer">
+  <!-- FOOTNOTE -->
+  <div class="footnote">
     <p><strong>Sources and basis.</strong> Population and encounter figures come from WELL Health FY2025 and Q2-2026 public disclosures (TSX: WELL). Member counts and the revenue per engaged member reflect WellChoice's own model as shared on the August 19, 2026 working session. Consumption rates, platform and team fee, pilot terms and the simulation credit follow the Amigo × WellChoice proposal of August 2026. Per-member usage is an Amigo market-based estimate until WellChoice's build team supplies its own. Lines marked "Placeholder, pending research" use directional inputs that will be replaced with sourced defaults.</p>
     <p><strong>How to read the projections.</strong> All figures are in US dollars and are projections, not quotes. Onboarding messages are charged on each year's member count, matching the proposal's method. Final pricing and terms follow the signed order form.</p>
   </div>
 
+  </div>
 </main>
-</div>
-</div>
 
 <script>
 (function(){
@@ -647,11 +589,6 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     var dxOn = $("tog-dx").checked;
     var wsOn = $("tog-ws").checked;
 
-    $("acc-wc").style.display = wcOn ? "" : "none";
-    $("acc-clinics").style.display = clOn ? "" : "none";
-    $("acc-dx").style.display = dxOn ? "" : "none";
-    $("acc-ws").style.display = wsOn ? "" : "none";
-
     var platform = num("sl-platform") * 12;
     var pilot = num("sl-pilot");
     var pilotCredited = $("ck-pilot-credit").checked;
@@ -710,7 +647,7 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     $("hero-a-years").textContent = "Years 1-3: " + years.map(function(y){ return fmtUSD(y.optA); }).join(" · ");
     $("hero-b-years").textContent = "Years 1-3: " + years.map(function(y){ return fmtUSD(y.optB); }).join(" · ");
 
-    // Sub metrics
+    // KPI tiles
     $("sc-y1a").textContent = fmtUSD(years[0].optA);
     $("sc-y1a-sub").textContent = wcOn ? "At " + fmtInt(years[0].members) + " members" : "WellChoice toggled off";
     $("sc-cpm").textContent = (wcOn && years[0].members > 0) ? "$" + (years[0].optA / years[0].members / 12).toFixed(2) : "n/a";
@@ -755,18 +692,18 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     noteBits.push(simNet === 0
       ? "Simulation and training compute is covered by the Amigo credit, so it nets to $0."
       : "Simulation compute exceeds the Amigo credit by " + fmtUSD(simNet) + " per year, included above.");
-    if (clOn || dxOn || wsOn) noteBits.push("Toggled-on placeholder lines add their consumption to both options.");
+    if (anyLine) noteBits.push("Toggled-on placeholder lines add their consumption to both options.");
     $("proj-note").textContent = noteBits.join(" ");
 
     // Keep table
     $("keep-body").innerHTML = years.map(function(y, i){
       return "<tr><td>Year " + (i+1) + "</td><td>" + fmtUSD(y.value) + "</td>" +
-        '<td class="opt-a-col">' + fmtUSD(y.optA) + '</td><td class="opt-a-col" style="color:var(--navy);">' + fmtUSD(y.value - y.optA) + "</td>" +
-        "<td>" + fmtUSD(y.optB) + "</td><td style='color:var(--navy);font-weight:700;'>" + fmtUSD(y.value - y.optB) + "</td></tr>";
+        '<td class="opt-a-col">' + fmtUSD(y.optA) + '</td><td class="opt-a-col">' + fmtUSD(y.value - y.optA) + "</td>" +
+        "<td>" + fmtUSD(y.optB) + "</td><td style='font-weight:700;color:var(--navy);'>" + fmtUSD(y.value - y.optB) + "</td></tr>";
     }).join("") +
       '<tr class="total-row"><td>3-yr total</td><td>' + fmtUSD(totValue) + "</td>" +
-      '<td class="opt-a-col">' + fmtUSD(totA) + '</td><td class="opt-a-col" style="color:var(--navy);">' + fmtUSD(totValue - totA) + "</td>" +
-      "<td>" + fmtUSD(totB) + "</td><td style='color:var(--navy);'>" + fmtUSD(totValue - totB) + "</td></tr>";
+      '<td class="opt-a-col">' + fmtUSD(totA) + '</td><td class="opt-a-col">' + fmtUSD(totValue - totA) + "</td>" +
+      "<td>" + fmtUSD(totB) + "</td><td style='font-weight:700;color:var(--navy);'>" + fmtUSD(totValue - totB) + "</td></tr>";
     $("keep-note").textContent = anyLine
       ? "Value combines WellChoice commerce revenue (about $" + Math.round(rpm) +
         " per engaged member per year, WellChoice's own model, shown before product cost) with the toggled-on lines' operating value at the placeholder rates set in each module. Projections, not commitments."
@@ -788,23 +725,24 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
       $("tier-note").textContent = TIERS[tierMode].label + " rates locked for every year, regardless of volume.";
     }
 
-    // Line chips + per-line breakdown
+    // Section chips + per-line breakdown
+    $("platform-total").textContent = fmtUSD(platform) + " / yr";
     var wcCost3 = lineCost3(wc);
-    $("wc-total").textContent = wcOn ? fmtUSD(wcCost3) + " / 3 yrs" : "$0";
-    function chip(id, line){ $(id).textContent = line ? fmtUSD(lineCost3(line)) + " / 3 yrs" : "$0"; }
+    $("wc-total").textContent = wcOn ? fmtUSD(wcCost3) + " / 3 yrs" : "Off";
+    function chip(id, line){ $(id).textContent = line ? fmtUSD(lineCost3(line)) + " / 3 yrs" : "Off"; }
     chip("clinics-total", cl); chip("dx-total", dx); chip("ws-total", ws);
 
     var lb = [];
     function lineRow(name, cost3, value3, basis){
       lb.push("<tr><td>" + name + "</td><td>" + fmtUSD(cost3) +
-        "</td><td style='color:var(--navy);font-weight:700;'>" + fmtUSD(value3) +
+        "</td><td style='font-weight:700;color:var(--navy);'>" + fmtUSD(value3) +
         "</td><td style='text-align:left;padding-left:24px;color:var(--text-muted);'>" + basis + "</td></tr>");
     }
     if (wcOn) lineRow("WellChoice", wcCost3, totRev, "Commerce revenue, WellChoice's model");
     if (clOn) lineRow("Primary, integrated &amp; allied care", lineCost3(cl), clValueYr * 3, "Operating cost avoided, placeholder");
     if (dxOn) lineRow("Specialized care &amp; diagnostics", lineCost3(dx), dxValueYr * 3, "Operating cost avoided, placeholder");
     if (wsOn) lineRow("WELLSTAR provider technology", lineCost3(ws), wsValueYr * 3, "Platform value, placeholder");
-    if (!lb.length) lb.push("<tr><td colspan='4' style='text-align:left;color:var(--text-muted);'>Toggle a business line on in the sidebar.</td></tr>");
+    if (!lb.length) lb.push("<tr><td colspan='4' style='text-align:left;color:var(--text-muted);'>Toggle a business line on below.</td></tr>");
     $("line-body").innerHTML = lb.join("");
   }
 
@@ -835,9 +773,17 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     el.addEventListener("input", function(){ sync(); recalc(); });
     sync();
   });
-  ["tog-wc","tog-clinics","tog-dx","tog-ws","ck-pilot-credit"].forEach(function(id){
-    $(id).addEventListener("change", recalc);
+
+  // ── Business-line toggles: include in the math and expand/collapse the section body ──
+  [["tog-wc","wc"],["tog-clinics","clinics"],["tog-dx","dx"],["tog-ws","ws"]].forEach(function(pair){
+    $(pair[0]).addEventListener("change", function(){
+      var on = this.checked;
+      $("body-" + pair[1]).style.display = on ? "" : "none";
+      $("arrow-" + pair[1]).classList.toggle("open", on);
+      recalc();
+    });
   });
+  $("ck-pilot-credit").addEventListener("change", recalc);
 
   // ── Usage presets ──
   var PRESETS = { low: [15,5,0], base: [35,15,2], high: [70,35,7] };
@@ -869,7 +815,7 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     });
   });
 
-  // ── Accordions ──
+  // ── Accordions (view collapse, independent of the toggle) ──
   document.querySelectorAll(".acc-header").forEach(function(h){
     h.addEventListener("click", function(e){
       if (e.target.closest("input,button,label")) return;
