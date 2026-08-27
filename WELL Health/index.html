@@ -6,12 +6,12 @@
 <title>WellChoice × Amigo — Multi-Year Cost &amp; Return Calculator</title>
 <style>
 :root {
-  --navy:#004776; --navy-deep:#00355a; --navy-mid:#0065a9;
-  --blue:#0084de; --blue-light:#4da9e8; --blue-xlight:#e8f3fb; --blue-xxlight:#f3f9fd;
+  --navy:#004776; --navy-deep:#00355a; --navy-mid:#004776;
+  --blue:#0084de; --blue-light:#0084de; --blue-xlight:#e8f3fb; --blue-xxlight:#f3f9fd;
   --ink:#212933; --text-mid:#3d4854; --text-muted:#6b7683;
-  --gold:#b07818; --gold-light:#fdf6e6;
-  --green:#1a8a5c; --green-light:#e6f5ee;
-  --warn-bg:#fffbeb; --warn-border:#f59e0b; --warn-text:#92400e;
+  --gold:#004776; --gold-light:#f3f9fd;
+  --green:#004776; --green-light:#f3f9fd;
+  --warn-bg:#f3f9fd; --warn-border:#dfe6ec; --warn-text:#6b7683;
   --border:#dfe6ec; --bg:#f5f8fa; --white:#ffffff;
   --r:10px; --r-sm:6px;
 }
@@ -31,7 +31,7 @@ body{font-family:'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica 
 .logo-wellhealth{height:38px;width:auto;display:block;}
 
 /* ── SITE HEADER ── */
-.site-header{background:linear-gradient(135deg,var(--navy-deep) 0%,var(--navy) 55%,var(--navy-mid) 100%);
+.site-header{background:linear-gradient(135deg,var(--navy-deep) 0%,var(--navy) 55%,var(--navy) 100%);
   padding:16px 28px;color:white;}
 .site-header h1{font-size:20px;font-weight:800;letter-spacing:-0.3px;line-height:1.2;}
 .site-header p{font-size:12px;opacity:0.72;margin-top:4px;}
@@ -82,7 +82,7 @@ body{font-family:'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica 
   padding:2px 8px;border-radius:20px;text-transform:uppercase;opacity:1;}
 .opt-panel.opt-b .opt-eyebrow{color:var(--text-muted);opacity:1;}
 .opt-value{font-size:38px;font-weight:900;letter-spacing:-1.5px;line-height:1.1;margin:6px 0 2px;}
-.opt-panel.opt-b .opt-value{color:var(--navy-mid);}
+.opt-panel.opt-b .opt-value{color:var(--blue);}
 .opt-sub{font-size:11px;opacity:.6;}
 .opt-panel.opt-b .opt-sub{color:var(--text-muted);opacity:1;}
 .opt-years{font-size:11px;margin-top:8px;opacity:.85;font-weight:600;}
@@ -95,8 +95,8 @@ body{font-family:'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica 
   color:var(--text-muted);margin-bottom:5px;}
 .sc-value{font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1;white-space:nowrap;}
 .sc-value.a-color{color:var(--navy);}
-.sc-value.rev-color{color:var(--navy-mid);}
-.sc-value.keep-color{color:var(--green);}
+.sc-value.rev-color{color:var(--navy);}
+.sc-value.keep-color{color:var(--navy);}
 .sc-sub{font-size:10.5px;color:var(--text-muted);margin-top:4px;}
 
 /* ── CHART ── */
@@ -108,14 +108,14 @@ body{font-family:'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica 
 .legend span{font-size:11px;color:var(--text-mid);display:flex;align-items:center;gap:6px;}
 .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
 .dot.a{background:var(--navy);}
-.dot.b{background:var(--blue-light);}
+.dot.b{background:var(--blue);}
 .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
 .bar-row:last-child{margin-bottom:0;}
 .bar-name{width:150px;font-size:12px;color:var(--text-mid);flex-shrink:0;font-weight:500;}
 .bar-track{flex:1;height:9px;background:#eef2f5;border-radius:5px;overflow:hidden;}
 .bar-fill{height:100%;border-radius:5px;transition:width .4s cubic-bezier(.4,0,.2,1);min-width:2px;}
 .bar-fill.a{background:var(--navy);}
-.bar-fill.b{background:var(--blue-light);}
+.bar-fill.b{background:var(--blue);}
 .bar-val{width:80px;text-align:right;font-size:12px;font-weight:700;color:var(--ink);flex-shrink:0;}
 
 /* ── TABLE ── */
@@ -130,10 +130,10 @@ td:first-child{text-align:left;font-weight:600;color:var(--ink);}
 tr:last-child td{border-bottom:none;}
 tr.total-row td{font-weight:800;color:var(--navy);border-top:2px solid var(--border);}
 .tier-chip{display:inline-block;font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:20px;
-  background:var(--blue-xlight);color:var(--navy-mid);text-transform:uppercase;letter-spacing:.4px;}
+  background:var(--blue-xlight);color:var(--navy);text-transform:uppercase;letter-spacing:.4px;}
 td.opt-a-col,th.opt-a-col{background:var(--blue-xxlight);}
 td.opt-a-col{font-weight:700;color:var(--navy);}
-td.opt-b-col{font-weight:700;color:var(--navy-mid);}
+td.opt-b-col{font-weight:700;color:var(--blue);}
 
 /* ── ACCORDIONS ── */
 .acc-section{background:white;border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;}
@@ -144,7 +144,7 @@ td.opt-b-col{font-weight:700;color:var(--navy-mid);}
 .acc-arrow.open{transform:rotate(90deg);}
 .acc-title{font-size:13.5px;font-weight:700;color:var(--ink);flex:1;letter-spacing:-.1px;}
 .acc-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0;}
-.badge-core{background:var(--blue-xlight);color:var(--navy-mid);}
+.badge-core{background:var(--blue-xlight);color:var(--navy);}
 .badge-placeholder{background:var(--warn-bg);color:var(--warn-text);border:1px solid var(--warn-border);}
 .acc-value{font-size:13px;font-weight:800;color:var(--navy);flex-shrink:0;white-space:nowrap;}
 .acc-body{padding:4px 18px 18px;border-top:1px solid #f0f4f6;}
@@ -159,12 +159,12 @@ td.opt-b-col{font-weight:700;color:var(--navy-mid);}
 .input-name{font-size:12.5px;font-weight:600;color:var(--ink);line-height:1.3;}
 .input-desc{font-size:11px;color:var(--text-muted);margin-top:2px;line-height:1.3;}
 .input-slider-wrap{flex:1;}
-.input-val{width:92px;text-align:right;font-size:13px;font-weight:700;color:var(--navy-mid);flex-shrink:0;}
+.input-val{width:92px;text-align:right;font-size:13px;font-weight:700;color:var(--navy);flex-shrink:0;}
 
 /* presets + segmented control */
 .preset-row{display:flex;align-items:center;gap:8px;margin:4px 0 10px;}
 .preset-label{font-size:11px;color:var(--text-muted);font-weight:600;}
-.preset-btn{font-size:11px;font-weight:700;color:var(--navy-mid);background:var(--blue-xxlight);
+.preset-btn{font-size:11px;font-weight:700;color:var(--navy);background:var(--blue-xxlight);
   border:1px solid var(--border);border-radius:20px;padding:3px 12px;cursor:pointer;font-family:inherit;}
 .preset-btn:hover{background:var(--blue-xlight);}
 .preset-btn.active{background:var(--navy);color:white;border-color:var(--navy);}
@@ -183,8 +183,6 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:non
 input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.15);}
 input[type="range"]::-moz-range-thumb{width:14px;height:14px;border:2.5px solid white;border-radius:50%;
   background:var(--blue);cursor:pointer;box-shadow:0 1px 5px rgba(0,132,222,.4);}
-input[type="range"].navy::-webkit-slider-thumb{background:var(--navy);box-shadow:0 1px 5px rgba(0,71,118,.35);}
-input[type="range"].gold::-webkit-slider-thumb{background:var(--gold);box-shadow:0 1px 5px rgba(176,120,24,.35);}
 input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box-shadow:0 1px 5px rgba(107,118,131,.35);}
 
 /* ── KEEP TABLE ── */
@@ -729,7 +727,7 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
         '<div class="bar-val">' + fmtUSD(y.optA) + '</div></div>' +
         '<div class="bar-row" style="margin-bottom:14px;"><div class="bar-name" style="color:var(--text-muted);font-size:11px;"></div>' +
         '<div class="bar-track"><div class="bar-fill b" style="width:' + (y.optB / maxCost * 100) + '%"></div></div>' +
-        '<div class="bar-val" style="color:var(--navy-mid);">' + fmtUSD(y.optB) + '</div></div>';
+        '<div class="bar-val" style="color:var(--blue);">' + fmtUSD(y.optB) + '</div></div>';
     }).join("");
 
     // Projection table
@@ -763,12 +761,12 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     // Keep table
     $("keep-body").innerHTML = years.map(function(y, i){
       return "<tr><td>Year " + (i+1) + "</td><td>" + fmtUSD(y.value) + "</td>" +
-        '<td class="opt-a-col">' + fmtUSD(y.optA) + '</td><td class="opt-a-col" style="color:var(--green);">' + fmtUSD(y.value - y.optA) + "</td>" +
-        "<td>" + fmtUSD(y.optB) + "</td><td style='color:var(--green);font-weight:700;'>" + fmtUSD(y.value - y.optB) + "</td></tr>";
+        '<td class="opt-a-col">' + fmtUSD(y.optA) + '</td><td class="opt-a-col" style="color:var(--navy);">' + fmtUSD(y.value - y.optA) + "</td>" +
+        "<td>" + fmtUSD(y.optB) + "</td><td style='color:var(--navy);font-weight:700;'>" + fmtUSD(y.value - y.optB) + "</td></tr>";
     }).join("") +
       '<tr class="total-row"><td>3-yr total</td><td>' + fmtUSD(totValue) + "</td>" +
-      '<td class="opt-a-col">' + fmtUSD(totA) + '</td><td class="opt-a-col" style="color:var(--green);">' + fmtUSD(totValue - totA) + "</td>" +
-      "<td>" + fmtUSD(totB) + "</td><td style='color:var(--green);'>" + fmtUSD(totValue - totB) + "</td></tr>";
+      '<td class="opt-a-col">' + fmtUSD(totA) + '</td><td class="opt-a-col" style="color:var(--navy);">' + fmtUSD(totValue - totA) + "</td>" +
+      "<td>" + fmtUSD(totB) + "</td><td style='color:var(--navy);'>" + fmtUSD(totValue - totB) + "</td></tr>";
     $("keep-note").textContent = anyLine
       ? "Value combines WellChoice commerce revenue (about $" + Math.round(rpm) +
         " per engaged member per year, WellChoice's own model, shown before product cost) with the toggled-on lines' operating value at the placeholder rates set in each module. Projections, not commitments."
@@ -799,7 +797,7 @@ input[type="range"].muted::-webkit-slider-thumb{background:var(--text-muted);box
     var lb = [];
     function lineRow(name, cost3, value3, basis){
       lb.push("<tr><td>" + name + "</td><td>" + fmtUSD(cost3) +
-        "</td><td style='color:var(--green);font-weight:700;'>" + fmtUSD(value3) +
+        "</td><td style='color:var(--navy);font-weight:700;'>" + fmtUSD(value3) +
         "</td><td style='text-align:left;padding-left:24px;color:var(--text-muted);'>" + basis + "</td></tr>");
     }
     if (wcOn) lineRow("WellChoice", wcCost3, totRev, "Commerce revenue, WellChoice's model");
